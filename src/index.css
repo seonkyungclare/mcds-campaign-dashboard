@@ -1,0 +1,69 @@
+/* MCDS 기본 서체 — Pretendard */
+@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.css');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* ---- MCDS semantic color tokens ---- */
+  --color-semantic-fg-default: #1a1a1a;
+  --color-semantic-fg-subtle: #666666;
+  --color-semantic-fg-disabled: #b3b3b3;
+  --color-semantic-fill-light: #ffffff;
+  --color-semantic-fill-subtle: #f7f7f7;
+  --color-semantic-fill-disabled: #f2f2f2;
+  --color-semantic-fill-accent: #2b52f0;
+  --color-semantic-fill-accent-hovered: #1a40d9;
+  --color-semantic-fill-accent-pressed: #1e34b3;
+  --color-semantic-fill-accent-disabled: #bacbff;
+  --color-semantic-fill-switch-container: #cccccc;
+  --color-semantic-fill-switch-container-hovered: #b3b3b3;
+  --color-semantic-fill-switch-container-pressed: #999999;
+  --color-semantic-fill-switch-container-disabled: #d9d9d9;
+  --color-semantic-border-default: #e0e0e0;
+
+  /* ---- typography ---- */
+  --mcds-fontfamily: 'Pretendard Variable', 'Pretendard', -apple-system,
+    BlinkMacSystemFont, 'Segoe UI', 'Noto Sans KR', sans-serif;
+  --typography-fontsize-14: 14px;
+  --typography-lineheight-20: 20px;
+
+  /* ---- spacing (8px base grid) ---- */
+  --dimension-spacing-8: 8px;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #fafafa;
+  font-family: var(--mcds-fontfamily);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#root {
+  width: 100%;
+}
+
+/* Keyboard focus only — no ring on mouse click */
+:focus-visible {
+  outline: 2px solid var(--color-semantic-fill-accent);
+  outline-offset: 2px;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #d9d9d9;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #b3b3b3;
+}
