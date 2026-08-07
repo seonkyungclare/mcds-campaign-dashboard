@@ -135,26 +135,28 @@
                 <div class="row__label"><span>구좌 선택<span class="req">*</span></span></div>
                 <div class="row__field">
                   <div class="slot-cards">
-                    <div class="slot-card slot-card--selected" data-slot aria-checked="true" role="checkbox" tabindex="0">
+                    <div class="slot-card slot-card--selected" data-slot data-slot-id="bigbanner" aria-checked="true" role="checkbox" tabindex="0">
                       <div class="slot-card__img"><img src="assets/slot-bigbanner.png" alt="빅배너 미리보기" /></div>
                       <div class="slot-card__body">
                         <span class="checkbox checkbox--h20"><span class="checkbox__box"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.2 4.7 8.9 10 3.2" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="checkbox__label" style="font-weight:600;">빅배너</span></span>
                         <p class="slot-card__desc">앱에 들어오면 가장 크게 보이는 홈 메인 대표 배너 구좌입니다.</p>
                       </div>
                     </div>
-                    <div class="slot-card" data-slot aria-checked="false" role="checkbox" tabindex="0">
+                    <div class="slot-card" data-slot data-slot-id="splash" aria-checked="false" role="checkbox" tabindex="0">
                       <div class="slot-card__img"><img src="assets/slot-splash.png" alt="앱 스플래시 미리보기" /></div>
                       <div class="slot-card__body">
                         <span class="checkbox checkbox--h20"><span class="checkbox__box"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.2 4.7 8.9 10 3.2" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="checkbox__label" style="font-weight:600;">앱 스플래시</span></span>
                         <p class="slot-card__desc">앱을 실행하면 메인 페이지 진입 전, 화면 전체를 덮어 노출되는 전면 구좌입니다.</p>
                       </div>
+                      <div class="tooltip" role="tooltip">앱스플래시와 하이라이트 퀵메뉴를 함께 선택하시려면 패키지형으로 캠페인을 생성해주세요.</div>
                     </div>
-                    <div class="slot-card" data-slot aria-checked="false" role="checkbox" tabindex="0">
+                    <div class="slot-card" data-slot data-slot-id="quickmenu" aria-checked="false" role="checkbox" tabindex="0">
                       <div class="slot-card__img"><img src="assets/slot-quickmenu.png" alt="하이라이트 퀵메뉴 미리보기" /></div>
                       <div class="slot-card__body">
                         <span class="checkbox checkbox--h20"><span class="checkbox__box"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.2 4.7 8.9 10 3.2" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="checkbox__label" style="font-weight:600;">하이라이트 퀵메뉴</span></span>
                         <p class="slot-card__desc">메인 스토어 진입 시 빅배너 바로 아래에 노출되는 버튼형 배너 구좌입니다.</p>
                       </div>
+                      <div class="tooltip" role="tooltip">앱스플래시와 하이라이트 퀵메뉴를 함께 선택하시려면 패키지형으로 캠페인을 생성해주세요.</div>
                     </div>
                   </div>
                 </div>
@@ -367,18 +369,42 @@
     });
 
     // ---- Slot cards (checkbox) ----
-    document.querySelectorAll('[data-slot]').forEach(function (card) {
-      function toggle() {
-        var on = card.getAttribute('aria-checked') === 'true' ? 'false' : 'true';
-        card.setAttribute('aria-checked', on);
-        card.classList.toggle('slot-card--selected', on === 'true');
-        card.querySelector('.checkbox').setAttribute('aria-checked', on);
+    // 규칙: 앱 스플래시 ↔ 하이라이트 퀵메뉴는 상호배타 —
+    // 한쪽을 선택하면 다른 한쪽이 Disabled 되고(선택 해제), hover 시 tooltip 노출.
+    (function () {
+      var splash = document.querySelector('[data-slot-id="splash"]');
+      var quick = document.querySelector('[data-slot-id="quickmenu"]');
+
+      function isOn(card) { return card.getAttribute('aria-checked') === 'true'; }
+      function setChecked(card, on) {
+        card.setAttribute('aria-checked', on ? 'true' : 'false');
+        card.classList.toggle('slot-card--selected', on);
+        card.querySelector('.checkbox').setAttribute('aria-checked', on ? 'true' : 'false');
       }
-      // sync inner checkbox visual to initial state
-      card.querySelector('.checkbox').setAttribute('aria-checked', card.getAttribute('aria-checked'));
-      card.addEventListener('click', toggle);
-      card.addEventListener('keydown', function (e) { if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); toggle(); } });
-    });
+      function setDisabled(card, disabled) {
+        card.classList.toggle('slot-card--disabled', disabled);
+        if (disabled && isOn(card)) setChecked(card, false); // 비활성 시 선택 해제
+      }
+      // 상호배타 반영: 한쪽이 켜져 있으면 반대쪽을 Disabled
+      function syncExclusive() {
+        if (!splash || !quick) return;
+        setDisabled(quick, isOn(splash));
+        setDisabled(splash, isOn(quick));
+      }
+
+      document.querySelectorAll('[data-slot]').forEach(function (card) {
+        card.querySelector('.checkbox').setAttribute('aria-checked', card.getAttribute('aria-checked'));
+        function toggle() {
+          // Disabled / Readonly 상태는 상호작용하지 않음
+          if (card.classList.contains('slot-card--disabled') || card.classList.contains('slot-card--readonly')) return;
+          setChecked(card, !isOn(card));
+          syncExclusive();
+        }
+        card.addEventListener('click', toggle);
+        card.addEventListener('keydown', function (e) { if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); toggle(); } });
+      });
+      syncExclusive();
+    })();
 
     // ---- 계약 금액 자동 계산 (목표 노출수 × CPM ÷ 1000) ----
     function num(v) { return parseInt((v || '').replace(/[^0-9]/g, ''), 10) || 0; }

@@ -23,6 +23,7 @@
   --fill-light-lower: #f2f2f2;        /* semantic/fill-light-lower */
   --fill-light-lower-hovered: #e6e6e6;
   --fill-light-low: #fafafa;          /* semantic/fill-light-low */
+  --overlay-floating: #333333;        /* semantic/overlay-floating (Tooltip 배경) */
 
   /* Accent */
   --accent: #2b52f0;           /* blue/40 primary */
@@ -272,18 +273,81 @@ button { font-family: inherit; }
 .checkbox:disabled .checkbox__label,
 .checkbox--disabled .checkbox__label { color: var(--fg-disabled); }
 
-/* ===================== Slot type cards ===================== */
+/* ===================== Slot type cards (구좌 유형) =====================
+   Figma 상태 규칙: Selected / Normal / Disabled / Readonly (node 2723-335459) */
 .slot-cards { display: flex; gap: 8px; width: 100%; }
+/* Normal(기본): 배경 #f2f2f2(gray-95), 테두리 없음 */
 .slot-card {
-  flex: 1; min-width: 0; display: flex; flex-direction: column;
-  border: 1px solid var(--border); border-radius: var(--r-8); background: var(--fill-light);
-  overflow: hidden; cursor: pointer; text-align: left; padding: 0;
+  position: relative;
+  flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 16px;
+  padding: 16px 20px;
+  border: 1px solid transparent; border-radius: var(--r-8); background: var(--fill-light-lower);
+  cursor: pointer; text-align: left;
 }
-.slot-card--selected { border-color: var(--accent); }
-.slot-card__img { height: 206px; margin: 16px 20px 0; border-radius: var(--r-4); overflow: hidden; background: var(--fill-subtle); }
+.slot-card__img { height: 206px; border-radius: var(--r-4); overflow: hidden; background: var(--fill-light); }
 .slot-card__img img { display: block; width: 100%; height: 100%; object-fit: cover; }
-.slot-card__body { display: flex; flex-direction: column; gap: 8px; padding: 16px 20px 20px; }
-.slot-card__desc { font-size: 13px; line-height: 20px; color: var(--fg-muted); }
+.slot-card__body { display: flex; flex-direction: column; gap: 8px; }
+.slot-card__desc { font-size: 14px; line-height: 20px; color: var(--fg-muted); }
+
+/* Selected — 연파랑 배경(#edf3ff) + 라이트블루 테두리(#bacbff) + 체크 */
+.slot-card--selected { background: var(--accent-light-low); border-color: var(--border-accent-light); }
+
+/* Disabled — 배경/테두리는 Normal과 동일, 체크박스 비활성 + 구좌명 흐림(#b8b8b8) */
+.slot-card--disabled { cursor: not-allowed; }
+.slot-card--disabled .checkbox { cursor: not-allowed; }
+.slot-card--disabled .checkbox__box { background: var(--fill-disabled); border-color: var(--border); }
+.slot-card--disabled .checkbox__box svg { display: none; }
+.slot-card--disabled .checkbox__label { color: #b8b8b8; }
+
+/* Readonly — 배경/테두리는 Normal과 동일, 체크박스 없이 구좌명만 표시 */
+.slot-card--readonly { cursor: default; }
+.slot-card--readonly .checkbox { cursor: default; }
+.slot-card--readonly .checkbox__box { display: none; }
+
+/* Disabled 카드에 hover하면 내부 tooltip 노출 */
+.slot-card--disabled:hover > .tooltip { opacity: 1; visibility: visible; }
+
+/* ===================== Tooltip (MCDS Tooltip / Compact) =====================
+   다크 오버레이(#333) 버블 + 방향 화살표. position × tone(default/error).
+   부모에 position:relative 필요. 기본 position=top. (node 9753-75532) */
+.tooltip {
+  --tt-bg: var(--overlay-floating);
+  position: absolute; z-index: 60; width: max-content; max-width: 320px;
+  padding: 12px; border-radius: var(--r-4);
+  background: var(--tt-bg); color: var(--fg-on-accent);
+  font-size: 14px; line-height: 20px; font-weight: 400; text-align: left;
+  opacity: 0; visibility: hidden; pointer-events: none;
+  transition: opacity 120ms ease, visibility 120ms ease;
+  /* 기본 position = top */
+  bottom: calc(100% + 6px); left: 50%; transform: translateX(-50%);
+}
+.tooltip--error { --tt-bg: var(--critical); }
+.tooltip::after {
+  content: ""; position: absolute; width: 0; height: 0; border: 4px solid transparent;
+  top: 100%; left: 50%; margin-left: -4px; border-top-color: var(--tt-bg);
+}
+
+/* top-start / top-end : 아래 배치 유지, 가로 정렬만 이동 */
+.tooltip--top-start { left: 0; transform: none; }
+.tooltip--top-start::after { left: 16px; }
+.tooltip--top-end { left: auto; right: 0; transform: none; }
+.tooltip--top-end::after { left: auto; right: 16px; margin-left: 0; }
+
+/* bottom */
+.tooltip--bottom { top: calc(100% + 6px); bottom: auto; left: 50%; transform: translateX(-50%); }
+.tooltip--bottom-start { top: calc(100% + 6px); bottom: auto; left: 0; transform: none; }
+.tooltip--bottom-end { top: calc(100% + 6px); bottom: auto; left: auto; right: 0; transform: none; }
+.tooltip--bottom::after, .tooltip--bottom-start::after, .tooltip--bottom-end::after {
+  top: auto; bottom: 100%; border-top-color: transparent; border-bottom-color: var(--tt-bg);
+}
+.tooltip--bottom-start::after { left: 16px; }
+.tooltip--bottom-end::after { left: auto; right: 16px; margin-left: 0; }
+
+/* left / right */
+.tooltip--left { top: 50%; bottom: auto; left: auto; right: calc(100% + 6px); transform: translateY(-50%); }
+.tooltip--left::after { top: 50%; left: 100%; margin: -4px 0 0 0; border-top-color: transparent; border-left-color: var(--tt-bg); }
+.tooltip--right { top: 50%; bottom: auto; left: calc(100% + 6px); right: auto; transform: translateY(-50%); }
+.tooltip--right::after { top: 50%; left: auto; right: 100%; margin: -4px 0 0 0; border-top-color: transparent; border-right-color: var(--tt-bg); }
 
 /* ===================== DatePicker ===================== */
 .datepicker {
@@ -311,7 +375,7 @@ button { font-family: inherit; }
 .callout__sub { font-size: 12px; line-height: 18px; color: var(--fg-muted); }
 
 /* Guide line (구매 유형 하단 안내) */
-.guide { display: flex; align-items: center; justify-content: flex-end; gap: 4px; }
+.guide { display: flex; align-items: center; justify-content: flex-start; gap: 4px; }
 .guide__icon { flex: 0 0 16px; width: 16px; height: 16px; display: flex; align-items: center; justify-content: center; }
 .guide__text { font-size: 14px; line-height: 20px; color: var(--accent); white-space: nowrap; }
 
