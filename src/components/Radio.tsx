@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { color, typography, shadow } from '../tokens';
+import { color, typography } from '../tokens';
 
 export type RadioState = 'enabled' | 'hovered' | 'disabled';
 
@@ -33,6 +33,8 @@ export function Radio({
   const resolved: RadioState = state ?? (hovering ? 'hovered' : 'enabled');
   const disabled = resolved === 'disabled';
 
+  // Figma matrix: unselected = white fill + gray border (accent border on hover);
+  // selected = accent fill (darker on hover, #bacbff when disabled) with a white dot.
   const ringColor = disabled
     ? selected
       ? color.fillAccentDisabled
@@ -42,8 +44,8 @@ export function Radio({
         ? color.fillAccentHovered
         : color.fillAccent
       : resolved === 'hovered'
-        ? color.borderStrong
-        : color.borderDefault;
+        ? color.borderAccentHovered
+        : color.borderLightLower;
 
   const bgColor = selected
     ? disabled
@@ -78,7 +80,6 @@ export function Radio({
           borderRadius: '50%',
           border: `${selected ? 0 : 1.5}px solid ${ringColor}`,
           backgroundColor: bgColor,
-          boxShadow: selected && !disabled ? shadow.card : undefined,
           cursor: disabled ? 'not-allowed' : 'pointer',
           transition: 'background-color 150ms ease, border-color 150ms ease',
         }}
@@ -90,7 +91,7 @@ export function Radio({
               width: DOT,
               height: DOT,
               borderRadius: '50%',
-              backgroundColor: disabled ? color.fillDisabled : color.fillLight,
+              backgroundColor: color.fillLight,
             }}
           />
         )}
@@ -103,7 +104,7 @@ export function Radio({
           style={{
             fontFamily: typography.fontFamily,
             fontSize: typography.fontSize[14],
-            lineHeight: typography.lineHeight[20],
+            lineHeight: '22px',
             fontWeight: typography.fontWeight.regular,
             color: disabled ? color.fgDisabled : color.fgDefault,
             cursor: disabled ? 'not-allowed' : 'pointer',

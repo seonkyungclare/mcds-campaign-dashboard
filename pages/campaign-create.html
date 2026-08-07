@@ -223,18 +223,15 @@
   </div>
 
   <script>
-    var RADIO_ON = '<svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="10" cy="10" r="10" fill="#2B52F0"/><circle cx="10" cy="10" r="4" fill="white"/></svg>';
-    var RADIO_OFF = '<svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="10" cy="10" r="9.5" fill="white" stroke="#D9D9D9"/></svg>';
-    function paintDot(dot, on) { dot.innerHTML = on ? RADIO_ON : RADIO_OFF; }
-    document.querySelectorAll('.radio__dot').forEach(function (dot) { paintDot(dot, dot.hasAttribute('data-on')); });
+    // MCDS radio: CSS 구동 dot — [data-on] 속성 토글로 상태 표시
+    function setDot(dot, on) { if (dot) { if (on) dot.setAttribute('data-on', ''); else dot.removeAttribute('data-on'); } }
     document.querySelectorAll('[data-radio]').forEach(function (el) {
       el.addEventListener('click', function () {
         var group = el.getAttribute('data-radio');
         document.querySelectorAll('[data-radio="' + group + '"]').forEach(function (peer) {
           var selected = peer === el;
           peer.setAttribute('aria-checked', selected ? 'true' : 'false');
-          var dot = peer.querySelector('.radio__dot');
-          if (dot) paintDot(dot, selected);
+          setDot(peer.querySelector('.radio__dot'), selected);
           if (peer.classList.contains('radio-card')) peer.classList.toggle('radio-card--selected', selected);
         });
       });

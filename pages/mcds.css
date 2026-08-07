@@ -11,11 +11,18 @@
   --fg-header: #333333;
   --fg-black: #000000;
 
+  --fg-disabled: #b3b3b3;
+
   /* Fill */
   --fill-light: #ffffff;
   --fill-subtle: #f7f7f7;
   --fill-disabled: #f2f2f2;
   --fill-gray-98: #fafafa;
+  --fill-light-hovered: #f2f2f2;      /* semantic/fill-light-hovered */
+  --fill-light-pressed: #e6e6e6;      /* semantic/fill-light-pressed */
+  --fill-light-lower: #f2f2f2;        /* semantic/fill-light-lower */
+  --fill-light-lower-hovered: #e6e6e6;
+  --fill-light-low: #fafafa;          /* semantic/fill-light-low */
 
   /* Accent */
   --accent: #2b52f0;           /* blue/40 primary */
@@ -23,18 +30,30 @@
   --accent-pressed: #1e34b3;
   --accent-disabled: #bacbff;
   --accent-bg-low: #f7faff;    /* semantic/bg-accent-low */
+  --accent-light-low: #edf3ff;      /* semantic/fill-accent-light-low */
+  --accent-light-hovered: #dbe6ff;  /* semantic/fill-accent-light-hovered */
+  --accent-light-pressed: #bacbff;  /* semantic/fill-accent-light-pressed */
   --blue-70: #99b1ff;
   --blue-90: #dbe6ff;
   --blue-95: #edf3ff;
 
   /* Border */
-  --border: #d9d9d9;       /* gray/85 */
+  --border: #d9d9d9;       /* gray/85 = semantic/border-light-lower */
   --border-light: #ececec;
+  --border-light-lower-hovered: #cccccc;
   --border-strong: #999999;
+  --border-disabled: #e6e6e6;
+  --border-accent-light: #bacbff;   /* semantic/border-accent-light */
   --divider: #cccccc;      /* gray/80 */
 
-  /* Status */
+  /* Status — critical (Button "warning" maps to critical) */
   --critical: #e5231b;
+  --critical-fg: #fc3f45;
+  --critical-border: #eb0517;
+  --critical-fg-hovered: #cc0414;
+  --critical-fill-hovered: #ffe2df;
+  --critical-fg-pressed: #ab1215;
+  --critical-fill-pressed: #ffc5c0;
 
   /* Typography */
   --font: 'Pretendard', 'Noto Sans KR', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
@@ -179,10 +198,27 @@ button { font-family: inherit; }
   background: none; border: 0; padding: 0; cursor: pointer;
 }
 .radio:disabled { cursor: not-allowed; }
-.radio__dot { flex: 0 0 20px; width: 20px; height: 20px; }
-.radio__dot svg { display: block; width: 20px; height: 20px; }
-.radio__label { font-size: 14px; line-height: 20px; font-weight: 400; color: var(--fg-default); white-space: nowrap; }
-.radio:disabled .radio__label { color: var(--fg-muted); }
+/* CSS-driven radio dot: white circle + gray border; accent fill + white dot when [data-on]. */
+.radio__dot {
+  position: relative; box-sizing: border-box; flex: 0 0 20px; width: 20px; height: 20px;
+  border-radius: 50%; background: var(--fill-light); border: 1.5px solid var(--border);
+  transition: background-color 120ms ease, border-color 120ms ease;
+}
+.radio:hover .radio__dot,
+.radio-box:hover .radio-box__head .radio__dot { border-color: var(--accent-hovered); }
+.radio__dot[data-on] {
+  background: var(--accent); border-color: var(--accent);
+}
+.radio:hover .radio__dot[data-on],
+.radio-box:hover .radio-box__head .radio__dot[data-on] { background: var(--accent-hovered); border-color: var(--accent-hovered); }
+.radio__dot[data-on]::after {
+  content: ""; position: absolute; top: 50%; left: 50%; width: 8px; height: 8px;
+  transform: translate(-50%, -50%); border-radius: 50%; background: var(--fill-light);
+}
+.radio:disabled .radio__dot { background: var(--fill-disabled); border-color: var(--border-disabled); }
+.radio:disabled .radio__dot[data-on] { background: var(--accent-disabled); border-color: transparent; }
+.radio__label { font-size: 14px; line-height: 22px; font-weight: 400; color: var(--fg-default); white-space: nowrap; }
+.radio:disabled .radio__label { color: var(--fg-disabled); }
 
 /* Radio card (구매 유형 / 타겟팅 설정) */
 .radio-card {
@@ -196,21 +232,45 @@ button { font-family: inherit; }
 .radio-card__desc { padding-left: 28px; font-size: 14px; line-height: 20px; font-weight: 400; color: var(--fg-muted); }
 
 /* ===================== Checkbox ===================== */
+/* Figma matrix: type(selected/unselected/indeterminate) × state(enabled/hovered/disabled). box radius 2. */
 .checkbox { display: inline-flex; align-items: center; gap: 8px; height: 36px; background: none; border: 0; padding: 0; cursor: pointer; }
 .checkbox--h20 { height: 20px; }
 .checkbox:disabled { cursor: not-allowed; }
 .checkbox__box {
-  flex: 0 0 20px; width: 20px; height: 20px; border-radius: var(--r-4);
+  position: relative; box-sizing: border-box; flex: 0 0 20px; width: 20px; height: 20px; border-radius: 2px;
   border: 1.5px solid var(--border); background: var(--fill-light);
   display: flex; align-items: center; justify-content: center;
   transition: background-color 120ms ease, border-color 120ms ease;
 }
-.checkbox[aria-checked="true"] .checkbox__box { background: var(--accent); border-color: var(--accent); }
-.checkbox[aria-checked="true"] .checkbox__box svg { display: block; }
 .checkbox__box svg { display: none; width: 12px; height: 12px; }
-.checkbox:disabled .checkbox__box { background: var(--fill-disabled); border-color: var(--border); }
+/* hover (unselected / indeterminate box) → accent border */
+.checkbox:hover .checkbox__box,
+.checkbox--indeterminate:hover .checkbox__box { border-color: var(--accent-hovered); }
+/* selected (filled) — also driven by ancestor .slot-card--selected or .checkbox--checked */
+.checkbox[aria-checked="true"] .checkbox__box,
+.checkbox--checked .checkbox__box,
+.slot-card--selected .checkbox__box { background: var(--accent); border-color: var(--accent); }
+.checkbox[aria-checked="true"] .checkbox__box svg,
+.checkbox--checked .checkbox__box svg,
+.slot-card--selected .checkbox__box svg { display: block; }
+.checkbox:hover[aria-checked="true"] .checkbox__box,
+.checkbox--checked:hover .checkbox__box,
+.slot-card--selected:hover .checkbox__box { background: var(--accent-hovered); border-color: var(--accent-hovered); }
+/* indeterminate — light box + accent inner square (overrides filled) */
+.checkbox--indeterminate .checkbox__box { background: var(--fill-light); border-color: var(--border); }
+.checkbox--indeterminate .checkbox__box svg { display: none; }
+.checkbox--indeterminate .checkbox__box::after {
+  content: ""; width: 8px; height: 8px; border-radius: 1px; background: var(--accent);
+}
+/* disabled */
+.checkbox:disabled .checkbox__box,
+.checkbox--disabled .checkbox__box { background: var(--fill-disabled); border-color: var(--border-disabled); }
+.checkbox:disabled[aria-checked="true"] .checkbox__box,
+.checkbox--checked.checkbox--disabled .checkbox__box { background: var(--accent-disabled); border-color: transparent; }
+.checkbox--indeterminate.checkbox--disabled .checkbox__box::after { background: var(--accent-disabled); }
 .checkbox__label { font-size: 14px; line-height: 20px; color: var(--fg-default); white-space: nowrap; }
-.checkbox:disabled .checkbox__label { color: var(--fg-muted); }
+.checkbox:disabled .checkbox__label,
+.checkbox--disabled .checkbox__label { color: var(--fg-disabled); }
 
 /* ===================== Slot type cards ===================== */
 .slot-cards { display: flex; gap: 8px; width: 100%; }
@@ -287,22 +347,43 @@ button { font-family: inherit; }
   display: flex; align-items: center; justify-content: flex-end; gap: 8px;
   padding: 16px 32px; background: var(--fill-light); border-top: 1px solid var(--border);
 }
+/* Figma matrix: type(primary/secondary/tertiary/warning) × size(32/36/40/48) × state × content(basic/iconOnly). */
 .btn {
-  height: 40px; display: inline-flex; align-items: center; justify-content: center; padding: 0 20px;
-  border-radius: var(--r-8); font-size: 14px; line-height: 20px; font-weight: 600; cursor: pointer;
-  border: 1px solid transparent; transition: background-color 150ms ease, border-color 150ms ease;
-  text-decoration: none;
+  box-sizing: border-box; height: 40px; display: inline-flex; align-items: center; justify-content: center;
+  gap: 6px; padding: 0 16px; border-radius: var(--r-4); font-size: 16px; line-height: 24px; font-weight: 400;
+  cursor: pointer; border: 1px solid transparent; white-space: nowrap; text-decoration: none;
+  transition: background-color 150ms ease, border-color 150ms ease, color 150ms ease;
 }
-.btn--secondary { background: var(--fill-light); border-color: var(--border); color: var(--fg-default); }
-.btn--secondary:hover { background: var(--fill-gray-98); }
-.btn--primary { background: var(--accent); color: var(--fg-on-accent); }
+/* sizes */
+.btn--32 { height: 32px; padding: 0 12px; gap: 4px; font-size: 14px; line-height: 20px; font-weight: 400; }
+.btn--36, .btn--sm { height: 36px; padding: 0 12px; gap: 4px; font-size: 14px; line-height: 20px; font-weight: 400; }
+.btn--40 { height: 40px; padding: 0 16px; gap: 6px; font-size: 16px; line-height: 24px; font-weight: 400; }
+.btn--48 { height: 48px; padding: 0 20px; gap: 6px; font-size: 16px; line-height: 24px; font-weight: 600; }
+.btn--icon { padding: 0; aspect-ratio: 1; }
+/* type: primary (solid) */
+.btn--primary { background: var(--accent); color: var(--fg-on-accent); border-color: transparent; }
 .btn--primary:hover { background: var(--accent-hovered); }
 .btn--primary:active { background: var(--accent-pressed); }
-.btn--sm { height: 36px; }
+/* type: secondary (light + border) */
+.btn--secondary { background: var(--fill-light); border-color: var(--border); color: var(--fg-default); }
+.btn--secondary:hover { background: var(--fill-light-hovered); border-color: var(--border-light-lower-hovered); }
+.btn--secondary:active { background: var(--fill-light-pressed); border-color: var(--border-light-lower-hovered); }
+/* type: tertiary (accent outline) */
+.btn--tertiary { background: transparent; border-color: var(--accent); color: var(--accent); }
+.btn--tertiary:hover { background: var(--accent-light-hovered); border-color: var(--accent-hovered); color: var(--accent-hovered); }
+.btn--tertiary:active { background: var(--accent-light-pressed); border-color: var(--accent-pressed); color: var(--accent-pressed); }
+/* type: warning (critical outline) */
+.btn--warning { background: transparent; border-color: var(--critical-border); color: var(--critical-fg); }
+.btn--warning:hover { background: var(--critical-fill-hovered); border-color: var(--critical-fg-hovered); color: var(--critical-fg-hovered); }
+.btn--warning:active { background: var(--critical-fill-pressed); border-color: var(--critical-fg-pressed); color: var(--critical-fg-pressed); }
+/* disabled (uniform gray; outline types keep transparent fill) */
 .btn[disabled], .btn.is-disabled {
-  background: var(--fill-disabled); border-color: var(--fill-disabled);
-  color: var(--fg-disabled, #b3b3b3); cursor: not-allowed;
+  background: var(--fill-disabled); border-color: var(--border-disabled);
+  color: var(--fg-disabled); cursor: not-allowed;
 }
+.btn--primary[disabled], .btn--primary.is-disabled { border-color: transparent; }
+.btn--tertiary[disabled], .btn--tertiary.is-disabled,
+.btn--warning[disabled], .btn--warning.is-disabled { background: transparent; border-color: var(--border-disabled); }
 
 /* ============================================================
    광고 생성(소재 등록) 화면 전용
@@ -327,12 +408,32 @@ button { font-family: inherit; }
 .radio-box__title { font-size: 14px; line-height: 20px; font-weight: 600; color: var(--fg-default); }
 .radio-box__chips { display: flex; flex-wrap: wrap; gap: 4px; padding-left: 28px; width: 100%; }
 
-/* 칩 (size 28, border=false) */
+/* 칩 (Chip / Element) — tone(default/accent/low) × size(24/28/32) × border × state.
+   base = tone default, size 28, border=false. */
 .chip {
-  display: inline-flex; align-items: center; height: 28px; padding: 0 10px;
-  background: var(--fill-disabled); border-radius: 6px;
-  font-size: 13px; line-height: 20px; color: #4d4d4d; white-space: nowrap;
+  display: inline-flex; align-items: center; gap: 2px; box-sizing: border-box;
+  height: 28px; padding: 0 8px; background: var(--fill-light-lower);
+  border: 1px solid transparent; border-radius: var(--r-4);
+  font-size: 14px; line-height: 20px; color: var(--fg-default); white-space: nowrap;
 }
+.chip--24 { height: 24px; font-size: 12px; line-height: 16px; }
+.chip--32 { height: 32px; }
+/* tone */
+.chip--accent { background: var(--accent-light-low); color: var(--accent); }
+.chip--low { color: var(--fg-muted); }
+/* outlined (border=true) */
+.chip--border { background: var(--fill-light-low); border-color: var(--border); }
+.chip--accent.chip--border { background: var(--accent-light-low); border-color: var(--border-accent-light); }
+.chip--low.chip--border { background: var(--fill-light-low); border-color: var(--border); }
+/* disabled */
+.chip--disabled { background: var(--fill-disabled); color: var(--fg-disabled); border-color: transparent; }
+.chip--disabled.chip--border { background: transparent; border-color: var(--border-disabled); }
+/* remove (✕) */
+.chip__remove {
+  display: inline-flex; align-items: center; justify-content: center; width: 14px; height: 14px;
+  margin-left: 2px; padding: 0; border: 0; background: transparent; color: inherit; cursor: pointer;
+}
+.chip__remove svg { display: block; width: 100%; height: 100%; }
 
 /* 업로드 */
 .upload-btn { width: 270px; gap: 6px; }
