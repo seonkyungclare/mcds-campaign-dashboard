@@ -525,8 +525,9 @@ button { font-family: inherit; }
 .preview-card__stage { display: flex; justify-content: center; }
 
 /* 폰 목업 */
-.phone { width: 250px; background: #0a0a0a; border-radius: 34px; padding: 5px; box-shadow: 0 8px 24px rgba(0,0,0,0.14); }
-.phone__screen { background: #fff; border-radius: 30px; overflow: hidden; }
+/* 목업 이미지에 폰 프레임이 포함되어 있어 CSS bezel은 두지 않음 */
+.phone { width: 250px; }
+.phone__screen { display: block; }
 .phone__mockup { display: block; width: 100%; height: auto; }
 .phone__status { display: flex; align-items: center; justify-content: space-between; padding: 8px 16px 2px; }
 .phone__time { font-size: 11px; font-weight: 700; color: #111; }
