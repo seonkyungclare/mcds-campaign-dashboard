@@ -1,0 +1,393 @@
+/* ============================================================
+   MCDS (MUSINSA Design System) — 공용 스타일
+   src/tokens.ts 및 Figma 변수 매핑. 캠페인/광고그룹 생성 화면 공용.
+   ============================================================ */
+:root {
+  /* Foreground */
+  --fg-default: #1a1a1a;   /* gray/10 */
+  --fg-subtle: #666666;    /* gray/40 */
+  --fg-muted: #808080;     /* gray/50 */
+  --fg-on-accent: #ffffff;
+  --fg-header: #333333;
+  --fg-black: #000000;
+
+  /* Fill */
+  --fill-light: #ffffff;
+  --fill-subtle: #f7f7f7;
+  --fill-disabled: #f2f2f2;
+  --fill-gray-98: #fafafa;
+
+  /* Accent */
+  --accent: #2b52f0;           /* blue/40 primary */
+  --accent-hovered: #1a40d9;
+  --accent-pressed: #1e34b3;
+  --accent-disabled: #bacbff;
+  --accent-bg-low: #f7faff;    /* semantic/bg-accent-low */
+  --blue-70: #99b1ff;
+  --blue-90: #dbe6ff;
+  --blue-95: #edf3ff;
+
+  /* Border */
+  --border: #d9d9d9;       /* gray/85 */
+  --border-light: #ececec;
+  --border-strong: #999999;
+  --divider: #cccccc;      /* gray/80 */
+
+  /* Status */
+  --critical: #e5231b;
+
+  /* Typography */
+  --font: 'Pretendard', 'Noto Sans KR', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+  /* Radius */
+  --r-4: 4px;
+  --r-8: 8px;
+
+  /* Layout */
+  --gnb-h: 52px;
+  --lnb-w: 210px;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  font-family: var(--font);
+  color: var(--fg-default);
+  background: var(--fill-light);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  min-width: 1024px;
+}
+p { margin: 0; }
+button { font-family: inherit; }
+
+/* ===================== GNB ===================== */
+.gnb {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  height: var(--gnb-h);
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  background: var(--fill-light);
+  border-bottom: 1px solid var(--border);
+}
+.gnb__logo { display: flex; align-items: center; height: var(--gnb-h); }
+.gnb__logo svg { display: block; height: 14px; width: auto; }
+.gnb__menu { flex: 1; display: flex; align-items: center; justify-content: flex-end; gap: 16px; }
+.gnb__link { font-size: 14px; line-height: 20px; font-weight: 500; color: var(--fg-header); cursor: pointer; }
+.gnb__divider { width: 1px; height: 12px; background: var(--divider); }
+
+/* ===================== Layout ===================== */
+.layout { display: flex; align-items: flex-start; }
+
+/* ===================== LNB ===================== */
+.lnb {
+  position: sticky;
+  top: var(--gnb-h);
+  align-self: flex-start;
+  flex: 0 0 var(--lnb-w);
+  width: var(--lnb-w);
+  min-height: calc(100vh - var(--gnb-h));
+  background: var(--fill-light);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+}
+.lnb__partner { display: flex; align-items: center; gap: 24px; padding: 16px 16px 24px; }
+.lnb__partner-name { font-size: 14px; line-height: 20px; font-weight: 600; color: var(--fg-black); }
+.lnb__list { background: var(--fill-gray-98); padding: 4px; display: flex; flex-direction: column; gap: 2px; }
+.nav-item { display: flex; align-items: center; gap: 8px; height: 40px; padding: 0 12px 0 20px; border-radius: var(--r-8); cursor: pointer; }
+.nav-item__label {
+  flex: 1; min-width: 0;
+  font-size: 14px; line-height: 20px; font-weight: 400;
+  color: rgba(0, 0, 0, 0.88);
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.nav-item:hover { background: var(--blue-95); }
+.nav-item--active { background: var(--blue-95); }
+.nav-item--active .nav-item__label { color: var(--accent); font-weight: 500; }
+.nav-item__chevron { flex: 0 0 12px; width: 12px; height: 12px; display: flex; align-items: center; justify-content: center; }
+.lnb__guide { display: flex; align-items: center; gap: 4px; height: 40px; padding: 0 20px; }
+.lnb__guide-label { font-size: 14px; line-height: 22px; color: rgba(0, 0, 0, 0.88); }
+
+/* ===================== Main ===================== */
+.main { flex: 1; min-width: 0; display: flex; flex-direction: column; min-height: calc(100vh - var(--gnb-h)); }
+.content { flex: 1; display: flex; flex-direction: column; gap: 32px; align-items: flex-start; padding: 32px 32px 80px; }
+.content__inner { width: 100%; max-width: 1326px; display: flex; flex-direction: column; gap: 32px; }
+.page-title { font-size: 24px; line-height: 34px; font-weight: 700; color: var(--fg-default); }
+
+/* ===================== Section ===================== */
+.section { display: flex; flex-direction: column; gap: 40px; width: 100%; }
+.section__title { font-size: 16px; line-height: 24px; font-weight: 600; color: var(--fg-default); }
+.divider { height: 1px; background: var(--border-light); border: 0; margin: 0; width: 100%; }
+
+/* Campaign info header */
+.camp-info { display: flex; flex-direction: column; gap: 12px; width: 100%; }
+.camp-info__label { font-size: 16px; line-height: 24px; font-weight: 600; color: var(--fg-default); }
+.camp-info__name-row { display: flex; align-items: center; gap: 8px; }
+.camp-info__name { font-size: 18px; line-height: 26px; font-weight: 600; color: var(--fg-default); }
+.camp-info__select {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 28px; height: 28px; border: 1px solid var(--border); border-radius: var(--r-4);
+  background: var(--fill-light); cursor: pointer;
+}
+.camp-info__tags { display: flex; align-items: center; gap: 8px; font-size: 12px; line-height: 18px; color: var(--fg-muted); }
+.camp-info__tags span:not(:last-child)::after { content: ""; }
+.camp-info__tag-sep { color: var(--border); }
+
+/* ===================== Form rows ===================== */
+.form { display: flex; flex-direction: column; gap: 12px; width: 100%; }
+.row { display: flex; gap: 8px; align-items: flex-start; }
+.row__label { flex: 0 0 140px; width: 140px; max-width: 140px; min-height: 36px; display: flex; align-items: center; }
+.row__label span { font-size: 14px; line-height: 20px; font-weight: 500; color: var(--fg-subtle); white-space: nowrap; }
+.req { color: var(--accent); margin-left: 2px; }
+.row__field { flex: 1; min-width: 0; }
+.help { font-size: 12px; line-height: 18px; color: var(--fg-muted); }
+.help--pad { padding: 0 2px; }
+
+/* ===================== TextField ===================== */
+.textfield { display: flex; flex-direction: column; gap: 4px; width: 100%; }
+.textfield__box {
+  display: flex; align-items: center; gap: 8px; height: 36px; padding: 0 8px;
+  background: var(--fill-light); border: 1px solid var(--border); border-radius: var(--r-4);
+}
+.textfield__box:focus-within { border-color: var(--accent); }
+.textfield__box.is-disabled { background: var(--fill-disabled); border-color: var(--border); }
+.textfield__input {
+  flex: 1; min-width: 0; border: 0; outline: 0; background: transparent;
+  font-family: inherit; font-size: 14px; line-height: 20px; color: var(--fg-default); padding: 0;
+}
+.textfield__input::placeholder { color: var(--fg-muted); }
+.textfield__input:disabled { color: var(--fg-default); -webkit-text-fill-color: var(--fg-default); }
+.textfield__help { display: flex; justify-content: flex-end; padding: 0 2px; }
+.textfield__help--between { justify-content: space-between; }
+.textfield__count { font-size: 12px; line-height: 18px; color: var(--fg-muted); }
+
+/* Numeric field with unit suffix */
+.num-field { display: flex; flex-direction: column; gap: 4px; }
+.num-field__row { display: flex; align-items: center; gap: 8px; }
+.num-field__box { width: 167.5px; }
+.num-field__box .textfield__input { text-align: right; }
+.num-field__unit { font-size: 14px; line-height: 20px; color: var(--fg-default); }
+
+/* ===================== Radio ===================== */
+.radio-group { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+.radio {
+  display: inline-flex; align-items: center; gap: 8px; height: 36px;
+  background: none; border: 0; padding: 0; cursor: pointer;
+}
+.radio:disabled { cursor: not-allowed; }
+.radio__dot { flex: 0 0 20px; width: 20px; height: 20px; }
+.radio__dot svg { display: block; width: 20px; height: 20px; }
+.radio__label { font-size: 14px; line-height: 20px; font-weight: 400; color: var(--fg-default); white-space: nowrap; }
+.radio:disabled .radio__label { color: var(--fg-muted); }
+
+/* Radio card (구매 유형 / 타겟팅 설정) */
+.radio-card {
+  display: flex; flex-direction: column; gap: 4px; padding: 20px;
+  border: 1px solid var(--border); border-radius: var(--r-8); background: var(--fill-light);
+  cursor: pointer; text-align: left;
+}
+.radio-card--selected { border-color: var(--accent); }
+.radio-card__head { display: flex; align-items: center; gap: 8px; min-height: 22px; }
+.radio-card__title { font-size: 14px; line-height: 20px; font-weight: 600; color: var(--fg-default); }
+.radio-card__desc { padding-left: 28px; font-size: 14px; line-height: 20px; font-weight: 400; color: var(--fg-muted); }
+
+/* ===================== Checkbox ===================== */
+.checkbox { display: inline-flex; align-items: center; gap: 8px; height: 36px; background: none; border: 0; padding: 0; cursor: pointer; }
+.checkbox--h20 { height: 20px; }
+.checkbox:disabled { cursor: not-allowed; }
+.checkbox__box {
+  flex: 0 0 20px; width: 20px; height: 20px; border-radius: var(--r-4);
+  border: 1.5px solid var(--border); background: var(--fill-light);
+  display: flex; align-items: center; justify-content: center;
+  transition: background-color 120ms ease, border-color 120ms ease;
+}
+.checkbox[aria-checked="true"] .checkbox__box { background: var(--accent); border-color: var(--accent); }
+.checkbox[aria-checked="true"] .checkbox__box svg { display: block; }
+.checkbox__box svg { display: none; width: 12px; height: 12px; }
+.checkbox:disabled .checkbox__box { background: var(--fill-disabled); border-color: var(--border); }
+.checkbox__label { font-size: 14px; line-height: 20px; color: var(--fg-default); white-space: nowrap; }
+.checkbox:disabled .checkbox__label { color: var(--fg-muted); }
+
+/* ===================== Slot type cards ===================== */
+.slot-cards { display: flex; gap: 8px; width: 100%; }
+.slot-card {
+  flex: 1; min-width: 0; display: flex; flex-direction: column;
+  border: 1px solid var(--border); border-radius: var(--r-8); background: var(--fill-light);
+  overflow: hidden; cursor: pointer; text-align: left; padding: 0;
+}
+.slot-card--selected { border-color: var(--accent); }
+.slot-card__img { height: 206px; margin: 16px 20px 0; border-radius: var(--r-4); overflow: hidden; background: var(--fill-subtle); }
+.slot-card__img img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.slot-card__body { display: flex; flex-direction: column; gap: 8px; padding: 16px 20px 20px; }
+.slot-card__desc { font-size: 13px; line-height: 20px; color: var(--fg-muted); }
+
+/* ===================== DatePicker ===================== */
+.datepicker {
+  display: inline-flex; align-items: center; gap: 8px; height: 36px; width: 167.5px; padding: 0 8px;
+  background: var(--fill-light); border: 1px solid var(--border); border-radius: var(--r-4);
+}
+.datepicker__input {
+  flex: 1; min-width: 0; border: 0; outline: 0; background: transparent;
+  font-family: inherit; font-size: 14px; line-height: 20px; color: var(--fg-default); padding: 0;
+}
+.datepicker__input::placeholder { color: var(--fg-muted); }
+.datepicker__icon { flex: 0 0 16px; width: 16px; height: 16px; color: var(--fg-muted); }
+.date-range { display: flex; align-items: center; gap: 8px; }
+.date-range__tilde { font-size: 14px; color: var(--fg-muted); }
+
+/* ===================== Callout ===================== */
+.callout {
+  display: flex; flex-direction: column; gap: 4px; width: 100%;
+  background: var(--accent-bg-low); border: 1px solid var(--blue-90); border-radius: var(--r-8);
+  padding: 16px 20px;
+}
+.callout__title { font-size: 14px; line-height: 20px; font-weight: 600; color: var(--accent); }
+.callout__value { font-size: 14px; line-height: 20px; color: var(--fg-default); }
+.callout__value b { font-weight: 600; }
+.callout__sub { font-size: 12px; line-height: 18px; color: var(--fg-muted); }
+
+/* Guide line (구매 유형 하단 안내) */
+.guide { display: flex; align-items: center; justify-content: flex-end; gap: 4px; }
+.guide__icon { flex: 0 0 16px; width: 16px; height: 16px; display: flex; align-items: center; justify-content: center; }
+.guide__text { font-size: 14px; line-height: 20px; color: var(--accent); white-space: nowrap; }
+
+/* Bulleted help list */
+.bullets { margin: 0; padding-left: 18px; list-style: disc; color: var(--fg-muted); }
+.bullets li { font-size: 12px; line-height: 18px; }
+
+/* Field stacks */
+.field-stack { display: flex; flex-direction: column; gap: 20px; width: 100%; }
+.purchase { display: flex; flex-direction: column; gap: 12px; width: 656px; max-width: 100%; }
+.purchase__cards { display: flex; gap: 8px; }
+.purchase__cards .radio-card { flex: 1; }
+
+/* Info panel (구매 유형 안내 3열) */
+.info { background: var(--accent-bg-low); border-radius: var(--r-8); padding: 32px; width: 656px; max-width: 100%; }
+.info__row { display: flex; gap: 32px; align-items: flex-start; }
+.info__item { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 12px; }
+.info__title { font-size: 14px; line-height: 20px; font-weight: 600; color: var(--fg-black); }
+.info__desc { font-size: 12px; line-height: 18px; font-weight: 500; color: var(--fg-muted); text-align: justify; }
+.info__text { display: flex; flex-direction: column; gap: 4px; }
+.gicon { position: relative; width: 52px; height: 52px; overflow: hidden; }
+.gicon > span { position: absolute; display: block; }
+.gicon svg { display: block; width: 100%; height: 100%; }
+
+/* Targeting rows (라벨 100px 정렬) */
+.trow { display: flex; gap: 8px; align-items: flex-start; }
+.trow__label { flex: 0 0 100px; width: 100px; min-height: 36px; display: flex; align-items: center; }
+.trow__label span { font-size: 14px; line-height: 20px; font-weight: 500; color: var(--fg-subtle); }
+
+/* ===================== Bottom bar ===================== */
+.bottombar {
+  position: sticky; bottom: 0; z-index: 20;
+  display: flex; align-items: center; justify-content: flex-end; gap: 8px;
+  padding: 16px 32px; background: var(--fill-light); border-top: 1px solid var(--border);
+}
+.btn {
+  height: 40px; display: inline-flex; align-items: center; justify-content: center; padding: 0 20px;
+  border-radius: var(--r-8); font-size: 14px; line-height: 20px; font-weight: 600; cursor: pointer;
+  border: 1px solid transparent; transition: background-color 150ms ease, border-color 150ms ease;
+  text-decoration: none;
+}
+.btn--secondary { background: var(--fill-light); border-color: var(--border); color: var(--fg-default); }
+.btn--secondary:hover { background: var(--fill-gray-98); }
+.btn--primary { background: var(--accent); color: var(--fg-on-accent); }
+.btn--primary:hover { background: var(--accent-hovered); }
+.btn--primary:active { background: var(--accent-pressed); }
+.btn--sm { height: 36px; }
+.btn[disabled], .btn.is-disabled {
+  background: var(--fill-disabled); border-color: var(--fill-disabled);
+  color: var(--fg-disabled, #b3b3b3); cursor: not-allowed;
+}
+
+/* ============================================================
+   광고 생성(소재 등록) 화면 전용
+   ============================================================ */
+
+/* 라벨 톤 (gray/30) */
+.form--creative .row__label span { color: #4d4d4d; }
+
+/* 2단 레이아웃: 좌 폼 + 우 미리보기 */
+.cols { display: flex; gap: 16px; align-items: flex-start; width: 100%; }
+.col-main { flex: 1; min-width: 0; max-width: 900px; display: flex; flex-direction: column; gap: 24px; }
+.col-preview { flex: 0 0 410px; width: 410px; }
+
+/* 라디오 박스(구좌 선택) */
+.radio-box {
+  width: 100%; display: flex; align-items: flex-start; gap: 12px; flex-direction: column;
+  padding: 20px; border: 1px solid var(--border); border-radius: var(--r-8);
+  background: var(--fill-light); cursor: pointer; text-align: left;
+}
+.radio-box--selected { border-color: var(--accent); }
+.radio-box__head { display: flex; align-items: center; gap: 8px; }
+.radio-box__title { font-size: 14px; line-height: 20px; font-weight: 600; color: var(--fg-default); }
+.radio-box__chips { display: flex; flex-wrap: wrap; gap: 4px; padding-left: 28px; width: 100%; }
+
+/* 칩 (size 28, border=false) */
+.chip {
+  display: inline-flex; align-items: center; height: 28px; padding: 0 10px;
+  background: var(--fill-disabled); border-radius: 6px;
+  font-size: 13px; line-height: 20px; color: #4d4d4d; white-space: nowrap;
+}
+
+/* 업로드 */
+.upload-btn { width: 270px; gap: 6px; }
+.upload-help { display: flex; flex-direction: column; gap: 2px; margin-top: 8px; }
+.upload-help ul { margin: 0; padding-left: 16px; list-style: disc; }
+.upload-help li { font-size: 12px; line-height: 18px; color: var(--fg-muted); }
+
+/* 첨부 후 파일 미리보기 */
+.file-preview { display: flex; flex-direction: column; gap: 8px; }
+.file-preview__img {
+  width: 360px; max-width: 100%; aspect-ratio: 1029 / 900; border-radius: var(--r-4);
+  overflow: hidden; background: var(--fill-subtle);
+}
+.file-preview__img img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.file-preview__name { font-size: 14px; line-height: 22px; font-weight: 500; color: var(--fg-default); }
+.file-preview__meta { font-size: 12px; line-height: 18px; color: var(--fg-muted); }
+
+/* 미리보기 카드 */
+.preview-card {
+  background: var(--fill-subtle); border-radius: var(--r-8); padding: 20px;
+  display: flex; flex-direction: column; gap: 16px;
+}
+.preview-card__title { font-size: 14px; line-height: 20px; font-weight: 600; color: var(--fg-default); }
+.preview-card__caption { font-size: 12px; line-height: 18px; color: var(--fg-muted); }
+.preview-card__stage { display: flex; justify-content: center; }
+
+/* 폰 목업 */
+.phone { width: 250px; background: #0a0a0a; border-radius: 34px; padding: 5px; box-shadow: 0 8px 24px rgba(0,0,0,0.14); }
+.phone__screen { background: #fff; border-radius: 30px; overflow: hidden; }
+.phone__status { display: flex; align-items: center; justify-content: space-between; padding: 8px 16px 2px; }
+.phone__time { font-size: 11px; font-weight: 700; color: #111; }
+.phone__status-ic { display: flex; gap: 4px; align-items: center; }
+.phone__header { display: flex; align-items: center; justify-content: space-between; padding: 4px 12px 6px; }
+.phone__logo { font-size: 13px; font-weight: 800; letter-spacing: -0.3px; color: #111; }
+.phone__header-ic { display: flex; gap: 8px; align-items: center; }
+.phone__search { margin: 0 12px 8px; height: 26px; border: 1px solid #e6e6e6; border-radius: 5px; background: #fff; }
+.phone__tabs { display: flex; gap: 9px; padding: 0 12px 6px; }
+.phone__tab { font-size: 10.5px; color: #b0b0b0; white-space: nowrap; }
+.phone__tab--active { color: #111; font-weight: 700; border-bottom: 1.5px solid #111; padding-bottom: 2px; }
+.phone__banner { position: relative; width: 100%; aspect-ratio: 1029 / 900; background: #ededed; overflow: hidden; }
+.phone__banner img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.phone__banner-overlay {
+  position: absolute; inset: 0; display: none; flex-direction: column; justify-content: flex-end;
+  gap: 2px; padding: 12px; background: linear-gradient(to top, rgba(0,0,0,0.28), rgba(0,0,0,0) 55%);
+}
+.phone__banner.has-image .phone__banner-overlay { display: flex; }
+.phone__banner-main { font-size: 12px; line-height: 15px; font-weight: 700; color: #fff; white-space: pre-line; }
+.phone__banner-sub { font-size: 8.5px; line-height: 12px; color: rgba(255,255,255,0.92); }
+.phone__banner-page { position: absolute; right: 10px; bottom: 12px; font-size: 8.5px; color: #fff; display: flex; align-items: center; gap: 3px; }
+.phone__grid { display: flex; flex-direction: column; gap: 6px; padding: 8px 12px; }
+.phone__grid-row { display: flex; gap: 6px; }
+.phone__sk { background: #ededed; border-radius: 6px; height: 46px; flex: 1; }
+.phone__live { padding: 4px 12px 6px; font-size: 12px; font-weight: 700; color: #111; }
+.phone__live-row { display: flex; gap: 6px; padding: 0 12px 8px; }
+.phone__live-row .phone__sk { height: 60px; }
+.phone__nav { display: flex; align-items: center; justify-content: space-between; padding: 6px 14px 10px; border-top: 1px solid #f2f2f2; }
+.phone__nav-item { display: flex; flex-direction: column; align-items: center; gap: 2px; font-size: 8px; color: #9a9a9a; }
+.phone__nav-item--active { color: #111; font-weight: 700; }

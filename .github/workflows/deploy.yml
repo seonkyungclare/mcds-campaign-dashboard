@@ -37,6 +37,10 @@ jobs:
       - name: Add 404 fallback
         run: cp dist/index.html dist/404.html
 
+      # MCDS 정적 플로우(캠페인/광고그룹/광고 생성)를 /pages/ 하위로 함께 배포.
+      - name: Include static MCDS flow pages
+        run: cp -r pages dist/pages
+
       # enablement: true 로 두면 저장소에 Pages 사이트가 없을 때 액션이 직접 생성한다.
       # Settings > Pages 를 수동으로 켜지 않아도 배포가 진행된다.
       - uses: actions/configure-pages@v5

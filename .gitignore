@@ -30,3 +30,6 @@ dist-ssr
 
 # verification artifacts
 dashboard.png
+
+# Claude Code local settings
+.claude/

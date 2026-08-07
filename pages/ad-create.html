@@ -1,0 +1,343 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="MCDS 기반 디스플레이 광고(소재) 생성 화면" />
+  <meta name="theme-color" content="#2b52f0" />
+  <title>광고 생성 - 디스플레이 광고</title>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+  <link rel="stylesheet" href="mcds.css" />
+</head>
+<body>
+  <!-- ===================== GNB ===================== -->
+  <header class="gnb">
+    <div class="gnb__logo" aria-label="MUSINSA">
+      <svg width="83.7344" height="14" viewBox="0 0 83.7344 14" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="MUSINSA">
+        <path d="M19.4619 8.17578C19.4621 10.6159 20.7329 12.1162 22.7734 12.1162C24.8138 12.1161 26.0838 10.6172 26.084 8.17578V0.350586H28.0283V8.15625C28.0282 11.8284 25.93 13.9999 22.7734 14C19.6168 14 17.5177 11.8285 17.5176 8.15625V0.350586H19.4619V8.17578ZM35.0762 0C37.7527 0 39.3711 1.57524 39.3711 4.06445H37.2539V3.8125C37.2539 2.5679 36.3744 1.8877 35.0762 1.8877C33.7779 1.88771 32.9385 2.56796 32.9385 3.67676C32.9386 4.64953 33.4984 5.13524 35.2568 5.77637L36.0557 6.06738C37.2939 6.51538 38.0332 6.90519 38.6309 7.52539C39.2297 8.14685 39.5898 8.84665 39.5898 9.95508C39.5898 12.1139 37.6912 14 35.0947 14C32.4983 14 30.4805 12.4053 30.4805 9.64453H32.5986V9.83887C32.5986 11.2585 33.6397 12.1143 35.0967 12.1143C36.5532 12.1141 37.4725 11.2981 37.4727 10.0342C37.4727 8.59497 36.5345 8.32306 34.916 7.73926L33.958 7.38965C32.8985 7.00045 32.1792 6.63179 31.6602 6.00879C31.1412 5.38583 30.8213 4.68539 30.8213 3.71387C30.8215 1.96395 32.1596 1.40466e-05 35.0762 0ZM65.0283 0C67.6019 0 69.1582 1.57647 69.1582 4.06543H67.1221V3.81152C67.1219 2.56724 66.2765 1.88672 65.0283 1.88672C63.7802 1.8868 62.9738 2.56731 62.9736 3.67578C62.9736 4.64869 63.5125 5.13425 65.2021 5.77539L65.9707 6.06738C67.1608 6.51378 67.8714 6.90274 68.4473 7.52539C69.0247 8.14693 69.3701 8.84736 69.3701 9.95605C69.37 12.1145 67.5444 14 65.0479 14C62.5513 14 60.6115 12.4058 60.6113 9.64551V9.64355H62.6475V9.83789C62.6475 11.2572 63.6481 12.1131 65.0488 12.1133C66.4496 12.1133 67.3338 11.2971 67.334 10.0332C67.334 8.59414 66.4322 8.32203 64.876 7.73828L63.9531 7.38867C62.9345 6.99954 62.2432 6.63071 61.7441 6.00781C61.2452 5.38494 60.9375 4.68523 60.9375 3.71387C60.9375 1.96408 62.2239 0.0001083 65.0283 0ZM7.17285 8.08398L12.0586 0.350586H14.3643V13.6504H12.4258V3.16113L8.06543 10.0596H6.28125L1.93848 3.16113V13.6504H0V0.350586H2.30762L7.17285 8.08398ZM43.7939 13.6504H42.042V0.350586H43.7939V13.6504ZM56.2129 10.7051V0.350586H58.1592V13.6504H55.9795L48.8945 3.35156V13.6504H46.9482V0.350586H49.1084L56.2129 10.7051ZM78.1602 0.350586L83.7344 13.6504H81.7061L80.1494 9.94531H74.0049L72.4492 13.6504H70.4209L75.9941 0.350586H78.1602ZM74.793 8.06445H79.3633L77.0781 2.63086L74.793 8.06445Z" fill="#1A1A1A"/>
+      </svg>
+    </div>
+    <nav class="gnb__menu">
+      <span class="gnb__link">파트너 오피스</span>
+      <span class="gnb__divider"></span>
+      <span class="gnb__link">로그아웃</span>
+    </nav>
+  </header>
+
+  <div class="layout">
+    <!-- ===================== LNB ===================== -->
+    <aside class="lnb">
+      <div class="lnb__partner"><span class="lnb__partner-name">무신사/데상트</span></div>
+      <nav class="lnb__list">
+        <div class="nav-item"><span class="nav-item__label">상품 광고</span></div>
+        <div class="nav-item nav-item--active"><span class="nav-item__label">디스플레이 광고</span></div>
+        <div class="nav-item"><span class="nav-item__label">디스플레이 광고 일괄 생성</span></div>
+        <div class="nav-item">
+          <span class="nav-item__label">비즈월렛 관리</span>
+          <span class="nav-item__chevron"><svg width="9.1" height="5" viewBox="0 0 9.10711 5.01213" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M0.353553 0.353553L4.48284 4.48284C4.52189 4.52189 4.58521 4.52189 4.62426 4.48284L8.75355 0.353553" stroke="#808080"/></svg></span>
+        </div>
+        <div class="nav-item">
+          <span class="nav-item__label">업체관리</span>
+          <span class="nav-item__chevron"><svg width="9.1" height="5" viewBox="0 0 9.10711 5.01213" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M0.353553 0.353553L4.48284 4.48284C4.52189 4.52189 4.58521 4.52189 4.62426 4.48284L8.75355 0.353553" stroke="#808080"/></svg></span>
+        </div>
+        <div class="nav-item">
+          <span class="nav-item__label">마케팅 구좌 관리</span>
+          <span class="nav-item__chevron"><svg width="9.1" height="5" viewBox="0 0 9.10711 5.01213" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M0.353553 0.353553L4.48284 4.48284C4.52189 4.52189 4.58521 4.52189 4.62426 4.48284L8.75355 0.353553" stroke="#808080"/></svg></span>
+        </div>
+        <div class="nav-item">
+          <span class="nav-item__label">큐레이터</span>
+          <span class="nav-item__chevron"><svg width="9.1" height="5" viewBox="0 0 9.10711 5.01213" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M0.353553 0.353553L4.48284 4.48284C4.52189 4.52189 4.58521 4.52189 4.62426 4.48284L8.75355 0.353553" stroke="#808080"/></svg></span>
+        </div>
+      </nav>
+      <div class="lnb__guide">
+        <span class="lnb__guide-label">광고 가이드</span>
+        <span class="nav-item__chevron" style="width:14px;height:14px;flex-basis:14px;">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9.04167 1.3125C9.04167 1.19647 9.08776 1.08519 9.16981 1.00314C9.25185 0.921094 9.36313 0.875 9.47917 0.875H12.6875C12.8035 0.875 12.9148 0.921094 12.9969 1.00314C13.0789 1.08519 13.125 1.19647 13.125 1.3125V4.52083C13.125 4.63687 13.0789 4.74815 12.9969 4.83019C12.9148 4.91224 12.8035 4.95833 12.6875 4.95833C12.5715 4.95833 12.4602 4.91224 12.3781 4.83019C12.2961 4.74815 12.25 4.63687 12.25 4.52083V2.36833L8.62167 5.99667C8.58161 6.03965 8.53331 6.07413 8.47965 6.09804C8.42598 6.12195 8.36805 6.13481 8.3093 6.13585C8.25056 6.13688 8.19221 6.12608 8.13773 6.10407C8.08326 6.08207 8.03377 6.04932 7.99223 6.00777C7.95068 5.96623 7.91793 5.91674 7.89593 5.86227C7.87392 5.80779 7.86312 5.74944 7.86415 5.6907C7.86519 5.63195 7.87805 5.57402 7.90196 5.52035C7.92587 5.46669 7.96035 5.41839 8.00333 5.37833L11.6317 1.75H9.47917C9.36313 1.75 9.25185 1.70391 9.16981 1.62186C9.08776 1.53981 9.04167 1.42853 9.04167 1.3125Z" fill="#808080"/><path d="M1.45833 2.47917C1.45833 1.91567 1.91567 1.45833 2.47917 1.45833H7.4375C7.55353 1.45833 7.66481 1.50443 7.74686 1.58647C7.82891 1.66852 7.875 1.7798 7.875 1.89583C7.875 2.01187 7.82891 2.12315 7.74686 2.20519C7.66481 2.28724 7.55353 2.33333 7.4375 2.33333H2.47917C2.44049 2.33333 2.4034 2.3487 2.37605 2.37605C2.3487 2.4034 2.33333 2.44049 2.33333 2.47917V11.5208C2.33333 11.6013 2.39867 11.6667 2.47917 11.6667H11.5208C11.5595 11.6667 11.5966 11.6513 11.624 11.624C11.6513 11.5966 11.6667 11.5595 11.6667 11.5208V6.5625C11.6667 6.44647 11.7128 6.33519 11.7948 6.25314C11.8769 6.17109 11.9881 6.125 12.1042 6.125C12.2202 6.125 12.3315 6.17109 12.4135 6.25314C12.4956 6.33519 12.5417 6.44647 12.5417 6.5625V11.5208C12.5417 11.7916 12.4341 12.0512 12.2427 12.2427C12.0512 12.4341 11.7916 12.5417 11.5208 12.5417H2.47917C2.20842 12.5417 1.94877 12.4341 1.75733 12.2427C1.56589 12.0512 1.45833 11.7916 1.45833 11.5208V2.47917Z" fill="#808080"/></svg>
+        </span>
+      </div>
+    </aside>
+
+    <!-- ===================== Main ===================== -->
+    <main class="main">
+      <div class="content">
+        <div class="content__inner">
+          <h1 class="page-title">광고 생성</h1>
+
+          <!-- 광고 그룹 정보 -->
+          <div class="camp-info">
+            <span class="camp-info__label">광고 그룹 정보</span>
+            <div class="camp-info__name-row">
+              <span class="camp-info__name">260830_광고 그룹_킨치 x 오스트리야</span>
+              <button type="button" class="camp-info__select" aria-label="광고 그룹 선택">
+                <svg width="10" height="6" viewBox="0 0 9.10711 5.01213" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M0.353553 0.353553L4.48284 4.48284C4.52189 4.52189 4.58521 4.52189 4.62426 4.48284L8.75355 0.353553" stroke="#808080"/></svg>
+              </button>
+            </div>
+            <div class="camp-info__tags">
+              <span>한국</span><span class="camp-info__tag-sep">|</span><span>인구통계학 타겟팅</span><span class="camp-info__tag-sep">|</span><span>2026-08-26 ~ 2026-10-30</span>
+            </div>
+          </div>
+
+          <hr class="divider" />
+
+          <!-- 광고 정보: 좌 폼 + 우 미리보기 -->
+          <div class="cols">
+            <div class="col-main">
+              <!-- 구좌 선택 -->
+              <div class="form">
+                <div class="row">
+                  <div class="row__label" style="align-items:flex-start;padding-top:0;"><span style="color:#4d4d4d;">구좌 선택</span></div>
+                  <div class="row__field">
+                    <div style="display:flex;flex-direction:column;gap:8px;" role="radiogroup" aria-label="구좌 선택">
+                      <button type="button" class="radio-box radio-box--selected" role="radio" aria-checked="true" data-radio="slot">
+                        <div class="radio-box__head"><span class="radio__dot" data-on></span><span class="radio-box__title">빅배너</span></div>
+                        <div class="radio-box__chips"><span class="chip">메인스토어</span><span class="chip">뷰티</span><span class="chip">키즈</span><span class="chip">스포츠</span></div>
+                      </button>
+                      <button type="button" class="radio-box" role="radio" aria-checked="false" data-radio="slot" style="flex-direction:row;align-items:center;">
+                        <div class="radio-box__head"><span class="radio__dot"></span><span class="radio-box__title">앱스플래시</span></div>
+                      </button>
+                      <button type="button" class="radio-box" role="radio" aria-checked="false" data-radio="slot">
+                        <div class="radio-box__head"><span class="radio__dot"></span><span class="radio-box__title">하이라이트 퀵메뉴</span></div>
+                        <div class="radio-box__chips"><span class="chip">메인스토어</span><span class="chip">아울렛</span><span class="chip">스포츠</span><span class="chip">유즈드</span></div>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <hr class="divider" />
+
+              <!-- 소재 정보 -->
+              <form class="form form--creative" onsubmit="return false;">
+                <!-- 광고명 -->
+                <div class="row">
+                  <div class="row__label"><span>광고명<span class="req">*</span></span></div>
+                  <div class="row__field">
+                    <div class="textfield">
+                      <label class="textfield__box">
+                        <input class="textfield__input" type="text" value="{260830}_광고_{빅배너}" maxlength="60" oninput="document.getElementById('adnameCount').textContent=this.value.length" />
+                      </label>
+                      <div class="textfield__help"><span class="textfield__count"><span id="adnameCount">0</span>/60</span></div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- 이미지 첨부 -->
+                <div class="row">
+                  <div class="row__label"><span>이미지 첨부<span class="req">*</span></span></div>
+                  <div class="row__field">
+                    <!-- 첨부 전 -->
+                    <div id="uploadEmpty">
+                      <button type="button" class="btn btn--secondary btn--sm upload-btn" id="uploadBtn" onclick="applyUpload()">
+                        <span style="width:16px;height:16px;display:inline-flex;"><svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 10.5V3M8 3L5 6M8 3l3 3M3 11.5v1a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-1" stroke="#1a1a1a" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                        파일 업로드
+                      </button>
+                      <div class="upload-help">
+                        <ul>
+                          <li>크기: 1029×900px</li>
+                          <li>파일 형식: JPG/PNG</li>
+                          <li>최대 용량: 1MB</li>
+                        </ul>
+                      </div>
+                    </div>
+                    <!-- 첨부 후 -->
+                    <div id="uploadFilled" style="display:none;">
+                      <div class="file-preview">
+                        <div class="file-preview__img"><img src="assets/kinch-bigbanner.png" alt="업로드한 빅배너 이미지" /></div>
+                        <span class="file-preview__name">킨치x오스트리야_빅배너.png</span>
+                        <span class="file-preview__meta">1029×900px · JPG · 914KB</span>
+                        <button type="button" class="btn btn--secondary btn--sm upload-btn" id="reuploadBtn" style="margin-top:4px;" onclick="applyUpload()">
+                          <span style="width:16px;height:16px;display:inline-flex;"><svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 10.5V3M8 3L5 6M8 3l3 3M3 11.5v1a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-1" stroke="#1a1a1a" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                          파일 업로드
+                        </button>
+                        <div class="upload-help">
+                          <ul>
+                            <li>크기: 1029×900px</li>
+                            <li>파일 형식: JPG/PNG</li>
+                            <li>최대 용량: 1MB</li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- 메인 문구 -->
+                <div class="row">
+                  <div class="row__label"><span>메인 문구<span class="req">*</span></span></div>
+                  <div class="row__field">
+                    <div style="display:flex;flex-direction:column;gap:8px;">
+                      <div class="radio-group" role="radiogroup" aria-label="메인 문구 사용 여부">
+                        <button type="button" class="radio" role="radio" aria-checked="true" data-radio="mainuse"><span class="radio__dot" data-on></span><span class="radio__label">사용함</span></button>
+                        <button type="button" class="radio" role="radio" aria-checked="false" data-radio="mainuse"><span class="radio__dot"></span><span class="radio__label">사용 안함</span></button>
+                      </div>
+                      <div class="textfield">
+                        <span class="textfield__box"><input class="textfield__input" type="text" id="mainLine1" placeholder="첫번째 줄을 최대 10자 이내로 입력하세요" maxlength="10" /></span>
+                      </div>
+                      <div class="textfield">
+                        <span class="textfield__box"><input class="textfield__input" type="text" id="mainLine2" placeholder="두번째 줄을 최대 10자 이내로 입력하세요" maxlength="10" /></span>
+                        <div class="textfield__help"><span class="textfield__count"><span id="mainCount">0</span>/22</span></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- 서브 문구 -->
+                <div class="row">
+                  <div class="row__label"><span>서브 문구<span class="req">*</span></span></div>
+                  <div class="row__field">
+                    <div style="display:flex;flex-direction:column;gap:8px;">
+                      <div class="radio-group" role="radiogroup" aria-label="서브 문구 사용 여부">
+                        <button type="button" class="radio" role="radio" aria-checked="true" data-radio="subuse"><span class="radio__dot" data-on></span><span class="radio__label">사용함</span></button>
+                        <button type="button" class="radio" role="radio" aria-checked="false" data-radio="subuse"><span class="radio__dot"></span><span class="radio__label">사용 안함</span></button>
+                      </div>
+                      <div class="textfield">
+                        <span class="textfield__box"><input class="textfield__input" type="text" id="subLine" placeholder="서브타이틀을 최대 18자 이내로 입력하세요." maxlength="18" /></span>
+                        <div class="textfield__help"><span class="textfield__count"><span id="subCount">0</span>/18</span></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- 랜딩 URL -->
+                <div class="row">
+                  <div class="row__label"><span>랜딩 URL<span class="req">*</span></span></div>
+                  <div class="row__field">
+                    <div class="textfield">
+                      <span class="textfield__box"><input class="textfield__input" type="text" placeholder="랜딩 URL을 입력하세요." /></span>
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </div>
+
+            <!-- 미리보기 -->
+            <aside class="col-preview">
+              <div class="preview-card">
+                <span class="preview-card__title">빅배너</span>
+                <div class="preview-card__stage">
+                  <div class="phone">
+                    <div class="phone__screen">
+                      <div class="phone__status">
+                        <span class="phone__time">9:41</span>
+                        <span class="phone__status-ic">
+                          <svg width="15" height="11" viewBox="0 0 16 12" fill="none"><path d="M8 2.5c2 0 3.8.8 5 2M8 6c1 0 2 .4 2.7 1.1M3 4.5C4.4 3.2 6.1 2.5 8 2.5" stroke="#111" stroke-width="1.2" stroke-linecap="round"/><circle cx="8" cy="9.5" r="1" fill="#111"/></svg>
+                          <svg width="22" height="11" viewBox="0 0 24 12" fill="none"><rect x="1" y="2" width="20" height="8" rx="2" stroke="#111" stroke-width="1"/><rect x="2.5" y="3.5" width="14" height="5" rx="1" fill="#111"/><rect x="22" y="4.5" width="1.5" height="3" rx="0.7" fill="#111"/></svg>
+                        </span>
+                      </div>
+                      <div class="phone__header">
+                        <span class="phone__logo">MUSINSA</span>
+                        <span class="phone__header-ic">
+                          <svg width="15" height="15" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="8.5" stroke="#111"/><path d="M6.5 8l1.7 5 1.8-4 1.8 4 1.7-5" stroke="#111" stroke-width="1" stroke-linejoin="round"/></svg>
+                          <svg width="15" height="15" viewBox="0 0 20 20" fill="none"><path d="M10 3a4 4 0 0 0-4 4c0 4-1.5 5.5-1.5 5.5h11S14 11 14 7a4 4 0 0 0-4-4zM8.5 15a1.5 1.5 0 0 0 3 0" stroke="#111" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                          <svg width="15" height="15" viewBox="0 0 20 20" fill="none"><path d="M5.5 6h9l-.8 9.5a1 1 0 0 1-1 .9H7.3a1 1 0 0 1-1-.9L5.5 6zM7.5 6V5a2.5 2.5 0 0 1 5 0v1" stroke="#111" stroke-width="1.1" stroke-linejoin="round"/></svg>
+                        </span>
+                      </div>
+                      <div class="phone__search"></div>
+                      <div class="phone__tabs">
+                        <span class="phone__tab">콘텐츠</span>
+                        <span class="phone__tab phone__tab--active">추천</span>
+                        <span class="phone__tab">랭킹</span>
+                        <span class="phone__tab">세일</span>
+                        <span class="phone__tab">브랜드</span>
+                        <span class="phone__tab">뷰티페스타</span>
+                        <span class="phone__tab">멤버스데이</span>
+                      </div>
+                      <div class="phone__banner" id="phoneBanner">
+                        <img id="phoneBannerImg" alt="" />
+                        <div class="phone__banner-overlay">
+                          <span class="phone__banner-main" id="bannerMain">메인 문구를 입력하면 이곳에
+반영됩니다</span>
+                          <span class="phone__banner-sub" id="bannerSub">서브문구를 입력하면 이곳에 반영됩니다</span>
+                        </div>
+                        <span class="phone__banner-page">1 / 99 <svg width="6" height="9" viewBox="0 0 6 9" fill="none"><path d="M1 1l4 3.5L1 8" stroke="#fff" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                      </div>
+                      <div class="phone__grid">
+                        <div class="phone__grid-row"><span class="phone__sk"></span><span class="phone__sk"></span><span class="phone__sk"></span></div>
+                        <div class="phone__grid-row"><span class="phone__sk"></span><span class="phone__sk"></span><span class="phone__sk"></span></div>
+                      </div>
+                      <div class="phone__live">무신사 라이브</div>
+                      <div class="phone__live-row"><span class="phone__sk"></span><span class="phone__sk"></span></div>
+                      <div class="phone__nav">
+                        <span class="phone__nav-item"><svg width="16" height="16" viewBox="0 0 20 20" fill="none"><circle cx="8.5" cy="8.5" r="5.5" stroke="#9a9a9a" stroke-width="1.3"/><path d="M13 13l4 4" stroke="#9a9a9a" stroke-width="1.3" stroke-linecap="round"/></svg>카테고리</span>
+                        <span class="phone__nav-item">(S)<span>스냅</span></span>
+                        <span class="phone__nav-item phone__nav-item--active"><svg width="16" height="16" viewBox="0 0 20 20" fill="#111"><path d="M10 3l7 6v8a1 1 0 0 1-1 1h-3v-5H7v5H4a1 1 0 0 1-1-1V9l7-6z"/></svg>홈</span>
+                        <span class="phone__nav-item"><svg width="16" height="16" viewBox="0 0 20 20" fill="none"><path d="M10 16S3.5 12 3.5 7.6A3.1 3.1 0 0 1 10 6a3.1 3.1 0 0 1 6.5 1.6C16.5 12 10 16 10 16z" stroke="#9a9a9a" stroke-width="1.3" stroke-linejoin="round"/></svg>좋아요</span>
+                        <span class="phone__nav-item"><svg width="16" height="16" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="7" r="3" stroke="#9a9a9a" stroke-width="1.3"/><path d="M4.5 16c0-3 2.5-4.5 5.5-4.5s5.5 1.5 5.5 4.5" stroke="#9a9a9a" stroke-width="1.3" stroke-linecap="round"/></svg>마이</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <p class="preview-card__caption">기기 설정에 따라 보여지는 줄바꿈과 글꼴, 이미지 크기가 다를 수 있습니다.</p>
+              </div>
+            </aside>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===================== Bottom bar ===================== -->
+      <div class="bottombar">
+        <a href="ad-group-create.html" class="btn btn--secondary" onclick="location.href='ad-group-create.html';return false;">취소</a>
+        <button type="button" class="btn btn--secondary" id="draftBtn">임시저장</button>
+        <button type="button" class="btn btn--primary is-disabled" id="createBtn" disabled>생성</button>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    var RADIO_ON = '<svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="10" cy="10" r="10" fill="#2B52F0"/><circle cx="10" cy="10" r="4" fill="white"/></svg>';
+    var RADIO_OFF = '<svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="10" cy="10" r="9.5" fill="white" stroke="#D9D9D9"/></svg>';
+    function paintDot(dot, on) { dot.innerHTML = on ? RADIO_ON : RADIO_OFF; }
+    document.querySelectorAll('.radio__dot').forEach(function (dot) { paintDot(dot, dot.hasAttribute('data-on')); });
+    document.querySelectorAll('[data-radio]').forEach(function (el) {
+      el.addEventListener('click', function () {
+        var group = el.getAttribute('data-radio');
+        document.querySelectorAll('[data-radio="' + group + '"]').forEach(function (peer) {
+          var selected = peer === el;
+          peer.setAttribute('aria-checked', selected ? 'true' : 'false');
+          var dot = peer.querySelector('.radio__dot');
+          if (dot) paintDot(dot, selected);
+          if (peer.classList.contains('radio-box')) peer.classList.toggle('radio-box--selected', selected);
+        });
+      });
+    });
+
+    // ---- 파일 업로드 → 이미지 첨부 영역 + 폰 미리보기 반영 ----
+    var SHOE = 'assets/kinch-bigbanner.png';
+    function applyUpload() {
+      document.getElementById('uploadEmpty').style.display = 'none';
+      document.getElementById('uploadFilled').style.display = 'block';
+      var banner = document.getElementById('phoneBanner');
+      document.getElementById('phoneBannerImg').src = SHOE;
+      banner.classList.add('has-image');
+      var btn = document.getElementById('createBtn');
+      btn.disabled = false; btn.classList.remove('is-disabled');
+    }
+    document.getElementById('uploadBtn').addEventListener('click', applyUpload);
+    document.getElementById('reuploadBtn').addEventListener('click', applyUpload);
+
+    // ---- 문구 → 배너 오버레이 반영 + 글자수 ----
+    function updateBanner() {
+      var l1 = document.getElementById('mainLine1').value;
+      var l2 = document.getElementById('mainLine2').value;
+      var sub = document.getElementById('subLine').value;
+      document.getElementById('bannerMain').textContent = (l1 || l2) ? (l1 + (l2 ? '\n' + l2 : '')) : '메인 문구를 입력하면 이곳에\n반영됩니다';
+      document.getElementById('bannerSub').textContent = sub || '서브문구를 입력하면 이곳에 반영됩니다';
+      document.getElementById('mainCount').textContent = l1.length + l2.length;
+      document.getElementById('subCount').textContent = sub.length;
+    }
+    ['mainLine1', 'mainLine2', 'subLine'].forEach(function (id) {
+      document.getElementById(id).addEventListener('input', updateBanner);
+    });
+
+    document.getElementById('draftBtn').addEventListener('click', function () { alert('임시저장되었습니다.'); });
+
+    // init counters
+    (function () {
+      var ad = document.querySelector('#adnameCount');
+      var adInput = document.querySelector('.form--creative .textfield__input');
+      if (ad && adInput) ad.textContent = adInput.value.length;
+    })();
+  </script>
+</body>
+</html>

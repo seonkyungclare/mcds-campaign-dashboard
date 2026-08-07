@@ -1,0 +1,415 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="MCDS 기반 디스플레이 광고 그룹 생성 화면" />
+  <meta name="theme-color" content="#2b52f0" />
+  <title>광고 그룹 생성 - 디스플레이 광고</title>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+  <link rel="stylesheet" href="mcds.css" />
+</head>
+<body>
+  <!-- ===================== GNB ===================== -->
+  <header class="gnb">
+    <div class="gnb__logo" aria-label="MUSINSA">
+      <svg width="83.7344" height="14" viewBox="0 0 83.7344 14" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="MUSINSA">
+        <path d="M19.4619 8.17578C19.4621 10.6159 20.7329 12.1162 22.7734 12.1162C24.8138 12.1161 26.0838 10.6172 26.084 8.17578V0.350586H28.0283V8.15625C28.0282 11.8284 25.93 13.9999 22.7734 14C19.6168 14 17.5177 11.8285 17.5176 8.15625V0.350586H19.4619V8.17578ZM35.0762 0C37.7527 0 39.3711 1.57524 39.3711 4.06445H37.2539V3.8125C37.2539 2.5679 36.3744 1.8877 35.0762 1.8877C33.7779 1.88771 32.9385 2.56796 32.9385 3.67676C32.9386 4.64953 33.4984 5.13524 35.2568 5.77637L36.0557 6.06738C37.2939 6.51538 38.0332 6.90519 38.6309 7.52539C39.2297 8.14685 39.5898 8.84665 39.5898 9.95508C39.5898 12.1139 37.6912 14 35.0947 14C32.4983 14 30.4805 12.4053 30.4805 9.64453H32.5986V9.83887C32.5986 11.2585 33.6397 12.1143 35.0967 12.1143C36.5532 12.1141 37.4725 11.2981 37.4727 10.0342C37.4727 8.59497 36.5345 8.32306 34.916 7.73926L33.958 7.38965C32.8985 7.00045 32.1792 6.63179 31.6602 6.00879C31.1412 5.38583 30.8213 4.68539 30.8213 3.71387C30.8215 1.96395 32.1596 1.40466e-05 35.0762 0ZM65.0283 0C67.6019 0 69.1582 1.57647 69.1582 4.06543H67.1221V3.81152C67.1219 2.56724 66.2765 1.88672 65.0283 1.88672C63.7802 1.8868 62.9738 2.56731 62.9736 3.67578C62.9736 4.64869 63.5125 5.13425 65.2021 5.77539L65.9707 6.06738C67.1608 6.51378 67.8714 6.90274 68.4473 7.52539C69.0247 8.14693 69.3701 8.84736 69.3701 9.95605C69.37 12.1145 67.5444 14 65.0479 14C62.5513 14 60.6115 12.4058 60.6113 9.64551V9.64355H62.6475V9.83789C62.6475 11.2572 63.6481 12.1131 65.0488 12.1133C66.4496 12.1133 67.3338 11.2971 67.334 10.0332C67.334 8.59414 66.4322 8.32203 64.876 7.73828L63.9531 7.38867C62.9345 6.99954 62.2432 6.63071 61.7441 6.00781C61.2452 5.38494 60.9375 4.68523 60.9375 3.71387C60.9375 1.96408 62.2239 0.0001083 65.0283 0ZM7.17285 8.08398L12.0586 0.350586H14.3643V13.6504H12.4258V3.16113L8.06543 10.0596H6.28125L1.93848 3.16113V13.6504H0V0.350586H2.30762L7.17285 8.08398ZM43.7939 13.6504H42.042V0.350586H43.7939V13.6504ZM56.2129 10.7051V0.350586H58.1592V13.6504H55.9795L48.8945 3.35156V13.6504H46.9482V0.350586H49.1084L56.2129 10.7051ZM78.1602 0.350586L83.7344 13.6504H81.7061L80.1494 9.94531H74.0049L72.4492 13.6504H70.4209L75.9941 0.350586H78.1602ZM74.793 8.06445H79.3633L77.0781 2.63086L74.793 8.06445Z" fill="#1A1A1A"/>
+      </svg>
+    </div>
+    <nav class="gnb__menu">
+      <span class="gnb__link">파트너 오피스</span>
+      <span class="gnb__divider"></span>
+      <span class="gnb__link">로그아웃</span>
+    </nav>
+  </header>
+
+  <div class="layout">
+    <!-- ===================== LNB ===================== -->
+    <aside class="lnb">
+      <div class="lnb__partner"><span class="lnb__partner-name">무신사/데상트</span></div>
+      <nav class="lnb__list">
+        <div class="nav-item"><span class="nav-item__label">상품 광고</span></div>
+        <div class="nav-item nav-item--active"><span class="nav-item__label">디스플레이 광고</span></div>
+        <div class="nav-item"><span class="nav-item__label">디스플레이 광고 일괄 생성</span></div>
+        <div class="nav-item">
+          <span class="nav-item__label">비즈월렛 관리</span>
+          <span class="nav-item__chevron"><svg width="9.1" height="5" viewBox="0 0 9.10711 5.01213" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M0.353553 0.353553L4.48284 4.48284C4.52189 4.52189 4.58521 4.52189 4.62426 4.48284L8.75355 0.353553" stroke="#808080"/></svg></span>
+        </div>
+        <div class="nav-item">
+          <span class="nav-item__label">업체관리</span>
+          <span class="nav-item__chevron"><svg width="9.1" height="5" viewBox="0 0 9.10711 5.01213" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M0.353553 0.353553L4.48284 4.48284C4.52189 4.52189 4.58521 4.52189 4.62426 4.48284L8.75355 0.353553" stroke="#808080"/></svg></span>
+        </div>
+        <div class="nav-item">
+          <span class="nav-item__label">마케팅 구좌 관리</span>
+          <span class="nav-item__chevron"><svg width="9.1" height="5" viewBox="0 0 9.10711 5.01213" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M0.353553 0.353553L4.48284 4.48284C4.52189 4.52189 4.58521 4.52189 4.62426 4.48284L8.75355 0.353553" stroke="#808080"/></svg></span>
+        </div>
+        <div class="nav-item">
+          <span class="nav-item__label">큐레이터</span>
+          <span class="nav-item__chevron"><svg width="9.1" height="5" viewBox="0 0 9.10711 5.01213" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M0.353553 0.353553L4.48284 4.48284C4.52189 4.52189 4.58521 4.52189 4.62426 4.48284L8.75355 0.353553" stroke="#808080"/></svg></span>
+        </div>
+      </nav>
+      <div class="lnb__guide">
+        <span class="lnb__guide-label">광고 가이드</span>
+        <span class="nav-item__chevron" style="width:14px;height:14px;flex-basis:14px;">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9.04167 1.3125C9.04167 1.19647 9.08776 1.08519 9.16981 1.00314C9.25185 0.921094 9.36313 0.875 9.47917 0.875H12.6875C12.8035 0.875 12.9148 0.921094 12.9969 1.00314C13.0789 1.08519 13.125 1.19647 13.125 1.3125V4.52083C13.125 4.63687 13.0789 4.74815 12.9969 4.83019C12.9148 4.91224 12.8035 4.95833 12.6875 4.95833C12.5715 4.95833 12.4602 4.91224 12.3781 4.83019C12.2961 4.74815 12.25 4.63687 12.25 4.52083V2.36833L8.62167 5.99667C8.58161 6.03965 8.53331 6.07413 8.47965 6.09804C8.42598 6.12195 8.36805 6.13481 8.3093 6.13585C8.25056 6.13688 8.19221 6.12608 8.13773 6.10407C8.08326 6.08207 8.03377 6.04932 7.99223 6.00777C7.95068 5.96623 7.91793 5.91674 7.89593 5.86227C7.87392 5.80779 7.86312 5.74944 7.86415 5.6907C7.86519 5.63195 7.87805 5.57402 7.90196 5.52035C7.92587 5.46669 7.96035 5.41839 8.00333 5.37833L11.6317 1.75H9.47917C9.36313 1.75 9.25185 1.70391 9.16981 1.62186C9.08776 1.53981 9.04167 1.42853 9.04167 1.3125Z" fill="#808080"/><path d="M1.45833 2.47917C1.45833 1.91567 1.91567 1.45833 2.47917 1.45833H7.4375C7.55353 1.45833 7.66481 1.50443 7.74686 1.58647C7.82891 1.66852 7.875 1.7798 7.875 1.89583C7.875 2.01187 7.82891 2.12315 7.74686 2.20519C7.66481 2.28724 7.55353 2.33333 7.4375 2.33333H2.47917C2.44049 2.33333 2.4034 2.3487 2.37605 2.37605C2.3487 2.4034 2.33333 2.44049 2.33333 2.47917V11.5208C2.33333 11.6013 2.39867 11.6667 2.47917 11.6667H11.5208C11.5595 11.6667 11.5966 11.6513 11.624 11.624C11.6513 11.5966 11.6667 11.5595 11.6667 11.5208V6.5625C11.6667 6.44647 11.7128 6.33519 11.7948 6.25314C11.8769 6.17109 11.9881 6.125 12.1042 6.125C12.2202 6.125 12.3315 6.17109 12.4135 6.25314C12.4956 6.33519 12.5417 6.44647 12.5417 6.5625V11.5208C12.5417 11.7916 12.4341 12.0512 12.2427 12.2427C12.0512 12.4341 11.7916 12.5417 11.5208 12.5417H2.47917C2.20842 12.5417 1.94877 12.4341 1.75733 12.2427C1.56589 12.0512 1.45833 11.7916 1.45833 11.5208V2.47917Z" fill="#808080"/></svg>
+        </span>
+      </div>
+    </aside>
+
+    <!-- ===================== Main ===================== -->
+    <main class="main">
+      <div class="content">
+        <div class="content__inner">
+          <h1 class="page-title">광고 그룹 생성</h1>
+
+          <!-- 캠페인 정보 -->
+          <div class="camp-info">
+            <span class="camp-info__label">캠페인 정보</span>
+            <div class="camp-info__name-row">
+              <span class="camp-info__name">260830_캠페인_킨치 x 오스트리야</span>
+              <button type="button" class="camp-info__select" aria-label="캠페인 선택">
+                <svg width="10" height="6" viewBox="0 0 9.10711 5.01213" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M0.353553 0.353553L4.48284 4.48284C4.52189 4.52189 4.58521 4.52189 4.62426 4.48284L8.75355 0.353553" stroke="#808080"/></svg>
+              </button>
+            </div>
+            <div class="camp-info__tags">
+              <span>광고</span><span class="camp-info__tag-sep">|</span><span>일반형</span><span class="camp-info__tag-sep">|</span><span>보장형</span>
+            </div>
+          </div>
+
+          <hr class="divider" />
+
+          <!-- ===================== 광고 구성 ===================== -->
+          <section class="section">
+            <h2 class="section__title">광고 구성</h2>
+            <form class="form" onsubmit="return false;">
+              <!-- 광고 그룹명 -->
+              <div class="row">
+                <div class="row__label"><span>광고 그룹명<span class="req">*</span></span></div>
+                <div class="row__field">
+                  <div class="textfield">
+                    <label class="textfield__box">
+                      <input class="textfield__input" type="text" value="260830_광고그룹_킨치 x 오스트리야" maxlength="200" oninput="document.getElementById('grpCount').textContent=this.value.length" />
+                    </label>
+                    <div class="textfield__help textfield__help--between">
+                      <span class="help">광고그룹을 구분하기 위한 이름을 입력해주세요.</span>
+                      <span class="textfield__count"><span id="grpCount">0</span>/200</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 플랫폼 -->
+              <div class="row">
+                <div class="row__label"><span>플랫폼<span class="req">*</span></span></div>
+                <div class="row__field">
+                  <div class="radio-group" role="radiogroup" aria-label="플랫폼">
+                    <button type="button" class="radio" role="radio" aria-checked="true" data-radio="platform">
+                      <span class="radio__dot" data-on></span><span class="radio__label">무신사</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 국가 -->
+              <div class="row">
+                <div class="row__label"><span>국가<span class="req">*</span></span></div>
+                <div class="row__field">
+                  <div class="radio-group" role="radiogroup" aria-label="국가">
+                    <button type="button" class="radio" role="radio" aria-checked="true" data-radio="country">
+                      <span class="radio__dot" data-on></span><span class="radio__label">한국</span>
+                    </button>
+                    <button type="button" class="radio" role="radio" aria-checked="false" data-radio="country" disabled>
+                      <span class="radio__dot"></span><span class="radio__label">미국</span>
+                    </button>
+                    <button type="button" class="radio" role="radio" aria-checked="false" data-radio="country" disabled>
+                      <span class="radio__dot"></span><span class="radio__label">일본</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 구좌 선택 -->
+              <div class="row">
+                <div class="row__label"><span>구좌 선택<span class="req">*</span></span></div>
+                <div class="row__field">
+                  <div class="slot-cards">
+                    <div class="slot-card slot-card--selected" data-slot aria-checked="true" role="checkbox" tabindex="0">
+                      <div class="slot-card__img"><img src="assets/slot-bigbanner.png" alt="빅배너 미리보기" /></div>
+                      <div class="slot-card__body">
+                        <span class="checkbox checkbox--h20"><span class="checkbox__box"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.2 4.7 8.9 10 3.2" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="checkbox__label" style="font-weight:600;">빅배너</span></span>
+                        <p class="slot-card__desc">앱에 들어오면 가장 크게 보이는 홈 메인 대표 배너 구좌입니다.</p>
+                      </div>
+                    </div>
+                    <div class="slot-card" data-slot aria-checked="false" role="checkbox" tabindex="0">
+                      <div class="slot-card__img"><img src="assets/slot-splash.png" alt="앱 스플래시 미리보기" /></div>
+                      <div class="slot-card__body">
+                        <span class="checkbox checkbox--h20"><span class="checkbox__box"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.2 4.7 8.9 10 3.2" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="checkbox__label" style="font-weight:600;">앱 스플래시</span></span>
+                        <p class="slot-card__desc">앱을 실행하면 메인 페이지 진입 전, 화면 전체를 덮어 노출되는 전면 구좌입니다.</p>
+                      </div>
+                    </div>
+                    <div class="slot-card" data-slot aria-checked="false" role="checkbox" tabindex="0">
+                      <div class="slot-card__img"><img src="assets/slot-quickmenu.png" alt="하이라이트 퀵메뉴 미리보기" /></div>
+                      <div class="slot-card__body">
+                        <span class="checkbox checkbox--h20"><span class="checkbox__box"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.2 4.7 8.9 10 3.2" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="checkbox__label" style="font-weight:600;">하이라이트 퀵메뉴</span></span>
+                        <p class="slot-card__desc">메인 스토어 진입 시 빅배너 바로 아래에 노출되는 버튼형 배너 구좌입니다.</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 빅배너 카테고리 -->
+              <div class="row">
+                <div class="row__label"><span>빅배너<span class="req">*</span></span></div>
+                <div class="row__field">
+                  <div class="radio-group" role="group" aria-label="빅배너 카테고리">
+                    <button type="button" class="checkbox" role="checkbox" aria-checked="true" data-check><span class="checkbox__box"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.2 4.7 8.9 10 3.2" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="checkbox__label">메인스토어</span></button>
+                    <button type="button" class="checkbox" role="checkbox" aria-checked="true" data-check><span class="checkbox__box"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.2 4.7 8.9 10 3.2" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="checkbox__label">뷰티</span></button>
+                    <button type="button" class="checkbox" role="checkbox" aria-checked="true" data-check><span class="checkbox__box"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.2 4.7 8.9 10 3.2" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="checkbox__label">아울렛</span></button>
+                    <button type="button" class="checkbox" role="checkbox" aria-checked="false" data-check><span class="checkbox__box"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.2 4.7 8.9 10 3.2" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="checkbox__label">슈즈</span></button>
+                    <button type="button" class="checkbox" role="checkbox" aria-checked="false" data-check><span class="checkbox__box"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.2 4.7 8.9 10 3.2" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="checkbox__label">럭셔리</span></button>
+                    <button type="button" class="checkbox" role="checkbox" aria-checked="false" data-check><span class="checkbox__box"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.2 4.7 8.9 10 3.2" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="checkbox__label">키즈</span></button>
+                    <button type="button" class="checkbox" role="checkbox" aria-checked="false" data-check><span class="checkbox__box"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.2 4.7 8.9 10 3.2" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="checkbox__label">스포츠</span></button>
+                    <button type="button" class="checkbox" role="checkbox" aria-checked="false" data-check><span class="checkbox__box"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.2 4.7 8.9 10 3.2" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="checkbox__label">유즈드</span></button>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </section>
+
+          <hr class="divider" />
+
+          <!-- ===================== 일정 및 예산 ===================== -->
+          <section class="section">
+            <h2 class="section__title">일정 및 예산</h2>
+            <form class="form" onsubmit="return false;">
+              <!-- 광고 기간 -->
+              <div class="row">
+                <div class="row__label"><span>광고 기간<span class="req">*</span></span></div>
+                <div class="row__field">
+                  <div style="display:flex;flex-direction:column;gap:8px;">
+                    <div class="date-range">
+                      <span class="datepicker">
+                        <input class="datepicker__input" type="text" value="2026-10-01 00:00" />
+                        <span class="datepicker__icon"><svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="2.5" y="3.5" width="11" height="10" rx="1.5" stroke="#808080"/><path d="M2.5 6.5h11M5.5 2v3M10.5 2v3" stroke="#808080"/></svg></span>
+                      </span>
+                      <span class="date-range__tilde">~</span>
+                      <span class="datepicker">
+                        <input class="datepicker__input" type="text" placeholder="종료 일시분" id="endDate" />
+                        <span class="datepicker__icon"><svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="2.5" y="3.5" width="11" height="10" rx="1.5" stroke="#808080"/><path d="M2.5 6.5h11M5.5 2v3M10.5 2v3" stroke="#808080"/></svg></span>
+                      </span>
+                      <button type="button" class="checkbox" role="checkbox" aria-checked="false" data-check id="noEnd"><span class="checkbox__box"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.2 4.7 8.9 10 3.2" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="checkbox__label">종료일 없음</span></button>
+                    </div>
+                    <span class="help help--pad">광고를 게시할 날짜와 시간/분을 입력합니다.</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 목표 노출수 -->
+              <div class="row">
+                <div class="row__label"><span>목표 노출수<span class="req">*</span></span></div>
+                <div class="row__field">
+                  <div class="num-field">
+                    <div class="num-field__row">
+                      <span class="textfield__box num-field__box"><input class="textfield__input" type="text" value="500,000" id="impressions" inputmode="numeric" /></span>
+                      <span class="num-field__unit">회</span>
+                    </div>
+                    <span class="help help--pad">광고 그룹 기간 동안 보장할 총 노출수를 직접 입력합니다.</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- CPM 단가 -->
+              <div class="row">
+                <div class="row__label"><span>CPM 단가<span class="req">*</span>
+                  <span class="guide__icon" style="margin-left:4px;"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="7" cy="7" r="6" stroke="#808080"/><path d="M7 6.2v3.6" stroke="#808080" stroke-width="1.2" stroke-linecap="round"/><circle cx="7" cy="4.4" r="0.7" fill="#808080"/></svg></span>
+                </span></div>
+                <div class="row__field">
+                  <div class="num-field">
+                    <div class="num-field__row">
+                      <span class="textfield__box num-field__box"><input class="textfield__input" type="text" value="1,000" id="cpm" inputmode="numeric" /></span>
+                      <span class="num-field__unit">원</span>
+                    </div>
+                    <span class="help help--pad">노출 1,000회당 단가를 입력해 주세요.</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 계약 금액 -->
+              <div class="row">
+                <div class="row__label"><span>계약 금액</span></div>
+                <div class="row__field">
+                  <div class="num-field">
+                    <div class="num-field__row">
+                      <span class="textfield__box num-field__box is-disabled"><input class="textfield__input" type="text" value="500,000" id="contract" disabled /></span>
+                      <span class="num-field__unit">원</span>
+                    </div>
+                    <span class="help help--pad">목표 노출수 × CPM ÷ 1,000 으로 자동 계산됩니다.</span>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </section>
+
+          <hr class="divider" />
+
+          <!-- ===================== 타겟팅 ===================== -->
+          <section class="section">
+            <h2 class="section__title">타겟팅</h2>
+            <form class="form" onsubmit="return false;">
+              <div class="row">
+                <div class="row__label"><span>타겟팅 설정<span class="req">*</span></span></div>
+                <div class="row__field">
+                  <div style="display:flex;flex-direction:column;gap:20px;">
+                    <!-- 타겟팅 설정 카드 -->
+                    <div class="purchase">
+                      <div class="purchase__cards" role="radiogroup" aria-label="타겟팅 설정">
+                        <button type="button" class="radio-card radio-card--selected" role="radio" aria-checked="true" data-radio="targeting">
+                          <div class="radio-card__head"><span class="radio__dot" data-on></span><span class="radio-card__title">인구통계학 타겟팅</span></div>
+                          <p class="radio-card__desc">성별·연령대·OS를 직접 골라 노출 대상을 정합니다.</p>
+                        </button>
+                        <button type="button" class="radio-card" role="radio" aria-checked="false" data-radio="targeting">
+                          <div class="radio-card__head"><span class="radio__dot"></span><span class="radio-card__title">커스텀 타겟팅</span></div>
+                          <p class="radio-card__desc">MATCH에서 생성한 커스텀 타겟팅을 선택할 수 있습니다.</p>
+                        </button>
+                      </div>
+                    </div>
+
+                    <!-- 세부 타겟 -->
+                    <div style="display:flex;flex-direction:column;gap:4px;">
+                      <div class="trow">
+                        <div class="trow__label"><span>성별<span class="req">*</span></span></div>
+                        <div class="radio-group">
+                          <button type="button" class="checkbox" role="checkbox" aria-checked="true" data-check><span class="checkbox__box"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.2 4.7 8.9 10 3.2" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="checkbox__label">전체</span></button>
+                          <button type="button" class="checkbox" role="checkbox" aria-checked="true" data-check><span class="checkbox__box"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.2 4.7 8.9 10 3.2" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="checkbox__label">남성</span></button>
+                          <button type="button" class="checkbox" role="checkbox" aria-checked="true" data-check><span class="checkbox__box"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.2 4.7 8.9 10 3.2" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="checkbox__label">여성</span></button>
+                        </div>
+                      </div>
+                      <div class="trow">
+                        <div class="trow__label"><span>연령대<span class="req">*</span></span></div>
+                        <div class="radio-group">
+                          <button type="button" class="checkbox" role="checkbox" aria-checked="false" data-check><span class="checkbox__box"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.2 4.7 8.9 10 3.2" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="checkbox__label">전체</span></button>
+                          <button type="button" class="checkbox" role="checkbox" aria-checked="true" data-check><span class="checkbox__box"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.2 4.7 8.9 10 3.2" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="checkbox__label">10대</span></button>
+                          <button type="button" class="checkbox" role="checkbox" aria-checked="true" data-check><span class="checkbox__box"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.2 4.7 8.9 10 3.2" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="checkbox__label">20대</span></button>
+                          <button type="button" class="checkbox" role="checkbox" aria-checked="true" data-check><span class="checkbox__box"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.2 4.7 8.9 10 3.2" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="checkbox__label">30대 초반</span></button>
+                          <button type="button" class="checkbox" role="checkbox" aria-checked="false" data-check><span class="checkbox__box"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.2 4.7 8.9 10 3.2" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="checkbox__label">30대 후반</span></button>
+                          <button type="button" class="checkbox" role="checkbox" aria-checked="false" data-check><span class="checkbox__box"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.2 4.7 8.9 10 3.2" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="checkbox__label">40대 이상</span></button>
+                        </div>
+                      </div>
+                      <div class="trow">
+                        <div class="trow__label"><span>OS<span class="req">*</span></span></div>
+                        <div class="radio-group">
+                          <button type="button" class="checkbox" role="checkbox" aria-checked="false" data-check><span class="checkbox__box"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.2 4.7 8.9 10 3.2" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="checkbox__label">전체</span></button>
+                          <button type="button" class="checkbox" role="checkbox" aria-checked="true" data-check><span class="checkbox__box"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.2 4.7 8.9 10 3.2" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="checkbox__label">iOS</span></button>
+                          <button type="button" class="checkbox" role="checkbox" aria-checked="false" data-check><span class="checkbox__box"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.2 4.7 8.9 10 3.2" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="checkbox__label">Android</span></button>
+                        </div>
+                      </div>
+                      <div class="trow">
+                        <div class="trow__label"><span>플랫폼 가입<span class="req">*</span></span></div>
+                        <div class="radio-group">
+                          <button type="button" class="checkbox" role="checkbox" aria-checked="false" data-check><span class="checkbox__box"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.2 4.7 8.9 10 3.2" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="checkbox__label">전체</span></button>
+                          <button type="button" class="checkbox" role="checkbox" aria-checked="true" data-check><span class="checkbox__box"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.2 4.7 8.9 10 3.2" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="checkbox__label">회원</span></button>
+                          <button type="button" class="checkbox" role="checkbox" aria-checked="false" data-check><span class="checkbox__box"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.2 4.7 8.9 10 3.2" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="checkbox__label">비회원</span></button>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- 콜아웃 -->
+                    <div class="callout">
+                      <span class="callout__title">예상 타겟 유저수</span>
+                      <span class="callout__value"><b>1,200,000~1,800,000</b> 명</span>
+                      <span class="callout__sub">설정하신 타겟 기준 예상 도달 규모입니다.</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </section>
+        </div>
+      </div>
+
+      <!-- ===================== Bottom bar ===================== -->
+      <div class="bottombar">
+        <a href="campaign-create.html" class="btn btn--secondary" onclick="location.href='campaign-create.html';return false;">취소</a>
+        <a href="ad-create.html" class="btn btn--primary" id="createBtn" onclick="location.href='ad-create.html';return false;">생성</a>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    // ---- Radio ----
+    var RADIO_ON = '<svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="10" cy="10" r="10" fill="#2B52F0"/><circle cx="10" cy="10" r="4" fill="white"/></svg>';
+    var RADIO_OFF = '<svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="10" cy="10" r="9.5" fill="white" stroke="#D9D9D9"/></svg>';
+    function paintDot(dot, on) { dot.innerHTML = on ? RADIO_ON : RADIO_OFF; }
+    document.querySelectorAll('.radio__dot').forEach(function (dot) { paintDot(dot, dot.hasAttribute('data-on')); });
+    document.querySelectorAll('[data-radio]').forEach(function (el) {
+      if (el.disabled) return;
+      el.addEventListener('click', function () {
+        var group = el.getAttribute('data-radio');
+        document.querySelectorAll('[data-radio="' + group + '"]').forEach(function (peer) {
+          var selected = peer === el;
+          peer.setAttribute('aria-checked', selected ? 'true' : 'false');
+          var dot = peer.querySelector('.radio__dot');
+          if (dot) paintDot(dot, selected);
+          if (peer.classList.contains('radio-card')) peer.classList.toggle('radio-card--selected', selected);
+        });
+      });
+    });
+
+    // ---- Checkbox toggle ----
+    document.querySelectorAll('[data-check]').forEach(function (el) {
+      el.addEventListener('click', function () {
+        if (el.disabled) return;
+        el.setAttribute('aria-checked', el.getAttribute('aria-checked') === 'true' ? 'false' : 'true');
+        if (el.id === 'noEnd') {
+          var end = document.getElementById('endDate');
+          if (end) { end.disabled = el.getAttribute('aria-checked') === 'true'; if (end.disabled) end.value = ''; }
+        }
+      });
+    });
+
+    // ---- Slot cards (checkbox) ----
+    document.querySelectorAll('[data-slot]').forEach(function (card) {
+      function toggle() {
+        var on = card.getAttribute('aria-checked') === 'true' ? 'false' : 'true';
+        card.setAttribute('aria-checked', on);
+        card.classList.toggle('slot-card--selected', on === 'true');
+        card.querySelector('.checkbox').setAttribute('aria-checked', on);
+      }
+      // sync inner checkbox visual to initial state
+      card.querySelector('.checkbox').setAttribute('aria-checked', card.getAttribute('aria-checked'));
+      card.addEventListener('click', toggle);
+      card.addEventListener('keydown', function (e) { if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); toggle(); } });
+    });
+
+    // ---- 계약 금액 자동 계산 (목표 노출수 × CPM ÷ 1000) ----
+    function num(v) { return parseInt((v || '').replace(/[^0-9]/g, ''), 10) || 0; }
+    function fmt(n) { return n.toLocaleString('en-US'); }
+    function recalc() {
+      var imp = num(document.getElementById('impressions').value);
+      var cpm = num(document.getElementById('cpm').value);
+      document.getElementById('contract').value = fmt(Math.round(imp * cpm / 1000));
+    }
+    ['impressions', 'cpm'].forEach(function (id) {
+      var el = document.getElementById(id);
+      el.addEventListener('input', function () {
+        var caretEnd = el.selectionStart === el.value.length;
+        el.value = el.value.replace(/[^0-9]/g, '') ? fmt(num(el.value)) : '';
+        if (caretEnd) el.setSelectionRange(el.value.length, el.value.length);
+        recalc();
+      });
+    });
+
+    // 생성 버튼은 ad-create.html 로 이동 (href + onclick)
+
+    // init counters
+    (function () {
+      var g = document.querySelector('#grpCount');
+      var input = document.querySelector('.textfield__input');
+      if (g && input) g.textContent = input.value.length;
+    })();
+  </script>
+</body>
+</html>
