@@ -89,14 +89,14 @@
                   <div class="row__label" style="align-items:flex-start;padding-top:0;"><span style="color:#4d4d4d;">구좌 선택</span></div>
                   <div class="row__field">
                     <div style="display:flex;flex-direction:column;gap:8px;" role="radiogroup" aria-label="구좌 선택">
-                      <button type="button" class="radio-box radio-box--selected" role="radio" aria-checked="true" data-radio="slot">
+                      <button type="button" class="radio-box radio-box--selected" role="radio" aria-checked="true" data-radio="slot" data-slot-type="bigbanner">
                         <div class="radio-box__head"><span class="radio__dot" data-on></span><span class="radio-box__title">빅배너</span></div>
                         <div class="radio-box__chips"><span class="chip">메인스토어</span><span class="chip">뷰티</span><span class="chip">키즈</span><span class="chip">스포츠</span></div>
                       </button>
-                      <button type="button" class="radio-box" role="radio" aria-checked="false" data-radio="slot" style="flex-direction:row;align-items:center;">
+                      <button type="button" class="radio-box" role="radio" aria-checked="false" data-radio="slot" data-slot-type="splash" style="flex-direction:row;align-items:center;">
                         <div class="radio-box__head"><span class="radio__dot"></span><span class="radio-box__title">앱스플래시</span></div>
                       </button>
-                      <button type="button" class="radio-box" role="radio" aria-checked="false" data-radio="slot">
+                      <button type="button" class="radio-box" role="radio" aria-checked="false" data-radio="slot" data-slot-type="quickmenu">
                         <div class="radio-box__head"><span class="radio__dot"></span><span class="radio-box__title">하이라이트 퀵메뉴</span></div>
                         <div class="radio-box__chips"><span class="chip">메인스토어</span><span class="chip">아울렛</span><span class="chip">스포츠</span><span class="chip">유즈드</span></div>
                       </button>
@@ -214,57 +214,11 @@
             <!-- 미리보기 -->
             <aside class="col-preview">
               <div class="preview-card">
-                <span class="preview-card__title">빅배너</span>
+                <span class="preview-card__title" id="previewTitle">빅배너</span>
                 <div class="preview-card__stage">
                   <div class="phone">
                     <div class="phone__screen">
-                      <div class="phone__status">
-                        <span class="phone__time">9:41</span>
-                        <span class="phone__status-ic">
-                          <svg width="15" height="11" viewBox="0 0 16 12" fill="none"><path d="M8 2.5c2 0 3.8.8 5 2M8 6c1 0 2 .4 2.7 1.1M3 4.5C4.4 3.2 6.1 2.5 8 2.5" stroke="#111" stroke-width="1.2" stroke-linecap="round"/><circle cx="8" cy="9.5" r="1" fill="#111"/></svg>
-                          <svg width="22" height="11" viewBox="0 0 24 12" fill="none"><rect x="1" y="2" width="20" height="8" rx="2" stroke="#111" stroke-width="1"/><rect x="2.5" y="3.5" width="14" height="5" rx="1" fill="#111"/><rect x="22" y="4.5" width="1.5" height="3" rx="0.7" fill="#111"/></svg>
-                        </span>
-                      </div>
-                      <div class="phone__header">
-                        <span class="phone__logo">MUSINSA</span>
-                        <span class="phone__header-ic">
-                          <svg width="15" height="15" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="8.5" stroke="#111"/><path d="M6.5 8l1.7 5 1.8-4 1.8 4 1.7-5" stroke="#111" stroke-width="1" stroke-linejoin="round"/></svg>
-                          <svg width="15" height="15" viewBox="0 0 20 20" fill="none"><path d="M10 3a4 4 0 0 0-4 4c0 4-1.5 5.5-1.5 5.5h11S14 11 14 7a4 4 0 0 0-4-4zM8.5 15a1.5 1.5 0 0 0 3 0" stroke="#111" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                          <svg width="15" height="15" viewBox="0 0 20 20" fill="none"><path d="M5.5 6h9l-.8 9.5a1 1 0 0 1-1 .9H7.3a1 1 0 0 1-1-.9L5.5 6zM7.5 6V5a2.5 2.5 0 0 1 5 0v1" stroke="#111" stroke-width="1.1" stroke-linejoin="round"/></svg>
-                        </span>
-                      </div>
-                      <div class="phone__search"></div>
-                      <div class="phone__tabs">
-                        <span class="phone__tab">콘텐츠</span>
-                        <span class="phone__tab phone__tab--active">추천</span>
-                        <span class="phone__tab">랭킹</span>
-                        <span class="phone__tab">세일</span>
-                        <span class="phone__tab">브랜드</span>
-                        <span class="phone__tab">뷰티페스타</span>
-                        <span class="phone__tab">멤버스데이</span>
-                      </div>
-                      <div class="phone__banner" id="phoneBanner">
-                        <img id="phoneBannerImg" alt="" />
-                        <div class="phone__banner-overlay">
-                          <span class="phone__banner-main" id="bannerMain">메인 문구를 입력하면 이곳에
-반영됩니다</span>
-                          <span class="phone__banner-sub" id="bannerSub">서브문구를 입력하면 이곳에 반영됩니다</span>
-                        </div>
-                        <span class="phone__banner-page">1 / 99 <svg width="6" height="9" viewBox="0 0 6 9" fill="none"><path d="M1 1l4 3.5L1 8" stroke="#fff" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-                      </div>
-                      <div class="phone__grid">
-                        <div class="phone__grid-row"><span class="phone__sk"></span><span class="phone__sk"></span><span class="phone__sk"></span></div>
-                        <div class="phone__grid-row"><span class="phone__sk"></span><span class="phone__sk"></span><span class="phone__sk"></span></div>
-                      </div>
-                      <div class="phone__live">무신사 라이브</div>
-                      <div class="phone__live-row"><span class="phone__sk"></span><span class="phone__sk"></span></div>
-                      <div class="phone__nav">
-                        <span class="phone__nav-item"><svg width="16" height="16" viewBox="0 0 20 20" fill="none"><circle cx="8.5" cy="8.5" r="5.5" stroke="#9a9a9a" stroke-width="1.3"/><path d="M13 13l4 4" stroke="#9a9a9a" stroke-width="1.3" stroke-linecap="round"/></svg>카테고리</span>
-                        <span class="phone__nav-item">(S)<span>스냅</span></span>
-                        <span class="phone__nav-item phone__nav-item--active"><svg width="16" height="16" viewBox="0 0 20 20" fill="#111"><path d="M10 3l7 6v8a1 1 0 0 1-1 1h-3v-5H7v5H4a1 1 0 0 1-1-1V9l7-6z"/></svg>홈</span>
-                        <span class="phone__nav-item"><svg width="16" height="16" viewBox="0 0 20 20" fill="none"><path d="M10 16S3.5 12 3.5 7.6A3.1 3.1 0 0 1 10 6a3.1 3.1 0 0 1 6.5 1.6C16.5 12 10 16 10 16z" stroke="#9a9a9a" stroke-width="1.3" stroke-linejoin="round"/></svg>좋아요</span>
-                        <span class="phone__nav-item"><svg width="16" height="16" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="7" r="3" stroke="#9a9a9a" stroke-width="1.3"/><path d="M4.5 16c0-3 2.5-4.5 5.5-4.5s5.5 1.5 5.5 4.5" stroke="#9a9a9a" stroke-width="1.3" stroke-linecap="round"/></svg>마이</span>
-                      </div>
+                      <img id="mockupImg" class="phone__mockup" src="assets/Mockup_frame_1.png" alt="앱 미리보기" />
                     </div>
                   </div>
                 </div>
@@ -299,32 +253,48 @@
       });
     });
 
-    // ---- 파일 업로드 → 이미지 첨부 영역 + 폰 미리보기 반영 ----
-    var SHOE = 'assets/kinch-bigbanner.png';
+    // ---- 구좌별 폰 미리보기 목업 (등록 전 a / 등록 후 b) ----
+    var MOCKUPS = {
+      bigbanner: { title: '빅배너', before: 'assets/Mockup_frame_1.png', after: 'assets/Mockup_frame_2.png' },
+      splash:    { title: '앱스플래시', before: 'assets/Mockup_frame_splash_a.png', after: 'assets/Mockup_frame_splash_b.png' },
+      quickmenu: { title: '하이라이트 퀵메뉴', before: 'assets/Mockup_frame_quick_a.png', after: 'assets/Mockup_frame_quick_b.png' }
+    };
+    var currentSlot = 'bigbanner';
+    var uploaded = false;
+    function updateMockup() {
+      var m = MOCKUPS[currentSlot];
+      document.getElementById('mockupImg').src = uploaded ? m.after : m.before;
+      document.getElementById('previewTitle').textContent = m.title;
+    }
+    // 구좌 선택 시 미리보기를 해당 구좌 목업으로 전환
+    document.querySelectorAll('[data-radio="slot"]').forEach(function (el) {
+      el.addEventListener('click', function () {
+        var t = el.getAttribute('data-slot-type');
+        if (t && MOCKUPS[t]) { currentSlot = t; updateMockup(); }
+      });
+    });
+
+    // ---- 파일 업로드 → 이미지 첨부 영역 + 폰 미리보기(등록 후) 반영 ----
     function applyUpload() {
       document.getElementById('uploadEmpty').style.display = 'none';
       document.getElementById('uploadFilled').style.display = 'block';
-      var banner = document.getElementById('phoneBanner');
-      document.getElementById('phoneBannerImg').src = SHOE;
-      banner.classList.add('has-image');
+      uploaded = true;
+      updateMockup();
       var btn = document.getElementById('createBtn');
       btn.disabled = false; btn.classList.remove('is-disabled');
     }
     document.getElementById('uploadBtn').addEventListener('click', applyUpload);
     document.getElementById('reuploadBtn').addEventListener('click', applyUpload);
 
-    // ---- 문구 → 배너 오버레이 반영 + 글자수 ----
-    function updateBanner() {
+    // ---- 문구 글자수 ----
+    function updateCounts() {
       var l1 = document.getElementById('mainLine1').value;
       var l2 = document.getElementById('mainLine2').value;
-      var sub = document.getElementById('subLine').value;
-      document.getElementById('bannerMain').textContent = (l1 || l2) ? (l1 + (l2 ? '\n' + l2 : '')) : '메인 문구를 입력하면 이곳에\n반영됩니다';
-      document.getElementById('bannerSub').textContent = sub || '서브문구를 입력하면 이곳에 반영됩니다';
       document.getElementById('mainCount').textContent = l1.length + l2.length;
-      document.getElementById('subCount').textContent = sub.length;
+      document.getElementById('subCount').textContent = document.getElementById('subLine').value.length;
     }
     ['mainLine1', 'mainLine2', 'subLine'].forEach(function (id) {
-      document.getElementById(id).addEventListener('input', updateBanner);
+      document.getElementById(id).addEventListener('input', updateCounts);
     });
 
     document.getElementById('draftBtn').addEventListener('click', function () { alert('임시저장되었습니다.'); });
