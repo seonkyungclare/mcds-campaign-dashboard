@@ -75,9 +75,12 @@
 
     /* Step/Tab 내비 (캠페인 › 광고그룹 › 광고) */
     .stepnav { display: flex; align-items: center; gap: 12px; border-bottom: 1px solid var(--border-light); }
-    .stepnav__item { display: inline-flex; align-items: center; height: 40px; padding-bottom: 12px; background: none; border: 0; border-bottom: 2px solid transparent; margin-bottom: -1px; font-size: 16px; line-height: 24px; font-weight: 500; color: var(--fg-default); cursor: pointer; font-family: inherit; }
-    .stepnav__item.on { color: var(--accent); border-bottom-color: var(--accent); }
-    .stepnav__sep { color: var(--fg-muted); display: inline-flex; align-items: center; }
+    .stepnav__group { display: inline-flex; align-items: center; gap: 8px; height: 40px; padding-bottom: 12px; border-bottom: 2px solid transparent; margin-bottom: -1px; }
+    .stepnav__group.on { border-bottom-color: var(--accent); }
+    .stepnav__item { background: none; border: 0; padding: 0; font-size: 16px; line-height: 24px; font-weight: 500; color: var(--fg-default); cursor: pointer; font-family: inherit; }
+    .stepnav__group.on .stepnav__item { color: var(--accent); }
+    .stepnav__sep { color: var(--fg-muted); display: inline-flex; align-items: center; height: 40px; padding-bottom: 12px; }
+    .stepnav__chip { cursor: default; }
 
     /* 툴바 */
     .dh__toolbar { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
@@ -234,11 +237,20 @@
         <!-- Step/Tab 내비 + 테이블 -->
         <div>
           <div class="stepnav" id="stepnav">
-            <button class="stepnav__item on" data-tab="camp">캠페인</button>
+            <div class="stepnav__group on" data-tab="camp">
+              <button class="stepnav__item" data-tab="camp">캠페인</button>
+              <span class="chip chip--24 chip--accent stepnav__chip" data-chip="camp" hidden><span class="stepnav__chip-cnt">0</span>건 선택<button type="button" class="chip__remove" onclick="clearSel('camp')" aria-label="캠페인 선택 해제"><svg viewBox="0 0 12 12" fill="none"><path d="M3 3l6 6M9 3l-6 6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg></button></span>
+            </div>
             <span class="stepnav__sep"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M6 4l4 4-4 4" stroke="#808080" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-            <button class="stepnav__item" data-tab="grp">광고그룹</button>
+            <div class="stepnav__group" data-tab="grp">
+              <button class="stepnav__item" data-tab="grp">광고그룹</button>
+              <span class="chip chip--24 chip--low stepnav__chip" data-chip="grp" hidden><span class="stepnav__chip-cnt">0</span>건 선택<button type="button" class="chip__remove" onclick="clearSel('grp')" aria-label="광고그룹 선택 해제"><svg viewBox="0 0 12 12" fill="none"><path d="M3 3l6 6M9 3l-6 6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg></button></span>
+            </div>
             <span class="stepnav__sep"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M6 4l4 4-4 4" stroke="#808080" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-            <button class="stepnav__item" data-tab="ad">광고</button>
+            <div class="stepnav__group" data-tab="ad">
+              <button class="stepnav__item" data-tab="ad">광고</button>
+              <span class="chip chip--24 chip--low stepnav__chip" data-chip="ad" hidden><span class="stepnav__chip-cnt">0</span>건 선택<button type="button" class="chip__remove" onclick="clearSel('ad')" aria-label="광고 선택 해제"><svg viewBox="0 0 12 12" fill="none"><path d="M3 3l6 6M9 3l-6 6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg></button></span>
+            </div>
           </div>
 
           <div class="dh__toolbar" style="padding:16px 0 12px;">
@@ -401,43 +413,72 @@
   let curTab='camp';
   function setTab(t){
     curTab=t;
-    document.querySelectorAll('.stepnav__item').forEach(el=>el.classList.toggle('on',el.dataset.tab===t));
+    document.querySelectorAll('.stepnav__group').forEach(el=>el.classList.toggle('on',el.dataset.tab===t));
     const d=TABLES[t];
     document.getElementById('createBtn').textContent=d.create;
     const chk='<button type="button" class="checkbox" role="checkbox" aria-checked="false" id="chkall" onclick="toggleAll()">'+CB_BOX+'</button>';
     document.getElementById('thead').innerHTML='<tr><th class="mcds-table__sel">'+chk+'</th>'+d.head.map((h,i)=>`<th class="${d.numcols.includes(i)?'mcds-table__num':''}">${h}</th>`).join('')+'</tr>';
-    document.getElementById('tbody').innerHTML = d.rows.map(r=>
-      '<tr><td class="mcds-table__sel"><button type="button" class="checkbox rowchk" role="checkbox" aria-checked="false" onclick="toggleRow(this)">'+CB_BOX+'</button></td>'+
+    document.getElementById('tbody').innerHTML = d.rows.map((r,ri)=>
+      '<tr><td class="mcds-table__sel"><button type="button" class="checkbox rowchk" role="checkbox" aria-checked="false" data-idx="'+ri+'" onclick="toggleRow(this)">'+CB_BOX+'</button></td>'+
       r.map((c,i)=>`<td class="${d.numcols.includes(i)?'mcds-table__num':''}">${c}</td>`).join('')+'</tr>'
     ).join('');
+    // 선택 상태 복원(탭 이동과 무관하게 유지)
+    document.querySelectorAll('#tbody .rowchk').forEach(el=>{ if(SEL[curTab].has(+el.dataset.idx)) cbSet(el,true); });
     onCheck();
   }
   // MCDS 체크박스(박스 + 체크 SVG). 표시 여부는 aria-checked / .checkbox--checked 로 CSS가 제어.
   const CB_BOX='<span class="checkbox__box"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.2 4.7 8.9 10 3.2" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>';
   const cbOn=el=>el.getAttribute('aria-checked')==='true';
   function cbSet(el,v){ el.setAttribute('aria-checked', v?'true':'false'); el.classList.toggle('checkbox--checked', v); el.classList.remove('checkbox--indeterminate'); }
-  function toggleRow(el){ cbSet(el, !cbOn(el)); onCheck(); }
+  // 스텝별 선택 항목(행 인덱스). 탭 이동과 무관하게 유지. camp→grp→ad 종속.
+  const SEL={camp:new Set(),grp:new Set(),ad:new Set()};
+  const STEP_ORDER=['camp','grp','ad'];
+  function toggleRow(el){ const v=!cbOn(el); cbSet(el,v); const i=+el.dataset.idx; if(v)SEL[curTab].add(i);else SEL[curTab].delete(i); onCheck(); }
   function toggleAll(){
     const head=document.getElementById('chkall');
     const target=!head.classList.contains('checkbox--checked'); // 전체선택 아님 → 전체 체크
-    document.querySelectorAll('#tbody .rowchk').forEach(c=>cbSet(c,target));
+    document.querySelectorAll('#tbody .rowchk').forEach(c=>{ cbSet(c,target); const i=+c.dataset.idx; if(target)SEL[curTab].add(i);else SEL[curTab].delete(i); });
     onCheck();
   }
   function onCheck(){
     const rows=[...document.querySelectorAll('#tbody .rowchk')];
     // 선택된 행 하이라이트 (MCDS Table .is-selected)
     rows.forEach(c=>c.closest('tr').classList.toggle('is-selected', cbOn(c)));
-    const n=rows.filter(cbOn).length;
+    const n=SEL[curTab].size;
     document.getElementById('selCnt').textContent=n;
     document.getElementById('bulkbar').classList.toggle('show',n>0);
-    // 전체선택 헤더 상태: none / indeterminate(일부) / all
+    // 전체선택 헤더 상태(현재 보이는 행 기준): none / indeterminate(일부) / all
+    const vis=rows.filter(cbOn).length;
     const head=document.getElementById('chkall');
     if(head){
-      const all=rows.length>0 && n===rows.length, some=n>0 && !all;
+      const all=rows.length>0 && vis===rows.length, some=vis>0 && !all;
       head.classList.toggle('checkbox--checked', all);
       head.classList.toggle('checkbox--indeterminate', some);
       head.setAttribute('aria-checked', all?'true':(some?'mixed':'false'));
     }
+    updateChips();
+  }
+  // 스텝 라벨 옆 "N건 선택 ✕" 칩 갱신. 활성 스텝=accent, 그 외=low.
+  function updateChips(){
+    STEP_ORDER.forEach(t=>{
+      const chip=document.querySelector('.stepnav__chip[data-chip="'+t+'"]');
+      if(!chip) return;
+      const cnt=SEL[t].size;
+      chip.hidden = cnt===0;
+      chip.querySelector('.stepnav__chip-cnt').textContent=cnt;
+      chip.classList.toggle('chip--accent', t===curTab);
+      chip.classList.toggle('chip--low', t!==curTab);
+    });
+  }
+  // 칩 ✕: 해당 스텝 초기화 + 종속 하위 스텝(이후 단계)도 함께 초기화.
+  function clearSel(t){
+    const from=STEP_ORDER.indexOf(t);
+    const affected=STEP_ORDER.slice(from);
+    affected.forEach(k=>SEL[k].clear());
+    if(affected.includes(curTab)){
+      document.querySelectorAll('#tbody .rowchk').forEach(el=>cbSet(el,false));
+    }
+    onCheck();
   }
 
   /* ================= init / events ================= */
