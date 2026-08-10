@@ -81,6 +81,7 @@
     .stepnav__group.on .stepnav__item { color: var(--accent); }
     .stepnav__sep { color: var(--fg-muted); display: inline-flex; align-items: center; height: 40px; padding-bottom: 12px; }
     .stepnav__chip { cursor: default; }
+    .stepnav__chip[hidden] { display: none; }  /* .chip의 display가 [hidden]을 덮어써 0건에도 보이던 문제 */
 
     /* 툴바 */
     .dh__toolbar { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
@@ -229,7 +230,7 @@
           </div>
           <div class="dh__legend"><span><i></i>조회 기간</span><span><i class="dash"></i>비교 기간</span></div>
           <div class="chartwrap" id="chartwrap">
-            <svg class="chart" viewBox="0 0 1000 300" preserveAspectRatio="none" id="chart"></svg>
+            <svg class="chart" viewBox="0 0 1000 300" id="chart"></svg>
             <div class="tip" id="tip"></div>
           </div>
         </div>
@@ -319,7 +320,7 @@
   let g1='ctr', g2='reach';
   function fillSel(id,val){ document.getElementById(id).innerHTML = MORDER.map(k=>`<option value="${k}" ${k===val?'selected':''}>${METRICS[k].label}</option>`).join(''); }
 
-  const CW=1000, CH=300, PADL=54, PADR=54, PADT=24, PADB=28, N=7;
+  let CW=1000; const CH=300, PADL=54, PADR=54, PADT=24, PADB=28, N=7;
   function scaleY(v, mx){ return CH-PADB-(CH-PADT-PADB)*(v/mx); }
   function px(i){ const slot=(CW-PADL-PADR)/(N-1); return PADL+slot*i; }
   function polyline(arr, mx, color, dash){
@@ -329,6 +330,10 @@
   function dots(arr, mx, color){ return arr.map((v,i)=>`<circle cx="${px(i).toFixed(1)}" cy="${scaleY(v,mx).toFixed(1)}" r="3.5" fill="#fff" stroke="${color}" stroke-width="2"/>`).join(''); }
   function renderChart(){
     const svg=document.getElementById('chart');
+    // 실제 컨테이너 픽셀 폭에 맞춰 viewBox를 잡아, 좌우 늘어남(왜곡) 없이 렌더
+    const wrap=document.getElementById('chartwrap');
+    CW=Math.round(wrap?.clientWidth||svg.clientWidth||1000)||1000;
+    svg.setAttribute('viewBox',`0 0 ${CW} ${CH}`);
     const m1=METRICS[g1], m2=METRICS[g2];
     const mx1=Math.max(...m1.cur,...m1.prev)*1.15, mx2=Math.max(...m2.cur,...m2.prev)*1.15;
     let out='';
@@ -493,6 +498,8 @@
   // '캠페인 만들기' → 현재 탭 생성 페이지 (캠페인 → campaign-create.html)
   document.getElementById('createBtn').addEventListener('click',()=>{ location.href=CREATE_LINK[curTab]; });
   renderChart(); initHover(); setTab('camp');
+  // 컨테이너 폭 변경 시 차트 재렌더(폭 기준 좌표 갱신)
+  let _rz; window.addEventListener('resize',()=>{ clearTimeout(_rz); _rz=setTimeout(renderChart,120); });
   </script>
 </body>
 </html>
