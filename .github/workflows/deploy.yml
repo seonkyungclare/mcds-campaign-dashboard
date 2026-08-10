@@ -27,6 +27,11 @@ jobs:
 
       - run: npm ci
 
+      # 타입 오류는 알림용으로만 보고하고, 정적 pages 배포를 막지 않는다(비차단).
+      - name: Typecheck (non-blocking)
+        run: npm run typecheck
+        continue-on-error: true
+
       # Project Pages are served from /<repo-name>/, so Vite needs a matching base path.
       - name: Build
         run: npm run build
