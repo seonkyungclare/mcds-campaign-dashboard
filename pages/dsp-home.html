@@ -92,24 +92,16 @@
     .dh__bulk { display: none; align-items: center; gap: 10px; background: var(--accent-light-low); border: 1px solid var(--blue-90); border-radius: var(--r-8); padding: 9px 13px; font-size: 13px; }
     .dh__bulk.show { display: flex; } .dh__bulk b { color: var(--accent); }
 
-    /* 테이블 */
-    .tscroll { overflow-x: auto; border: 1px solid var(--border); border-radius: var(--r-8); }
-    table.dt { border-collapse: collapse; width: 100%; font-size: 13px; }
-    .dt thead th { background: #fafafa; text-align: left; padding: 11px 12px; font-size: 12px; font-weight: 600; color: var(--fg-subtle); white-space: nowrap; border-bottom: 1px solid var(--border); }
-    .dt thead th.num { text-align: right; }
-    .dt tbody td { padding: 11px 12px; border-bottom: 1px solid var(--border-light); white-space: nowrap; vertical-align: middle; color: var(--fg-default); }
-    .dt tbody tr:hover { background: #fafbfc; }
-    .dt .num { text-align: right; font-variant-numeric: tabular-nums; }
-    .dt .lnk { color: var(--accent); font-weight: 500; cursor: pointer; }
-    .dt .idtxt { color: var(--fg-muted); }
+    /* 테이블 셀 콘텐츠 — 구조/페이지네이션은 mcds.css의 .mcds-table / .pagination 사용 */
+    .idtxt { color: var(--fg-muted); }
     .abtn { border: 1px solid var(--border); background: #fff; border-radius: var(--r-4); padding: 5px 9px; font-size: 12px; font-weight: 500; color: var(--fg-subtle); cursor: pointer; white-space: nowrap; }
     .abtn:hover { border-color: var(--border-light-lower-hovered); }
-    /* MCDS 토글 */
-    .tg { width: 34px; height: 20px; border-radius: 20px; background: #d1d6db; position: relative; display: inline-block; cursor: pointer; }
+    /* 토글 (cellType=switch) */
+    .tg { width: 34px; height: 20px; border-radius: 20px; background: #d1d6db; position: relative; display: inline-block; cursor: pointer; vertical-align: middle; }
     .tg.on { background: var(--accent); }
     .tg::after { content: ""; position: absolute; width: 16px; height: 16px; border-radius: 50%; background: #fff; top: 2px; left: 2px; transition: left .12s; }
     .tg.on::after { left: 16px; }
-    /* 상태 뱃지 */
+    /* 상태 뱃지 (cellType=tag) */
     .stat { font-size: 12px; font-weight: 600; border-radius: var(--r-4); padding: 3px 8px; display: inline-block; white-space: nowrap; }
     .stat-live { color: var(--accent); background: var(--accent-light-low); }
     .stat-wait { color: #1d4ed8; background: #eaf0ff; }
@@ -118,12 +110,6 @@
     .stat-end { color: var(--fg-muted); background: var(--fill-light-lower); }
     .stat-draft { color: #7c3aed; background: #f3ecff; }
     .rv-appr { color: #0a8f52; background: #e7f7ef; } .rv-rej { color: #e5231b; background: #fdeaec; }
-
-    /* 페이지네이션 */
-    .dh__pg { display: flex; align-items: center; justify-content: center; gap: 4px; padding-top: 4px; }
-    .dh__pg button { min-width: 32px; height: 32px; border: 1px solid transparent; border-radius: var(--r-4); background: none; font-size: 13px; color: var(--fg-subtle); cursor: pointer; font-family: inherit; }
-    .dh__pg button.on { border-color: var(--accent); color: var(--accent); font-weight: 600; }
-    .dh__pg button.arrow { color: var(--fg-muted); }
   </style>
 </head>
 <body>
@@ -271,14 +257,17 @@
             <button class="abtn">일괄 ON</button><button class="abtn">일괄 OFF</button><button class="abtn">일괄 복제</button>
           </div>
 
-          <div class="tscroll"><table class="dt"><thead id="thead"></thead><tbody id="tbody"></tbody></table></div>
+          <div class="mcds-table-wrap"><table class="mcds-table"><thead id="thead"></thead><tbody id="tbody"></tbody></table></div>
 
-          <div class="dh__pg">
-            <button class="arrow">‹</button>
-            <button class="on">1</button><button>2</button><button>3</button><button>4</button><button>5</button>
-            <button style="cursor:default">…</button><button>32</button>
-            <button class="arrow">›</button>
-          </div>
+          <nav class="pagination" aria-label="페이지네이션">
+            <button class="pagination__item" aria-label="이전">‹</button>
+            <button class="pagination__item pagination__item--current">1</button>
+            <button class="pagination__item">2</button><button class="pagination__item">3</button>
+            <button class="pagination__item">4</button><button class="pagination__item">5</button>
+            <span class="pagination__item pagination__item--ellipsis">…</span>
+            <button class="pagination__item">32</button>
+            <button class="pagination__item" aria-label="다음">›</button>
+          </nav>
         </div>
       </div>
     </main>
@@ -366,7 +355,7 @@
   /* ================= 테이블 (Figma 컬럼 + HTML 데이터) ================= */
   const on='<span class="tg on"></span>', off='<span class="tg"></span>';
   function stat(c,t){ return `<span class="stat stat-${c}">${t}</span>`; }
-  function link(t){ return `<span class="lnk">${t}</span>`; }
+  function link(t){ return `<span class="mcds-table__link">${t}</span>`; }
   const AC_CAMP=['수정','광고그룹 추가','복제'], AC_GRP=['수정','광고 추가','복제'], AC_AD=['수정','복제'];
   function acts(list){ return '<span style="display:inline-flex;gap:6px">'+list.map(a=>`<span class="abtn">${a}</span>`).join('')+'</span>'; }
 
@@ -416,15 +405,17 @@
     const d=TABLES[t];
     document.getElementById('createBtn').textContent=d.create;
     const chk='<input type="checkbox" onclick="toggleAll(this)">';
-    document.getElementById('thead').innerHTML='<tr><th>'+chk+'</th>'+d.head.map((h,i)=>`<th class="${d.numcols.includes(i)?'num':''}">${h}</th>`).join('')+'</tr>';
+    document.getElementById('thead').innerHTML='<tr><th class="mcds-table__sel">'+chk+'</th>'+d.head.map((h,i)=>`<th class="${d.numcols.includes(i)?'mcds-table__num':''}">${h}</th>`).join('')+'</tr>';
     document.getElementById('tbody').innerHTML = d.rows.map(r=>
-      '<tr><td><input type="checkbox" class="rowchk" onchange="onCheck()"></td>'+
-      r.map((c,i)=>`<td class="${d.numcols.includes(i)?'num':''}">${c}</td>`).join('')+'</tr>'
+      '<tr><td class="mcds-table__sel"><input type="checkbox" class="rowchk" onchange="onCheck()"></td>'+
+      r.map((c,i)=>`<td class="${d.numcols.includes(i)?'mcds-table__num':''}">${c}</td>`).join('')+'</tr>'
     ).join('');
     onCheck();
   }
   function toggleAll(el){ document.querySelectorAll('.rowchk').forEach(c=>c.checked=el.checked); onCheck(); }
   function onCheck(){
+    // 선택된 행 하이라이트 (MCDS Table .is-selected)
+    document.querySelectorAll('#tbody .rowchk').forEach(c=>c.closest('tr').classList.toggle('is-selected', c.checked));
     const n=document.querySelectorAll('.rowchk:checked').length;
     document.getElementById('selCnt').textContent=n;
     document.getElementById('bulkbar').classList.toggle('show',n>0);
