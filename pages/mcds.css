@@ -563,3 +563,224 @@ button { font-family: inherit; }
 .phone__nav { display: flex; align-items: center; justify-content: space-between; padding: 6px 14px 10px; border-top: 1px solid #f2f2f2; }
 .phone__nav-item { display: flex; flex-direction: column; align-items: center; gap: 2px; font-size: 8px; color: #9a9a9a; }
 .phone__nav-item--active { color: #111; font-weight: 700; }
+
+/* ===================== Table (Column-based) ===================== */
+/* Figma: 헤더(회색·14 semibold) + 선택 컬럼(checkbox/radio 44px) + 데이터 셀(14/20)
+   + 행 상태(hover/selected/error/disabled) + pagination. 셀 border=행 구분선만(#d9d9d9). */
+.mcds-table-wrap { border: 1px solid var(--border); border-radius: var(--r-8); overflow-x: auto; }
+.mcds-table { width: 100%; border-collapse: collapse; font-family: var(--font); }
+.mcds-table thead th {
+  background: var(--fill-light-low); padding: 12px; text-align: left;
+  font-size: 14px; line-height: 20px; font-weight: 600; color: var(--fg-default);
+  border-bottom: 1px solid var(--border); white-space: nowrap;
+}
+.mcds-table th.mcds-table__sel, .mcds-table td.mcds-table__sel {
+  width: 44px; padding: 0; text-align: center; vertical-align: middle;
+}
+.mcds-table tbody td {
+  padding: 14px 12px; font-size: 14px; line-height: 20px; color: var(--fg-default);
+  border-bottom: 1px solid var(--border); background: transparent;
+}
+.mcds-table tbody tr { background: var(--fill-light); transition: background-color 120ms ease; }
+.mcds-table tbody tr:hover { background: var(--fill-light-low); }
+.mcds-table tbody tr.is-selected { background: var(--accent-light-low); }
+.mcds-table tbody tr.is-selected:hover { background: var(--accent-light-hovered); }
+.mcds-table tbody tr.is-error { background: var(--critical-fill-hovered); }
+.mcds-table tbody tr.is-disabled { cursor: not-allowed; }
+.mcds-table tbody tr.is-disabled td { color: var(--fg-disabled); }
+.mcds-table__num { text-align: right; font-variant-numeric: tabular-nums; }
+.mcds-table__link { color: var(--accent); cursor: pointer; }
+.mcds-table__th-inner { display: inline-flex; align-items: center; gap: 4px; }
+.mcds-table__th-inner--right { justify-content: flex-end; width: 100%; }
+.mcds-table__icon-btn { display: inline-flex; align-items: center; border: 0; background: transparent; padding: 0; cursor: pointer; color: #8c8c8c; }
+
+/* Pagination */
+.pagination { display: flex; align-items: center; justify-content: center; gap: 4px; margin-top: 16px; }
+.pagination__item {
+  min-width: 36px; height: 36px; padding: 0 6px; display: inline-flex; align-items: center; justify-content: center;
+  border-radius: var(--r-4); border: 1px solid transparent; background: transparent;
+  font-size: 14px; line-height: 20px; color: var(--fg-default); cursor: pointer;
+}
+.pagination__item:hover:not(.pagination__item--current):not([disabled]) { background: var(--fill-light-low); }
+.pagination__item--current { border-color: var(--accent); color: var(--accent); font-weight: 600; cursor: default; }
+.pagination__item--ellipsis { color: var(--fg-muted); cursor: default; }
+.pagination__item[disabled] { color: var(--fg-disabled); cursor: not-allowed; }
+
+/* ===================== Overlay / Modal / Alert ===================== */
+/* Figma "Popup"(Modal) + Alert. dim 배경 위 흰 카드 radius 12, 헤더/푸터 구분선 #e6e6e6. */
+.overlay {
+  position: fixed; inset: 0; z-index: 1000; display: flex; align-items: center; justify-content: center;
+  padding: 24px; background: rgba(0,0,0,0.45);
+}
+.overlay[hidden] { display: none; }
+
+/* Modal (Popup) */
+.modal {
+  display: flex; flex-direction: column; width: 540px; max-width: 100%; max-height: 90vh;
+  background: var(--fill-light); border-radius: 12px; box-shadow: 0 4px 16px 0 rgba(0,0,0,0.12);
+}
+.modal--540 { width: 540px; } .modal--660 { width: 660px; } .modal--780 { width: 780px; }
+.modal--900 { width: 900px; } .modal--1020 { width: 1020px; }
+.modal__header {
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  padding: 24px; border-bottom: 1px solid var(--border-disabled);
+}
+.modal__title { font-size: 20px; line-height: 28px; font-weight: 600; color: var(--fg-default); }
+.modal__close {
+  display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px;
+  border: 0; background: transparent; color: var(--fg-default); cursor: pointer; padding: 0;
+}
+.modal__body { padding: 24px; overflow-y: auto; flex: 1 1 auto; font-size: 14px; line-height: 20px; color: var(--fg-default); }
+.modal__footer {
+  display: flex; align-items: center; justify-content: flex-end; gap: 8px;
+  padding: 24px; border-top: 1px solid var(--border-disabled);
+}
+
+/* Alert (compact confirm dialog — no dividers/close) */
+.alert {
+  display: flex; flex-direction: column; gap: 24px; width: 420px; max-width: 100%;
+  padding: 24px; background: var(--fill-light); border-radius: 12px; box-shadow: 0 4px 16px 0 rgba(0,0,0,0.12);
+}
+.alert__text { display: flex; flex-direction: column; gap: 8px; }
+.alert__title { font-size: 20px; line-height: 28px; font-weight: 600; color: var(--fg-default); }
+.alert__desc { font-size: 14px; line-height: 20px; color: var(--fg-subtle); }
+.alert__actions { display: flex; align-items: center; justify-content: flex-end; gap: 8px; }
+
+/* ============================================================
+   Prototype scaffolding — Modal · Drawer · Toast · Descriptions ·
+   Card · Tabs · Select · Alert · Empty · 2-depth LNB
+   antd(Modal/Drawer/message/Select/Tabs/Descriptions/Card/Alert/Empty)의
+   MCDS 대체물. Preflight Hi-Fi 목업 생성기가 사용하며 본편에서도 재사용 가능.
+   모든 값은 기존 :root 토큰을 재사용한다.
+   ============================================================ */
+
+/* Overlay (Modal/Drawer 공용 딤) */
+.mcds-overlay {
+  position: fixed; inset: 0; z-index: 100;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex; align-items: center; justify-content: center; padding: 24px;
+}
+.mcds-overlay--right { align-items: stretch; justify-content: flex-end; padding: 0; }
+
+/* Modal */
+.mcds-modal {
+  width: 100%; max-width: 520px; max-height: calc(100vh - 96px);
+  display: flex; flex-direction: column;
+  background: var(--fill-light); border-radius: var(--r-8);
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.18); overflow: hidden;
+}
+.mcds-modal--wide { max-width: 720px; }
+.mcds-modal--confirm { max-width: 400px; }
+.mcds-modal__header {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding: 20px 24px; border-bottom: 1px solid var(--border-light);
+}
+.mcds-modal__title { font-size: 18px; line-height: 26px; font-weight: 600; color: var(--fg-default); }
+.mcds-modal__close {
+  border: 0; background: transparent; color: var(--fg-muted);
+  font-size: 18px; line-height: 1; cursor: pointer; padding: 4px;
+}
+.mcds-modal__close:hover { color: var(--fg-default); }
+.mcds-modal__body { padding: 24px; overflow-y: auto; display: flex; flex-direction: column; gap: 16px; }
+.mcds-modal--confirm .mcds-modal__body { gap: 8px; font-size: 14px; line-height: 20px; color: var(--fg-subtle); }
+.mcds-modal__footer {
+  display: flex; align-items: center; justify-content: flex-end; gap: 8px;
+  padding: 16px 24px; border-top: 1px solid var(--border-light);
+}
+
+/* Drawer (우측 슬라이드 패널) */
+.mcds-drawer {
+  width: 100%; max-width: 480px; height: 100vh;
+  display: flex; flex-direction: column; background: var(--fill-light);
+  box-shadow: -8px 0 28px rgba(0, 0, 0, 0.14);
+}
+.mcds-drawer__header {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding: 20px 24px; border-bottom: 1px solid var(--border-light);
+}
+.mcds-drawer__title { font-size: 18px; line-height: 26px; font-weight: 600; color: var(--fg-default); }
+.mcds-drawer__close { border: 0; background: transparent; color: var(--fg-muted); font-size: 18px; cursor: pointer; padding: 4px; }
+.mcds-drawer__close:hover { color: var(--fg-default); }
+.mcds-drawer__body { padding: 24px; overflow-y: auto; flex: 1; display: flex; flex-direction: column; gap: 16px; }
+.mcds-drawer__footer {
+  display: flex; align-items: center; justify-content: flex-end; gap: 8px;
+  padding: 16px 24px; border-top: 1px solid var(--border-light);
+}
+
+/* Toast / message (상단 중앙 스택) */
+.mcds-toast-wrap {
+  position: fixed; top: 24px; left: 50%; transform: translateX(-50%); z-index: 200;
+  display: flex; flex-direction: column; align-items: center; gap: 8px; pointer-events: none;
+}
+.mcds-toast {
+  display: inline-flex; align-items: center; gap: 8px; max-width: 90vw;
+  padding: 10px 16px; border-radius: var(--r-8);
+  background: var(--fill-light); border: 1px solid var(--border-light);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.16);
+  font-size: 14px; line-height: 20px; color: var(--fg-default);
+}
+.mcds-toast::before { content: ""; flex: 0 0 8px; width: 8px; height: 8px; border-radius: 50%; background: var(--fg-muted); }
+.mcds-toast--success::before { background: #12b76a; }
+.mcds-toast--error::before { background: var(--critical); }
+.mcds-toast--info::before { background: var(--accent); }
+
+/* Descriptions (key-value 상세) */
+.mcds-desc { display: grid; grid-template-columns: 140px 1fr; row-gap: 12px; column-gap: 16px; width: 100%; }
+.mcds-desc__label { font-size: 14px; line-height: 20px; font-weight: 500; color: var(--fg-subtle); }
+.mcds-desc__value { font-size: 14px; line-height: 20px; color: var(--fg-default); }
+
+/* Card / Statistic */
+.mcds-card {
+  display: flex; flex-direction: column; gap: 16px; width: 100%;
+  padding: 20px 24px; background: var(--fill-light);
+  border: 1px solid var(--border-light); border-radius: var(--r-8);
+}
+.mcds-card__title { font-size: 16px; line-height: 24px; font-weight: 600; color: var(--fg-default); }
+.mcds-stat { display: flex; flex-direction: column; gap: 4px; }
+.mcds-stat__label { font-size: 13px; line-height: 18px; color: var(--fg-muted); }
+.mcds-stat__value { font-size: 24px; line-height: 32px; font-weight: 700; color: var(--fg-default); }
+
+/* Tabs */
+.mcds-tabs { display: flex; align-items: center; gap: 4px; width: 100%; border-bottom: 1px solid var(--border); }
+.mcds-tab {
+  padding: 10px 16px; margin-bottom: -1px; border: 0; border-bottom: 2px solid transparent;
+  background: transparent; font-family: inherit; font-size: 14px; line-height: 20px;
+  font-weight: 500; color: var(--fg-muted); cursor: pointer;
+}
+.mcds-tab:hover { color: var(--fg-default); }
+.mcds-tab--active { color: var(--accent); border-bottom-color: var(--accent); font-weight: 600; }
+
+/* Select (native, styled) */
+.mcds-select {
+  height: 36px; min-width: 160px; padding: 0 32px 0 8px;
+  border: 1px solid var(--border); border-radius: var(--r-4);
+  background-color: var(--fill-light);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23808080' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 8px center;
+  font-family: inherit; font-size: 14px; line-height: 20px; color: var(--fg-default);
+  appearance: none; -webkit-appearance: none; cursor: pointer;
+}
+.mcds-select:focus { outline: 0; border-color: var(--accent); }
+.mcds-select:disabled { background-color: var(--fill-disabled); color: var(--fg-disabled); cursor: not-allowed; }
+
+/* Alert */
+.mcds-alert {
+  display: flex; align-items: flex-start; gap: 8px; width: 100%;
+  padding: 12px 16px; border-radius: var(--r-8);
+  font-size: 14px; line-height: 20px;
+}
+.mcds-alert--info { background: var(--accent-bg-low); border: 1px solid var(--blue-90); color: var(--fg-default); }
+.mcds-alert--error { background: var(--critical-fill-hovered); border: 1px solid var(--critical-border); color: var(--critical); }
+.mcds-alert--success { background: #e7f7ef; border: 1px solid #a6e9c5; color: #027a48; }
+
+/* Empty state */
+.mcds-empty {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 8px; padding: 48px 24px; color: var(--fg-muted);
+}
+.mcds-empty__title { font-size: 14px; line-height: 20px; color: var(--fg-muted); }
+
+/* LNB 2-depth 하위 항목 */
+.nav-item--sub { padding-left: 36px; }
+.nav-item--sub .nav-item__label { font-size: 13px; font-weight: 400; color: var(--fg-muted); }
+.nav-item--sub.nav-item--active .nav-item__label { color: var(--accent); font-weight: 500; }

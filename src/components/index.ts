@@ -4,7 +4,13 @@ export { Chip, type ChipProps, type ChipTone, type ChipSize, type ChipState } fr
 export { Switch, type SwitchProps, type SwitchState, type SwitchSize } from './Switch';
 export { TextField, type TextFieldProps } from './TextField';
 export { Select, type SelectProps, type SelectOption } from './Select';
-export { Table, type TableProps, type TableColumn } from './Table';
+export {
+  Table,
+  type TableProps,
+  type TableColumn,
+  type CellType,
+  type RowState,
+} from './Table';
 export { Badge, type BadgeProps, type BadgeTone } from './Badge';
 export {
   Button,
@@ -15,4 +21,6 @@ export {
   type ButtonContent,
 } from './Button';
 export { Segment, type SegmentProps, type SegmentItem } from './Segment';
+export { Modal, type ModalProps, type ModalSize } from './Modal';
+export { Alert, type AlertProps } from './Alert';
 export { CampaignDashboard } from './CampaignDashboard';
