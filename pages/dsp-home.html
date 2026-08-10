@@ -1,0 +1,447 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="MCDS 기반 디스플레이 광고 관리 홈(현황)" />
+  <meta name="theme-color" content="#2b52f0" />
+  <title>디스플레이 광고 관리</title>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+  <link rel="stylesheet" href="mcds.css" />
+  <style>
+    /* ===== 디스플레이 광고 관리 홈 — Figma 디자인 기준 (MCDS 토큰) ===== */
+    .dh { display: flex; flex-direction: column; gap: 24px; padding: 32px; width: 100%; max-width: 1600px; }
+    .dh * { box-sizing: border-box; }
+
+    .dh__title { font-size: 24px; line-height: 34px; font-weight: 700; color: var(--fg-default); }
+    .dh__acct { display: flex; align-items: center; gap: 6px; }
+    .dh__acct-name { font-size: 18px; line-height: 26px; font-weight: 600; color: var(--fg-default); }
+    .dh__acct-btn { display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; border: 1px solid var(--border); border-radius: var(--r-4); background: #fff; cursor: pointer; }
+
+    .dh__sec-head { display: flex; align-items: center; justify-content: space-between; }
+    .dh__sec-title { font-size: 18px; line-height: 26px; font-weight: 600; color: var(--fg-default); }
+    .dh__hint { font-size: 12px; color: var(--fg-muted); display: inline-flex; align-items: center; gap: 4px; }
+
+    /* 기간 / 비교 바 */
+    .dh__bar { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+    .dh__daterow { display: flex; align-items: center; gap: 10px; }
+    .dh__date { display: inline-flex; align-items: center; gap: 8px; height: 36px; padding: 0 10px; border: 1px solid var(--border); border-radius: var(--r-4); background: #fff; font-size: 14px; color: var(--fg-default); }
+    .dh__date svg { color: var(--fg-muted); }
+    .dh__vs { font-size: 13px; color: var(--fg-muted); }
+    .dh__baractions { display: flex; align-items: center; gap: 8px; }
+    .seg { display: inline-flex; border: 1px solid var(--border); border-radius: var(--r-4); overflow: hidden; }
+    .seg button { border: 0; background: #fff; height: 34px; padding: 0 12px; font-size: 13px; font-weight: 500; color: var(--fg-subtle); cursor: pointer; font-family: inherit; border-left: 1px solid var(--border); }
+    .seg button:first-child { border-left: 0; }
+    .seg button.on { background: var(--accent-light-low); color: var(--accent); font-weight: 600; }
+    .lbtn { display: inline-flex; align-items: center; gap: 6px; height: 36px; padding: 0 12px; border: 1px solid var(--border); border-radius: var(--r-4); background: #fff; font-size: 13px; font-weight: 500; color: var(--fg-default); cursor: pointer; font-family: inherit; }
+
+    /* 지표 카드 */
+    .dh__cards { display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; }
+    @media (max-width: 1400px) { .dh__cards { grid-template-columns: repeat(3, 1fr); } }
+    .mcard { border: 1px solid var(--border); border-radius: var(--r-8); background: #fff; padding: 16px 18px; display: flex; flex-direction: column; gap: 10px; }
+    .mcard__top { display: flex; align-items: center; justify-content: space-between; }
+    .mcard__k { font-size: 13px; color: var(--fg-subtle); font-weight: 500; }
+    .mcard__more { color: var(--fg-muted); cursor: pointer; line-height: 0; }
+    .mcard__v { font-size: 22px; line-height: 30px; font-weight: 700; color: var(--fg-default); }
+    .mcard__v small { font-size: 13px; font-weight: 500; color: var(--fg-muted); margin-left: 2px; }
+    .mcard__d { font-size: 12px; font-weight: 600; display: inline-flex; align-items: center; gap: 3px; border-radius: var(--r-4); padding: 2px 7px; width: fit-content; }
+    .d-up { color: var(--accent); background: var(--accent-light-low); }
+    .d-down { color: #e5231b; background: #fdeaec; }
+    .d-flat { color: var(--fg-muted); background: var(--fill-light-lower); }
+
+    /* 차트 */
+    .dh__panel { border: 1px solid var(--border); border-radius: var(--r-8); background: #fff; padding: 20px; }
+    .dh__chart-head { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; margin-bottom: 8px; }
+    .dh__metricsel { display: flex; align-items: center; gap: 12px; }
+    .msel { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; color: var(--fg-default); }
+    .msel .dot { width: 8px; height: 8px; border-radius: 50%; }
+    .msel select { height: 30px; border: 1px solid var(--border); border-radius: var(--r-4); font-size: 13px; padding: 0 6px; color: var(--fg-default); background: #fff; font-family: inherit; }
+    .dot.o { background: #ec6f2d; } .dot.b { background: var(--accent); }
+    .dh__legend { display: flex; gap: 14px; font-size: 12px; color: var(--fg-muted); margin-bottom: 6px; }
+    .dh__legend i { display: inline-block; width: 16px; height: 0; border-top: 2px solid var(--fg-muted); margin-right: 5px; vertical-align: middle; }
+    .dh__legend i.dash { border-top-style: dashed; }
+    .chartwrap { position: relative; }
+    svg.chart { width: 100%; height: 300px; display: block; }
+    .yg { stroke: var(--border-light); stroke-width: 1; }
+    .xlab, .ylab { font-size: 10px; fill: var(--fg-muted); }
+    #guide { stroke: #c4c9d0; stroke-width: 1; stroke-dasharray: 3 3; opacity: 0; }
+    .tip { position: absolute; top: 8px; transform: translateX(-50%); background: #fff; border: 1px solid var(--border); border-radius: var(--r-8); box-shadow: 0 6px 20px rgba(0,0,0,.12); padding: 11px 13px; font-size: 12px; min-width: 190px; pointer-events: none; opacity: 0; transition: opacity .08s; z-index: 5; }
+    .tip .td { font-weight: 700; margin-bottom: 8px; }
+    .tip .trow { margin-bottom: 7px; } .tip .trow:last-child { margin-bottom: 0; }
+    .tip .tm { display: flex; align-items: center; gap: 5px; font-weight: 600; margin-bottom: 3px; }
+    .tip .tl { display: flex; justify-content: space-between; color: var(--fg-subtle); }
+    .tip .tl b { color: var(--fg-default); }
+
+    /* Step/Tab 내비 (캠페인 › 광고그룹 › 광고) */
+    .stepnav { display: flex; align-items: center; gap: 12px; border-bottom: 1px solid var(--border-light); }
+    .stepnav__item { display: inline-flex; align-items: center; height: 40px; padding-bottom: 12px; background: none; border: 0; border-bottom: 2px solid transparent; margin-bottom: -1px; font-size: 16px; line-height: 24px; font-weight: 500; color: var(--fg-default); cursor: pointer; font-family: inherit; }
+    .stepnav__item.on { color: var(--accent); border-bottom-color: var(--accent); }
+    .stepnav__sep { color: var(--fg-muted); display: inline-flex; align-items: center; }
+
+    /* 툴바 */
+    .dh__toolbar { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .dh__toolbar .spacer { flex: 1; }
+    .tbtn { display: inline-flex; align-items: center; gap: 4px; height: 36px; padding: 0 14px; border: 1px solid var(--border); border-radius: var(--r-4); background: #fff; font-size: 14px; font-weight: 600; color: var(--fg-default); cursor: pointer; font-family: inherit; }
+    .tbtn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+    .tbtn.primary:hover { background: var(--accent-hovered); }
+    .tsearch { display: inline-flex; align-items: center; gap: 7px; height: 36px; border: 1px solid var(--border); border-radius: var(--r-4); padding: 0 10px; min-width: 300px; background: #fff; }
+    .tsearch input { border: 0; outline: 0; font-size: 13px; width: 100%; background: transparent; font-family: inherit; }
+    .tsearch svg { color: var(--fg-muted); flex: none; }
+    .tsel { height: 36px; border: 1px solid var(--border); border-radius: var(--r-4); padding: 0 8px; font-size: 13px; background: #fff; color: var(--fg-default); font-family: inherit; }
+    .dh__bulk { display: none; align-items: center; gap: 10px; background: var(--accent-light-low); border: 1px solid var(--blue-90); border-radius: var(--r-8); padding: 9px 13px; font-size: 13px; }
+    .dh__bulk.show { display: flex; } .dh__bulk b { color: var(--accent); }
+
+    /* 테이블 */
+    .tscroll { overflow-x: auto; border: 1px solid var(--border); border-radius: var(--r-8); }
+    table.dt { border-collapse: collapse; width: 100%; font-size: 13px; }
+    .dt thead th { background: #fafafa; text-align: left; padding: 11px 12px; font-size: 12px; font-weight: 600; color: var(--fg-subtle); white-space: nowrap; border-bottom: 1px solid var(--border); }
+    .dt thead th.num { text-align: right; }
+    .dt tbody td { padding: 11px 12px; border-bottom: 1px solid var(--border-light); white-space: nowrap; vertical-align: middle; color: var(--fg-default); }
+    .dt tbody tr:hover { background: #fafbfc; }
+    .dt .num { text-align: right; font-variant-numeric: tabular-nums; }
+    .dt .lnk { color: var(--accent); font-weight: 500; cursor: pointer; }
+    .dt .idtxt { color: var(--fg-muted); }
+    .abtn { border: 1px solid var(--border); background: #fff; border-radius: var(--r-4); padding: 5px 9px; font-size: 12px; font-weight: 500; color: var(--fg-subtle); cursor: pointer; white-space: nowrap; }
+    .abtn:hover { border-color: var(--border-light-lower-hovered); }
+    /* MCDS 토글 */
+    .tg { width: 34px; height: 20px; border-radius: 20px; background: #d1d6db; position: relative; display: inline-block; cursor: pointer; }
+    .tg.on { background: var(--accent); }
+    .tg::after { content: ""; position: absolute; width: 16px; height: 16px; border-radius: 50%; background: #fff; top: 2px; left: 2px; transition: left .12s; }
+    .tg.on::after { left: 16px; }
+    /* 상태 뱃지 */
+    .stat { font-size: 12px; font-weight: 600; border-radius: var(--r-4); padding: 3px 8px; display: inline-block; white-space: nowrap; }
+    .stat-live { color: var(--accent); background: var(--accent-light-low); }
+    .stat-wait { color: #1d4ed8; background: #eaf0ff; }
+    .stat-del { color: #e5231b; background: #fdeaec; }
+    .stat-pause { color: #9a6a00; background: #fff6e9; }
+    .stat-end { color: var(--fg-muted); background: var(--fill-light-lower); }
+    .stat-draft { color: #7c3aed; background: #f3ecff; }
+    .rv-appr { color: #0a8f52; background: #e7f7ef; } .rv-rej { color: #e5231b; background: #fdeaec; }
+
+    /* 페이지네이션 */
+    .dh__pg { display: flex; align-items: center; justify-content: center; gap: 4px; padding-top: 4px; }
+    .dh__pg button { min-width: 32px; height: 32px; border: 1px solid transparent; border-radius: var(--r-4); background: none; font-size: 13px; color: var(--fg-subtle); cursor: pointer; font-family: inherit; }
+    .dh__pg button.on { border-color: var(--accent); color: var(--accent); font-weight: 600; }
+    .dh__pg button.arrow { color: var(--fg-muted); }
+  </style>
+</head>
+<body>
+  <!-- ===================== GNB ===================== -->
+  <header class="gnb">
+    <div class="gnb__logo" aria-label="MUSINSA">
+      <svg width="83.7344" height="14" viewBox="0 0 83.7344 14" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="MUSINSA">
+        <path d="M19.4619 8.17578C19.4621 10.6159 20.7329 12.1162 22.7734 12.1162C24.8138 12.1161 26.0838 10.6172 26.084 8.17578V0.350586H28.0283V8.15625C28.0282 11.8284 25.93 13.9999 22.7734 14C19.6168 14 17.5177 11.8285 17.5176 8.15625V0.350586H19.4619V8.17578ZM35.0762 0C37.7527 0 39.3711 1.57524 39.3711 4.06445H37.2539V3.8125C37.2539 2.5679 36.3744 1.8877 35.0762 1.8877C33.7779 1.88771 32.9385 2.56796 32.9385 3.67676C32.9386 4.64953 33.4984 5.13524 35.2568 5.77637L36.0557 6.06738C37.2939 6.51538 38.0332 6.90519 38.6309 7.52539C39.2297 8.14685 39.5898 8.84665 39.5898 9.95508C39.5898 12.1139 37.6912 14 35.0947 14C32.4983 14 30.4805 12.4053 30.4805 9.64453H32.5986V9.83887C32.5986 11.2585 33.6397 12.1143 35.0967 12.1143C36.5532 12.1141 37.4725 11.2981 37.4727 10.0342C37.4727 8.59497 36.5345 8.32306 34.916 7.73926L33.958 7.38965C32.8985 7.00045 32.1792 6.63179 31.6602 6.00879C31.1412 5.38583 30.8213 4.68539 30.8213 3.71387C30.8215 1.96395 32.1596 1.40466e-05 35.0762 0ZM65.0283 0C67.6019 0 69.1582 1.57647 69.1582 4.06543H67.1221V3.81152C67.1219 2.56724 66.2765 1.88672 65.0283 1.88672C63.7802 1.8868 62.9738 2.56731 62.9736 3.67578C62.9736 4.64869 63.5125 5.13425 65.2021 5.77539L65.9707 6.06738C67.1608 6.51378 67.8714 6.90274 68.4473 7.52539C69.0247 8.14693 69.3701 8.84736 69.3701 9.95605C69.37 12.1145 67.5444 14 65.0479 14C62.5513 14 60.6115 12.4058 60.6113 9.64551V9.64355H62.6475V9.83789C62.6475 11.2572 63.6481 12.1131 65.0488 12.1133C66.4496 12.1133 67.3338 11.2971 67.334 10.0332C67.334 8.59414 66.4322 8.32203 64.876 7.73828L63.9531 7.38867C62.9345 6.99954 62.2432 6.63071 61.7441 6.00781C61.2452 5.38494 60.9375 4.68523 60.9375 3.71387C60.9375 1.96408 62.2239 0.0001083 65.0283 0ZM7.17285 8.08398L12.0586 0.350586H14.3643V13.6504H12.4258V3.16113L8.06543 10.0596H6.28125L1.93848 3.16113V13.6504H0V0.350586H2.30762L7.17285 8.08398ZM43.7939 13.6504H42.042V0.350586H43.7939V13.6504ZM56.2129 10.7051V0.350586H58.1592V13.6504H55.9795L48.8945 3.35156V13.6504H46.9482V0.350586H49.1084L56.2129 10.7051ZM78.1602 0.350586L83.7344 13.6504H81.7061L80.1494 9.94531H74.0049L72.4492 13.6504H70.4209L75.9941 0.350586H78.1602ZM74.793 8.06445H79.3633L77.0781 2.63086L74.793 8.06445Z" fill="#1A1A1A"/>
+      </svg>
+    </div>
+    <nav class="gnb__menu">
+      <span class="gnb__link">파트너 오피스</span>
+      <span class="gnb__divider"></span>
+      <span class="gnb__link">로그아웃</span>
+    </nav>
+  </header>
+
+  <div class="layout">
+    <!-- ===================== LNB ===================== -->
+    <aside class="lnb">
+      <div class="lnb__partner"><span class="lnb__partner-name">무신사/데상트</span></div>
+      <nav class="lnb__list">
+        <div class="nav-item"><span class="nav-item__label">상품 광고</span></div>
+        <div class="nav-item nav-item--active"><span class="nav-item__label">디스플레이 광고</span></div>
+        <div class="nav-item"><span class="nav-item__label">디스플레이 광고 일괄 생성</span></div>
+        <div class="nav-item">
+          <span class="nav-item__label">비즈월렛 관리</span>
+          <span class="nav-item__chevron"><svg width="9.1" height="5" viewBox="0 0 9.10711 5.01213" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M0.353553 0.353553L4.48284 4.48284C4.52189 4.52189 4.58521 4.52189 4.62426 4.48284L8.75355 0.353553" stroke="#808080"/></svg></span>
+        </div>
+        <div class="nav-item">
+          <span class="nav-item__label">업체관리</span>
+          <span class="nav-item__chevron"><svg width="9.1" height="5" viewBox="0 0 9.10711 5.01213" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M0.353553 0.353553L4.48284 4.48284C4.52189 4.52189 4.58521 4.52189 4.62426 4.48284L8.75355 0.353553" stroke="#808080"/></svg></span>
+        </div>
+        <div class="nav-item">
+          <span class="nav-item__label">마케팅 구좌 관리</span>
+          <span class="nav-item__chevron"><svg width="9.1" height="5" viewBox="0 0 9.10711 5.01213" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M0.353553 0.353553L4.48284 4.48284C4.52189 4.52189 4.58521 4.52189 4.62426 4.48284L8.75355 0.353553" stroke="#808080"/></svg></span>
+        </div>
+        <div class="nav-item">
+          <span class="nav-item__label">큐레이터</span>
+          <span class="nav-item__chevron"><svg width="9.1" height="5" viewBox="0 0 9.10711 5.01213" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M0.353553 0.353553L4.48284 4.48284C4.52189 4.52189 4.58521 4.52189 4.62426 4.48284L8.75355 0.353553" stroke="#808080"/></svg></span>
+        </div>
+      </nav>
+      <div class="lnb__guide">
+        <span class="lnb__guide-label">광고 가이드</span>
+        <span class="nav-item__chevron" style="width:14px;height:14px;flex-basis:14px;">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9.04167 1.3125C9.04167 1.19647 9.08776 1.08519 9.16981 1.00314C9.25185 0.921094 9.36313 0.875 9.47917 0.875H12.6875C12.8035 0.875 12.9148 0.921094 12.9969 1.00314C13.0789 1.08519 13.125 1.19647 13.125 1.3125V4.52083C13.125 4.63687 13.0789 4.74815 12.9969 4.83019C12.9148 4.91224 12.8035 4.95833 12.6875 4.95833C12.5715 4.95833 12.4602 4.91224 12.3781 4.83019C12.2961 4.74815 12.25 4.63687 12.25 4.52083V2.36833L8.62167 5.99667C8.58161 6.03965 8.53331 6.07413 8.47965 6.09804C8.42598 6.12195 8.36805 6.13481 8.3093 6.13585C8.25056 6.13688 8.19221 6.12608 8.13773 6.10407C8.08326 6.08207 8.03377 6.04932 7.99223 6.00777C7.95068 5.96623 7.91793 5.91674 7.89593 5.86227C7.87392 5.80779 7.86312 5.74944 7.86415 5.6907C7.86519 5.63195 7.87805 5.57402 7.90196 5.52035C7.92587 5.46669 7.96035 5.41839 8.00333 5.37833L11.6317 1.75H9.47917C9.36313 1.75 9.25185 1.70391 9.16981 1.62186C9.08776 1.53981 9.04167 1.42853 9.04167 1.3125Z" fill="#808080"/><path d="M1.45833 2.47917C1.45833 1.91567 1.91567 1.45833 2.47917 1.45833H7.4375C7.55353 1.45833 7.66481 1.50443 7.74686 1.58647C7.82891 1.66852 7.875 1.7798 7.875 1.89583C7.875 2.01187 7.82891 2.12315 7.74686 2.20519C7.66481 2.28724 7.55353 2.33333 7.4375 2.33333H2.47917C2.44049 2.33333 2.4034 2.3487 2.37605 2.37605C2.3487 2.4034 2.33333 2.44049 2.33333 2.47917V11.5208C2.33333 11.6013 2.39867 11.6667 2.47917 11.6667H11.5208C11.5595 11.6667 11.5966 11.6513 11.624 11.624C11.6513 11.5966 11.6667 11.5595 11.6667 11.5208V6.5625C11.6667 6.44647 11.7128 6.33519 11.7948 6.25314C11.8769 6.17109 11.9881 6.125 12.1042 6.125C12.2202 6.125 12.3315 6.17109 12.4135 6.25314C12.4956 6.33519 12.5417 6.44647 12.5417 6.5625V11.5208C12.5417 11.7916 12.4341 12.0512 12.2427 12.2427C12.0512 12.4341 11.7916 12.5417 11.5208 12.5417H2.47917C2.20842 12.5417 1.94877 12.4341 1.75733 12.2427C1.56589 12.0512 1.45833 11.7916 1.45833 11.5208V2.47917Z" fill="#808080"/></svg>
+        </span>
+      </div>
+    </aside>
+
+    <!-- ===================== Main ===================== -->
+    <main class="main">
+      <div class="dh">
+        <div class="dh__title">디스플레이 광고 관리</div>
+        <div class="dh__acct">
+          <span class="dh__acct-name">Account_id</span>
+          <button type="button" class="dh__acct-btn" aria-label="계정 선택">
+            <svg width="10" height="6" viewBox="0 0 9.10711 5.01213" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M0.353553 0.353553L4.48284 4.48284C4.52189 4.52189 4.58521 4.52189 4.62426 4.48284L8.75355 0.353553" stroke="#808080"/></svg>
+          </button>
+        </div>
+
+        <div class="dh__sec-head">
+          <span class="dh__sec-title">전체 캠페인 <span style="color:var(--fg-muted);font-weight:500;">(4건)</span></span>
+          <span class="dh__hint">성과 계산 기준안내
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="6" stroke="#808080"/><path d="M7 6.2v3.6" stroke="#808080" stroke-width="1.2" stroke-linecap="round"/><circle cx="7" cy="4.4" r="0.7" fill="#808080"/></svg>
+          </span>
+        </div>
+
+        <!-- 기간 / 비교 -->
+        <div class="dh__bar">
+          <div class="dh__daterow">
+            <span class="dh__date">2026.05.01
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/></svg>
+            </span>
+            <span style="color:var(--fg-muted);">–</span>
+            <span class="dh__date">2026.05.07
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/></svg>
+            </span>
+            <span class="dh__vs">vs. 2026.04.23 ~ 2026.04.30</span>
+          </div>
+          <div class="dh__baractions">
+            <span class="seg" id="cmpSeg">
+              <button data-cmp="none">비교 없음</button>
+              <button data-cmp="day">전일 대비</button>
+              <button data-cmp="week" class="on">전주 대비</button>
+              <button data-cmp="month">전월 대비</button>
+            </span>
+            <button class="lbtn">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>간략보기
+            </button>
+            <button class="lbtn">성과 리포트 다운로드
+              <svg width="10" height="6" viewBox="0 0 9 5" fill="none"><path d="M.35.35 4.48 4.48 8.75.35" stroke="#808080"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- 지표 카드 -->
+        <div class="dh__cards" id="cards"></div>
+
+        <!-- 일별 지표 비교 -->
+        <div class="dh__panel">
+          <div class="dh__chart-head">
+            <span class="dh__sec-title" style="display:inline-flex;align-items:center;gap:4px;">일별 지표 비교
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="6" stroke="#808080"/><path d="M7 6.2v3.6" stroke="#808080" stroke-width="1.2" stroke-linecap="round"/><circle cx="7" cy="4.4" r="0.7" fill="#808080"/></svg>
+            </span>
+            <div class="dh__metricsel">
+              <span class="msel"><span class="dot o"></span>지표 1
+                <select id="g1sel"></select>
+              </span>
+              <span class="msel"><span class="dot b"></span>지표 2
+                <select id="g2sel"></select>
+              </span>
+            </div>
+          </div>
+          <div class="dh__legend"><span><i></i>조회 기간</span><span><i class="dash"></i>비교 기간</span></div>
+          <div class="chartwrap" id="chartwrap">
+            <svg class="chart" viewBox="0 0 1000 300" preserveAspectRatio="none" id="chart"></svg>
+            <div class="tip" id="tip"></div>
+          </div>
+        </div>
+
+        <!-- Step/Tab 내비 + 테이블 -->
+        <div>
+          <div class="stepnav" id="stepnav">
+            <button class="stepnav__item on" data-tab="camp">캠페인</button>
+            <span class="stepnav__sep"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M6 4l4 4-4 4" stroke="#808080" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            <button class="stepnav__item" data-tab="grp">광고그룹</button>
+            <span class="stepnav__sep"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M6 4l4 4-4 4" stroke="#808080" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            <button class="stepnav__item" data-tab="ad">광고</button>
+          </div>
+
+          <div class="dh__toolbar" style="padding:16px 0 12px;">
+            <button class="tbtn">삭제</button>
+            <button class="tbtn primary" id="createBtn">캠페인 만들기</button>
+            <div class="spacer"></div>
+            <div class="tsearch">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg>
+              <input id="searchInput" placeholder="캠페인명·캠페인ID·랜딩URL·이름 검색">
+            </div>
+            <button class="tbtn">검색</button>
+            <select class="tsel"><option>1000개</option><option>100개</option><option>50개</option></select>
+          </div>
+
+          <div class="dh__bulk" id="bulkbar"><b id="selCnt">0</b>개 선택됨
+            <button class="abtn">일괄 ON</button><button class="abtn">일괄 OFF</button><button class="abtn">일괄 복제</button>
+          </div>
+
+          <div class="tscroll"><table class="dt"><thead id="thead"></thead><tbody id="tbody"></tbody></table></div>
+
+          <div class="dh__pg">
+            <button class="arrow">‹</button>
+            <button class="on">1</button><button>2</button><button>3</button><button>4</button><button>5</button>
+            <button style="cursor:default">…</button><button>32</button>
+            <button class="arrow">›</button>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+  /* ================= 지표 카드 (Figma 값) ================= */
+  const CARDS = [
+    {k:'클릭수', v:'103,920', u:'회', d:'down', dt:'21%'},
+    {k:'노출수', v:'14,820,000', u:'회', d:'down', dt:'21%'},
+    {k:'집행 광고비', v:'32,450,000', u:'원', d:'up', dt:'56%'},
+    {k:'전환 거래수', v:'1,240', u:'건', d:'up', dt:'56%'},
+    {k:'CTR', v:'0.70', u:'%', d:'flat', dt:'0%'},
+    {k:'전환 거래액', v:'23,456,789', u:'원', d:'up', dt:'56%'},
+  ];
+  function renderCards(){
+    document.getElementById('cards').innerHTML = CARDS.map(c=>{
+      const arrow = c.d==='up'?'▲':c.d==='down'?'▼':'–';
+      return `<div class="mcard"><div class="mcard__top"><span class="mcard__k">${c.k}</span>`+
+        `<span class="mcard__more" title="더보기">⋮</span></div>`+
+        `<div class="mcard__v">${c.v}<small>${c.u}</small></div>`+
+        `<div class="mcard__d d-${c.d}">${arrow} ${c.dt}</div></div>`;
+    }).join('');
+  }
+
+  /* ================= 일별 지표 비교 차트 ================= */
+  const XS = ['8/20','8/21','8/22','8/23','8/24','8/25','8/26'];
+  const METRICS = {
+    ctr:{label:'CTR', cur:[0.62,0.70,0.65,0.60,0.72,0.74,0.78], prev:[0.58,0.63,0.60,0.57,0.66,0.69,0.72]},
+    reach:{label:'도달 유저수', cur:[3.1,3.2,3.35,3.5,3.75,3.7,3.85], prev:[2.9,3.0,3.1,3.25,3.4,3.45,3.55]},
+    click:{label:'클릭수', cur:[4.6,4.9,5.1,5.6,6.0,6.2,6.35], prev:[4.3,4.5,4.7,5.1,5.5,5.6,5.75]},
+    imp:{label:'노출수', cur:[5.4,5.8,5.2,6.4,6.0,6.6,6.78], prev:[4.9,5.3,4.8,5.85,5.5,6.05,6.2]},
+    cost:{label:'집행 광고비', cur:[2.6,2.9,2.7,3.1,3.4,3.5,3.6], prev:[2.4,2.6,2.5,2.8,3.0,3.1,3.2]},
+    conv:{label:'전환 거래액', cur:[1.8,1.9,2.0,2.3,2.5,2.6,2.7], prev:[1.6,1.7,1.9,2.1,2.3,2.4,2.5]},
+  };
+  const MORDER = ['ctr','reach','click','imp','cost','conv'];
+  let g1='ctr', g2='reach';
+  function fillSel(id,val){ document.getElementById(id).innerHTML = MORDER.map(k=>`<option value="${k}" ${k===val?'selected':''}>${METRICS[k].label}</option>`).join(''); }
+
+  const CW=1000, CH=300, PADL=54, PADR=54, PADT=24, PADB=28, N=7;
+  function scaleY(v, mx){ return CH-PADB-(CH-PADT-PADB)*(v/mx); }
+  function px(i){ const slot=(CW-PADL-PADR)/(N-1); return PADL+slot*i; }
+  function polyline(arr, mx, color, dash){
+    const pts = arr.map((v,i)=>`${px(i).toFixed(1)},${scaleY(v,mx).toFixed(1)}`).join(' ');
+    return `<polyline fill="none" stroke="${color}" stroke-width="2.5" ${dash?'stroke-dasharray="5 4" opacity="0.55"':''} points="${pts}"/>`;
+  }
+  function dots(arr, mx, color){ return arr.map((v,i)=>`<circle cx="${px(i).toFixed(1)}" cy="${scaleY(v,mx).toFixed(1)}" r="3.5" fill="#fff" stroke="${color}" stroke-width="2"/>`).join(''); }
+  function renderChart(){
+    const svg=document.getElementById('chart');
+    const m1=METRICS[g1], m2=METRICS[g2];
+    const mx1=Math.max(...m1.cur,...m1.prev)*1.15, mx2=Math.max(...m2.cur,...m2.prev)*1.15;
+    let out='';
+    for(let i=0;i<=4;i++){ const y=PADT+(CH-PADT-PADB)*i/4; out+=`<line class="yg" x1="${PADL}" y1="${y}" x2="${CW-PADR}" y2="${y}"/>`; }
+    // 좌축(지표1) 라벨
+    for(let i=0;i<=4;i++){ const y=PADT+(CH-PADT-PADB)*i/4; out+=`<text class="ylab" x="${PADL-8}" y="${y+3}" text-anchor="end">${(mx1*(4-i)/4).toFixed(2)}</text>`; }
+    // 지표2 (파랑) — 비교 뒤, 조회 앞
+    out+=polyline(m2.prev,mx2,'#2b52f0',true)+polyline(m2.cur,mx2,'#2b52f0',false)+dots(m2.cur,mx2,'#2b52f0');
+    // 지표1 (주황)
+    out+=polyline(m1.prev,mx1,'#ec6f2d',true)+polyline(m1.cur,mx1,'#ec6f2d',false)+dots(m1.cur,mx1,'#ec6f2d');
+    XS.forEach((d,i)=>{ out+=`<text class="xlab" x="${px(i).toFixed(1)}" y="${CH-8}" text-anchor="middle">${d}</text>`; });
+    out+=`<line id="guide" x1="0" y1="${PADT}" x2="0" y2="${CH-PADB}"/>`;
+    svg.innerHTML=out;
+  }
+  function initHover(){
+    const svg=document.getElementById('chart'), tip=document.getElementById('tip');
+    svg.addEventListener('mousemove',e=>{
+      const r=svg.getBoundingClientRect(), x=e.clientX-r.left;
+      const slot=r.width*((CW-PADL-PADR)/(N-1)/CW), left0=r.width*(PADL/CW);
+      let i=Math.round((x-left0)/slot); i=Math.max(0,Math.min(N-1,i));
+      const vbX=px(i), g=document.getElementById('guide');
+      if(g){ g.setAttribute('x1',vbX); g.setAttribute('x2',vbX); g.style.opacity=1; }
+      let html=`<div class="td">${XS[i]} · 기준일</div>`;
+      [[g1,'o'],[g2,'b']].forEach(([k,dc])=>{
+        const m=METRICS[k];
+        html+=`<div class="trow"><div class="tm"><span class="dot ${dc}"></span>${m.label}</div>`+
+          `<div class="tl">조회 <b>${m.cur[i]}</b></div><div class="tl">비교 <b>${m.prev[i]}</b></div></div>`;
+      });
+      tip.innerHTML=html;
+      let lp=r.width*(vbX/CW); const tw=200; lp=Math.max(tw/2,Math.min(r.width-tw/2,lp));
+      tip.style.left=lp+'px'; tip.style.opacity=1;
+    });
+    svg.addEventListener('mouseleave',()=>{ tip.style.opacity=0; const g=document.getElementById('guide'); if(g) g.style.opacity=0; });
+  }
+
+  /* ================= 테이블 (Figma 컬럼 + HTML 데이터) ================= */
+  const on='<span class="tg on"></span>', off='<span class="tg"></span>';
+  function stat(c,t){ return `<span class="stat stat-${c}">${t}</span>`; }
+  function link(t){ return `<span class="lnk">${t}</span>`; }
+  const AC_CAMP=['수정','광고그룹 추가','복제'], AC_GRP=['수정','광고 추가','복제'], AC_AD=['수정','복제'];
+  function acts(list){ return '<span style="display:inline-flex;gap:6px">'+list.map(a=>`<span class="abtn">${a}</span>`).join('')+'</span>'; }
+
+  const TABLES = {
+    camp:{
+      create:'캠페인 만들기', count:'4',
+      head:['ON/OFF','상태','캠페인ID','캠페인명','캠페인유형','구매유형','패키지유형','브랜드','국가','구좌','계약금액','ROAS','관리'],
+      numcols:[10,11],
+      rows:[
+        [on,stat('live','노출중'),'CMP-426548',link('롤링스톤즈 | 아크메드라비 컬렉션'),'광고','보장형','일반형','브랜드명','한국','빅배너, 스플래시','5,000,000','3.7',acts(AC_CAMP)],
+        [on,stat('live','노출중'),'CMP-245135',link('식스핏 패션플래닛 pick'),'광고','보장형','일반형','브랜드명','한국','빅배너, 스플래시','3,000,000','3.9',acts(AC_CAMP)],
+        [on,stat('wait','노출 대기'),'CMP-369742',link('캠페인_킨치 x 오스트리야'),'광고','보장형','일반형','브랜드명','한국','빅배너, 스플래시','1,980,000','3.5',acts(AC_CAMP)],
+        [on,stat('del','삭제'),'CMP-582930',link('클래식 트렌치코트 & 재킷'),'광고','보장형','패키지형','브랜드명','한국','빅배너, 스플래시','8,320,000','4.1',acts(AC_CAMP)],
+        [on,stat('pause','일시정지'),'CMP-174856',link('해변을 닮은 서머 드레스'),'비광고','프로모티드','패키지형','브랜드명','한국','빅배너, 스플래시','–','3.8',acts(AC_CAMP)],
+        [on,stat('end','종료'),'CMP-903482',link('럭셔리 스니커즈 셀렉션'),'비광고','프로모티드','패키지형','브랜드명','한국','빅배너, 스플래시','–','4.2',acts(AC_CAMP)],
+        [on,stat('pause','일시정지'),'CMP-618274',link('친환경 패브릭 브랜드 소개'),'비광고','프로모티드','패키지형','브랜드명','한국','빅배너, 스플래시','–','3.6',acts(AC_CAMP)],
+        [on,stat('wait','노출 대기'),'CMP-752619',link('트렌드 세터를 위한 액세서리'),'비광고','프로모티드','패키지형','브랜드명','한국','빅배너, 스플래시','–','4.0',acts(AC_CAMP)],
+      ]},
+    grp:{
+      create:'광고그룹 만들기', count:'4',
+      head:['ON/OFF','상태','광고그룹ID','광고그룹명','캠페인명','구매유형','구좌','타겟팅','기간','CPM단가','계약금액','목표달성','ROAS','관리'],
+      numcols:[9,10,11,12],
+      rows:[
+        [on,stat('live','노출중'),'GRP-88012',link('빅배너_2049여성'),'롤링스톤즈 | 아크메드라비','보장형','빅배너','인구통계학','07.07~07.20','3,500','29,995,000','86%','512%',acts(AC_GRP)],
+        [on,stat('live','노출중'),'GRP-88004',link('스플래시_전체'),'식스핏 패션플래닛 pick','보장형','스플래시+퀵메뉴','커스텀','07.01~07.31','4,000','52,500,000','71%','604%',acts(AC_GRP)],
+        [on,stat('wait','노출 대기'),'GRP-88240',link('신상_퀵메뉴'),'캠페인_킨치 x 오스트리야','보장형','퀵메뉴','인구통계학','07.16~07.25','2,400','12,000,000','0%','–',acts(AC_GRP)],
+        [off,stat('end','종료'),'GRP-87560',link('럭셔리_빅배너'),'럭셔리 스니커즈 셀렉션','보장형','빅배너','인구통계학','06.01~06.30','3,000','18,000,000','100%','488%',acts(AC_GRP)],
+      ]},
+    ad:{
+      create:'광고 만들기', count:'6',
+      head:['ON/OFF','상태','검수','광고ID','광고명','광고그룹명','구좌','타입','기간','노출수','클릭수','CTR','관리'],
+      numcols:[9,10,11],
+      rows:[
+        [on,stat('live','노출중'),'<span class="stat rv-appr">승인</span>','AD-550188',link('빅배너_A컷'),'빅배너_2049여성','빅배너','이미지','07.07~07.20','3,700,000','34,500','0.93%',acts(AC_AD)],
+        [on,stat('live','노출중'),'<span class="stat rv-appr">승인</span>','AD-550190',link('빅배너_B컷'),'빅배너_2049여성','빅배너','이미지','07.07~07.20','3,670,000','34,000','0.93%',acts(AC_AD)],
+        [on,stat('live','노출중'),'<span class="stat rv-appr">승인</span>','AD-550102',link('스플래시_동영상'),'스플래시_전체','앱 스플래시','동영상','07.01~07.31','9,320,000','73,600','0.79%',acts(AC_AD)],
+        [off,stat('draft','임시저장'),'<span class="idtxt">–</span>','AD-550410',link('신상_퀵메뉴_초안'),'신상_퀵메뉴','퀵메뉴','—','—','0','0','–',acts(['수정','복제'])],
+        [on,stat('wait','노출 대기'),'<span class="stat rv-rej">반려</span>','AD-551030',link('경매_빅배너_C'),'경매_빅배너_2039','빅배너','이미지','07.14~07.28','0','0','–',acts(AC_AD)],
+        [off,stat('end','종료'),'<span class="stat rv-appr">승인</span>','AD-549900',link('럭셔리_빅배너_A'),'럭셔리_빅배너','빅배너','이미지','06.01~06.30','6,000,000','44,500','0.74%',acts(AC_AD)],
+      ]},
+  };
+  const CREATE_LINK={ camp:'campaign-create.html', grp:'ad-group-create.html', ad:'ad-create.html' };
+  let curTab='camp';
+  function setTab(t){
+    curTab=t;
+    document.querySelectorAll('.stepnav__item').forEach(el=>el.classList.toggle('on',el.dataset.tab===t));
+    const d=TABLES[t];
+    document.getElementById('createBtn').textContent=d.create;
+    const chk='<input type="checkbox" onclick="toggleAll(this)">';
+    document.getElementById('thead').innerHTML='<tr><th>'+chk+'</th>'+d.head.map((h,i)=>`<th class="${d.numcols.includes(i)?'num':''}">${h}</th>`).join('')+'</tr>';
+    document.getElementById('tbody').innerHTML = d.rows.map(r=>
+      '<tr><td><input type="checkbox" class="rowchk" onchange="onCheck()"></td>'+
+      r.map((c,i)=>`<td class="${d.numcols.includes(i)?'num':''}">${c}</td>`).join('')+'</tr>'
+    ).join('');
+    onCheck();
+  }
+  function toggleAll(el){ document.querySelectorAll('.rowchk').forEach(c=>c.checked=el.checked); onCheck(); }
+  function onCheck(){
+    const n=document.querySelectorAll('.rowchk:checked').length;
+    document.getElementById('selCnt').textContent=n;
+    document.getElementById('bulkbar').classList.toggle('show',n>0);
+  }
+
+  /* ================= init / events ================= */
+  renderCards();
+  fillSel('g1sel',g1); fillSel('g2sel',g2);
+  document.getElementById('g1sel').addEventListener('change',e=>{ g1=e.target.value; renderChart(); });
+  document.getElementById('g2sel').addEventListener('change',e=>{ g2=e.target.value; renderChart(); });
+  document.querySelectorAll('#cmpSeg button').forEach(b=>b.addEventListener('click',()=>{
+    document.querySelectorAll('#cmpSeg button').forEach(x=>x.classList.remove('on')); b.classList.add('on');
+  }));
+  document.querySelectorAll('.stepnav__item').forEach(b=>b.addEventListener('click',()=>setTab(b.dataset.tab)));
+  // '캠페인 만들기' → 현재 탭 생성 페이지 (캠페인 → campaign-create.html)
+  document.getElementById('createBtn').addEventListener('click',()=>{ location.href=CREATE_LINK[curTab]; });
+  renderChart(); initHover(); setTab('camp');
+  </script>
+</body>
+</html>

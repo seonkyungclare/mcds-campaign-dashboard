@@ -139,8 +139,13 @@ button { font-family: inherit; }
 .page-title { font-size: 24px; line-height: 34px; font-weight: 700; color: var(--fg-default); }
 
 /* ===================== Section ===================== */
-.section { display: flex; flex-direction: column; gap: 40px; width: 100%; }
-.section__title { font-size: 16px; line-height: 24px; font-weight: 600; color: var(--fg-default); }
+/* section title ↔ 상세 속성(폼) 간격 16px, 상세 속성끼리는 .form gap 12px */
+.section { display: flex; flex-direction: column; gap: 16px; width: 100%; }
+
+/* 광고 그룹 생성: 캠페인 정보 ↔ 섹션그룹 = 32px(구분선 중앙), 섹션끼리 = 24px(구분선 중앙) */
+.ag-body { display: flex; flex-direction: column; gap: 16px; width: 100%; }
+.ag-sections { display: flex; flex-direction: column; gap: 12px; width: 100%; }
+.section__title { margin: 0; font-size: 16px; line-height: 24px; font-weight: 600; color: var(--fg-default); }
 .divider { height: 1px; background: var(--border-light); border: 0; margin: 0; width: 100%; }
 
 /* Campaign info header */
