@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>MCDS 컴포넌트 변형 미리보기</title>
+<link rel="stylesheet" href="mcds.css?v=20260810b" />
+<style>
+  body { padding: 32px; min-width: 0; background: #fff; }
+  h1 { font-size: 22px; margin: 0 0 24px; }
+  h2 { font-size: 16px; margin: 32px 0 12px; color: #333; }
+  .grid { display: grid; grid-template-columns: 90px repeat(4, auto); gap: 12px 20px; align-items: center; }
+  .grid .hd { font-size: 12px; color: #808080; }
+  .row-lab { font-size: 12px; color: #808080; }
+  .cell { display: flex; gap: 8px; align-items: center; }
+  .swatch { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+  .disrow { display: flex; gap: 20px; align-items: center; flex-wrap: wrap; }
+</style>
+</head>
+<body>
+<h1>MCDS 컴포넌트 변형 (mcds.css)</h1>
+
+<h2>Button — type × size (enabled / hover는 마우스오버, disabled)</h2>
+<div class="grid">
+  <span class="hd"></span><span class="hd">32</span><span class="hd">36</span><span class="hd">40</span><span class="hd">48</span>
+  <span class="row-lab">primary</span>
+  <span><button class="btn btn--primary btn--32">Button</button></span>
+  <span><button class="btn btn--primary btn--36">Button</button></span>
+  <span><button class="btn btn--primary btn--40">Button</button></span>
+  <span><button class="btn btn--primary btn--48">Button</button></span>
+  <span class="row-lab">secondary</span>
+  <span><button class="btn btn--secondary btn--32">Button</button></span>
+  <span><button class="btn btn--secondary btn--36">Button</button></span>
+  <span><button class="btn btn--secondary btn--40">Button</button></span>
+  <span><button class="btn btn--secondary btn--48">Button</button></span>
+  <span class="row-lab">tertiary</span>
+  <span><button class="btn btn--tertiary btn--32">Button</button></span>
+  <span><button class="btn btn--tertiary btn--36">Button</button></span>
+  <span><button class="btn btn--tertiary btn--40">Button</button></span>
+  <span><button class="btn btn--tertiary btn--48">Button</button></span>
+  <span class="row-lab">warning</span>
+  <span><button class="btn btn--warning btn--32">Button</button></span>
+  <span><button class="btn btn--warning btn--36">Button</button></span>
+  <span><button class="btn btn--warning btn--40">Button</button></span>
+  <span><button class="btn btn--warning btn--48">Button</button></span>
+</div>
+<h2>Button — disabled & iconOnly</h2>
+<div class="disrow">
+  <button class="btn btn--primary btn--40 is-disabled">primary</button>
+  <button class="btn btn--secondary btn--40 is-disabled">secondary</button>
+  <button class="btn btn--tertiary btn--40 is-disabled">tertiary</button>
+  <button class="btn btn--warning btn--40 is-disabled">warning</button>
+  <button class="btn btn--primary btn--40 btn--icon" aria-label="icon">+</button>
+  <button class="btn btn--secondary btn--36 btn--icon" aria-label="icon">+</button>
+</div>
+
+<h2>Checkbox — selected / indeterminate / unselected (enabled·disabled)</h2>
+<div class="swatch">
+  <span class="checkbox checkbox--checked"><span class="checkbox__box"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.2 4.7 8.9 10 3.2" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="checkbox__label">selected</span></span>
+  <span class="checkbox checkbox--indeterminate"><span class="checkbox__box"></span><span class="checkbox__label">indeterminate</span></span>
+  <span class="checkbox"><span class="checkbox__box"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.2 4.7 8.9 10 3.2" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="checkbox__label">unselected</span></span>
+  <span class="checkbox checkbox--checked checkbox--disabled"><span class="checkbox__box"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.2 4.7 8.9 10 3.2" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="checkbox__label">selected·disabled</span></span>
+  <span class="checkbox checkbox--indeterminate checkbox--disabled"><span class="checkbox__box"></span><span class="checkbox__label">indet·disabled</span></span>
+  <span class="checkbox checkbox--disabled"><span class="checkbox__box"></span><span class="checkbox__label">unsel·disabled</span></span>
+</div>
+
+<h2>Radio — selected / unselected (enabled·disabled)</h2>
+<div class="swatch">
+  <button class="radio"><span class="radio__dot" data-on></span><span class="radio__label">selected</span></button>
+  <button class="radio"><span class="radio__dot"></span><span class="radio__label">unselected</span></button>
+  <button class="radio" disabled><span class="radio__dot" data-on></span><span class="radio__label">selected·disabled</span></button>
+  <button class="radio" disabled><span class="radio__dot"></span><span class="radio__label">unselected·disabled</span></button>
+</div>
+
+<h2>Chip — tone(default/accent/low) × border(false/true) × size</h2>
+<div class="swatch">
+  <span class="chip">default</span>
+  <span class="chip chip--accent">accent</span>
+  <span class="chip chip--low">low</span>
+  <span class="chip chip--border">default·border</span>
+  <span class="chip chip--accent chip--border">accent·border</span>
+  <span class="chip chip--low chip--border">low·border</span>
+  <span class="chip chip--disabled">disabled</span>
+  <span class="chip chip--disabled chip--border">disabled·border</span>
+</div>
+<div class="swatch" style="margin-top:12px;">
+  <span class="chip chip--24">size 24</span>
+  <span class="chip">size 28</span>
+  <span class="chip chip--32">size 32</span>
+  <span class="chip chip--accent">태그<button class="chip__remove" aria-label="remove"><svg viewBox="0 0 16 16" fill="none"><path d="M4 4 12 12M12 4 4 12" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg></button></span>
+</div>
+</body>
+</html>

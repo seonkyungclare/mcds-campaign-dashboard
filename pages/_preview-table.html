@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>MCDS Table 미리보기</title>
+<link rel="stylesheet" href="mcds.css?v=20260810b" />
+<style>
+  body { padding: 32px; background: #fff; }
+  h1 { font-size: 22px; margin: 0 0 20px; }
+  .sort { display:inline-flex; align-items:center; gap:4px; border:0; background:transparent; font:inherit; font-weight:600; cursor:pointer; padding:0; }
+</style>
+</head>
+<body>
+<h1>MCDS Table (mcds.css / .mcds-table)</h1>
+
+<div class="mcds-table-wrap">
+  <table class="mcds-table">
+    <thead>
+      <tr>
+        <th class="mcds-table__sel">
+          <span class="checkbox checkbox--indeterminate"><span class="checkbox__box"></span></span>
+        </th>
+        <th>
+          <span class="mcds-table__th-inner">
+            <button class="sort" type="button">캠페인명
+              <svg width="12" height="12" viewBox="0 0 12 12"><path d="M6 2.5 3.5 5h5L6 2.5z" fill="#1a1a1a"/><path d="M6 9.5 3.5 7h5L6 9.5z" fill="#c2c2c2"/></svg>
+            </button>
+            <span class="mcds-table__icon-btn" title="캠페인 이름입니다"><svg width="13" height="13" viewBox="0 0 13 13"><circle cx="6.5" cy="6.5" r="5" stroke="#8c8c8c" fill="none"/><path d="M6.5 5.6v3.2M6.5 3.9v.05" stroke="#8c8c8c" stroke-width="1.2" stroke-linecap="round"/></svg></span>
+          </span>
+        </th>
+        <th>상태</th>
+        <th>
+          <span class="mcds-table__th-inner">유형
+            <button class="mcds-table__icon-btn" aria-label="필터"><svg width="12" height="12" viewBox="0 0 12 12"><path d="M1.5 2.5h9L7 6.5v3L5 10.5v-4L1.5 2.5z" fill="#8c8c8c"/></svg></button>
+          </span>
+        </th>
+        <th class="mcds-table__num">노출수</th>
+        <th class="mcds-table__num">클릭수</th>
+        <th>액션</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="mcds-table__sel"><span class="checkbox"><span class="checkbox__box"></span></span></td>
+        <td>여름 프로모션</td>
+        <td><span class="chip chip--accent">진행중</span></td>
+        <td>빅배너</td>
+        <td class="mcds-table__num">1,240,000</td>
+        <td class="mcds-table__num">32,100</td>
+        <td><span class="mcds-table__link">수정</span></td>
+      </tr>
+      <tr class="is-selected">
+        <td class="mcds-table__sel"><span class="checkbox checkbox--checked"><span class="checkbox__box"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.2 4.7 8.9 10 3.2" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></span></td>
+        <td>가을 신상 런칭</td>
+        <td><span class="chip chip--accent">진행중</span></td>
+        <td>앱 스플래시</td>
+        <td class="mcds-table__num">980,500</td>
+        <td class="mcds-table__num">18,742</td>
+        <td><span class="mcds-table__link">수정</span></td>
+      </tr>
+      <tr>
+        <td class="mcds-table__sel"><span class="checkbox"><span class="checkbox__box"></span></span></td>
+        <td>브랜드 데이</td>
+        <td><span class="chip chip--low">종료</span></td>
+        <td>퀵메뉴</td>
+        <td class="mcds-table__num">2,010,300</td>
+        <td class="mcds-table__num">51,020</td>
+        <td><span class="mcds-table__link">수정</span></td>
+      </tr>
+      <tr class="is-error">
+        <td class="mcds-table__sel"><span class="checkbox"><span class="checkbox__box"></span></span></td>
+        <td>예산 초과 캠페인</td>
+        <td><span class="chip chip--low">중단</span></td>
+        <td>빅배너</td>
+        <td class="mcds-table__num">120,000</td>
+        <td class="mcds-table__num">2,003</td>
+        <td><span class="mcds-table__link">수정</span></td>
+      </tr>
+      <tr class="is-disabled">
+        <td class="mcds-table__sel"><span class="checkbox checkbox--disabled"><span class="checkbox__box"></span></span></td>
+        <td>임시저장 캠페인</td>
+        <td><span class="chip chip--disabled">임시저장</span></td>
+        <td>-</td>
+        <td class="mcds-table__num">-</td>
+        <td class="mcds-table__num">-</td>
+        <td>-</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<nav class="pagination" aria-label="페이지네이션">
+  <button class="pagination__item" type="button" disabled aria-label="이전"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 3.5 5.5 8l4.5 4.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+  <button class="pagination__item pagination__item--current" type="button" aria-current="page">1</button>
+  <button class="pagination__item" type="button">2</button>
+  <button class="pagination__item" type="button">3</button>
+  <button class="pagination__item" type="button">4</button>
+  <button class="pagination__item" type="button">5</button>
+  <span class="pagination__item pagination__item--ellipsis">…</span>
+  <button class="pagination__item" type="button">32</button>
+  <button class="pagination__item" type="button" aria-label="다음"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M6 3.5 10.5 8 6 12.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+</nav>
+</body>
+</html>
