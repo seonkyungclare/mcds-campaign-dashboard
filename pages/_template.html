@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="ko">
+<!--
+  ============================================================
+  MCDS 화면 템플릿 — 새 화면은 이 파일을 복사해서 시작하세요.
+  - 색상/타이포/간격은 반드시 mcds.css의 토큰(var(--...))만 사용 (하드코딩 색상 금지)
+  - GNB/LNB는 아래 마크업을 그대로 유지 (활성 메뉴만 nav-item--active 로 지정)
+  - 화면 고유 스타일이 필요하면 <style>에 인라인하되, 재사용 컴포넌트는 mcds.css에 추가
+  ============================================================
+-->
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="MCDS 화면" />
+  <meta name="theme-color" content="#2b52f0" />
+  <title>화면 제목</title>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+  <link rel="stylesheet" href="mcds.css" />
+  <!-- 화면 고유 스타일이 필요하면 여기에 (토큰 사용) -->
+  <!-- <style> .my-thing { color: var(--fg-default); } </style> -->
+</head>
+<body>
+  <!-- ===================== GNB (고정) ===================== -->
+  <header class="gnb">
+    <div class="gnb__logo" aria-label="MUSINSA">
+      <svg width="83.7344" height="14" viewBox="0 0 83.7344 14" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="MUSINSA">
+        <path d="M19.4619 8.17578C19.4621 10.6159 20.7329 12.1162 22.7734 12.1162C24.8138 12.1161 26.0838 10.6172 26.084 8.17578V0.350586H28.0283V8.15625C28.0282 11.8284 25.93 13.9999 22.7734 14C19.6168 14 17.5177 11.8285 17.5176 8.15625V0.350586H19.4619V8.17578ZM35.0762 0C37.7527 0 39.3711 1.57524 39.3711 4.06445H37.2539V3.8125C37.2539 2.5679 36.3744 1.8877 35.0762 1.8877C33.7779 1.88771 32.9385 2.56796 32.9385 3.67676C32.9386 4.64953 33.4984 5.13524 35.2568 5.77637L36.0557 6.06738C37.2939 6.51538 38.0332 6.90519 38.6309 7.52539C39.2297 8.14685 39.5898 8.84665 39.5898 9.95508C39.5898 12.1139 37.6912 14 35.0947 14C32.4983 14 30.4805 12.4053 30.4805 9.64453H32.5986V9.83887C32.5986 11.2585 33.6397 12.1143 35.0967 12.1143C36.5532 12.1141 37.4725 11.2981 37.4727 10.0342C37.4727 8.59497 36.5345 8.32306 34.916 7.73926L33.958 7.38965C32.8985 7.00045 32.1792 6.63179 31.6602 6.00879C31.1412 5.38583 30.8213 4.68539 30.8213 3.71387C30.8215 1.96395 32.1596 1.40466e-05 35.0762 0ZM65.0283 0C67.6019 0 69.1582 1.57647 69.1582 4.06543H67.1221V3.81152C67.1219 2.56724 66.2765 1.88672 65.0283 1.88672C63.7802 1.8868 62.9738 2.56731 62.9736 3.67578C62.9736 4.64869 63.5125 5.13425 65.2021 5.77539L65.9707 6.06738C67.1608 6.51378 67.8714 6.90274 68.4473 7.52539C69.0247 8.14693 69.3701 8.84736 69.3701 9.95605C69.37 12.1145 67.5444 14 65.0479 14C62.5513 14 60.6115 12.4058 60.6113 9.64551V9.64355H62.6475V9.83789C62.6475 11.2572 63.6481 12.1131 65.0488 12.1133C66.4496 12.1133 67.3338 11.2971 67.334 10.0332C67.334 8.59414 66.4322 8.32203 64.876 7.73828L63.9531 7.38867C62.9345 6.99954 62.2432 6.63071 61.7441 6.00781C61.2452 5.38494 60.9375 4.68523 60.9375 3.71387C60.9375 1.96408 62.2239 0.0001083 65.0283 0ZM7.17285 8.08398L12.0586 0.350586H14.3643V13.6504H12.4258V3.16113L8.06543 10.0596H6.28125L1.93848 3.16113V13.6504H0V0.350586H2.30762L7.17285 8.08398ZM43.7939 13.6504H42.042V0.350586H43.7939V13.6504ZM56.2129 10.7051V0.350586H58.1592V13.6504H55.9795L48.8945 3.35156V13.6504H46.9482V0.350586H49.1084L56.2129 10.7051ZM78.1602 0.350586L83.7344 13.6504H81.7061L80.1494 9.94531H74.0049L72.4492 13.6504H70.4209L75.9941 0.350586H78.1602ZM74.793 8.06445H79.3633L77.0781 2.63086L74.793 8.06445Z" fill="#1A1A1A"/>
+      </svg>
+    </div>
+    <nav class="gnb__menu">
+      <span class="gnb__link">파트너 오피스</span>
+      <span class="gnb__divider"></span>
+      <span class="gnb__link">로그아웃</span>
+    </nav>
+  </header>
+
+  <div class="layout">
+    <!-- ===================== LNB (고정 · 활성 메뉴만 변경) ===================== -->
+    <aside class="lnb">
+      <div class="lnb__partner"><span class="lnb__partner-name">무신사/데상트</span></div>
+      <nav class="lnb__list">
+        <div class="nav-item"><span class="nav-item__label">상품 광고</span></div>
+        <div class="nav-item nav-item--active"><span class="nav-item__label">디스플레이 광고</span></div>
+        <div class="nav-item"><span class="nav-item__label">디스플레이 광고 일괄 생성</span></div>
+        <div class="nav-item">
+          <span class="nav-item__label">비즈월렛 관리</span>
+          <span class="nav-item__chevron"><svg width="9.1" height="5" viewBox="0 0 9.10711 5.01213" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M0.353553 0.353553L4.48284 4.48284C4.52189 4.52189 4.58521 4.52189 4.62426 4.48284L8.75355 0.353553" stroke="#808080"/></svg></span>
+        </div>
+        <div class="nav-item">
+          <span class="nav-item__label">업체관리</span>
+          <span class="nav-item__chevron"><svg width="9.1" height="5" viewBox="0 0 9.10711 5.01213" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M0.353553 0.353553L4.48284 4.48284C4.52189 4.52189 4.58521 4.52189 4.62426 4.48284L8.75355 0.353553" stroke="#808080"/></svg></span>
+        </div>
+        <div class="nav-item">
+          <span class="nav-item__label">마케팅 구좌 관리</span>
+          <span class="nav-item__chevron"><svg width="9.1" height="5" viewBox="0 0 9.10711 5.01213" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M0.353553 0.353553L4.48284 4.48284C4.52189 4.52189 4.58521 4.52189 4.62426 4.48284L8.75355 0.353553" stroke="#808080"/></svg></span>
+        </div>
+        <div class="nav-item">
+          <span class="nav-item__label">큐레이터</span>
+          <span class="nav-item__chevron"><svg width="9.1" height="5" viewBox="0 0 9.10711 5.01213" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M0.353553 0.353553L4.48284 4.48284C4.52189 4.52189 4.58521 4.52189 4.62426 4.48284L8.75355 0.353553" stroke="#808080"/></svg></span>
+        </div>
+      </nav>
+      <div class="lnb__guide">
+        <span class="lnb__guide-label">광고 가이드</span>
+        <span class="nav-item__chevron" style="width:14px;height:14px;flex-basis:14px;">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9.04167 1.3125C9.04167 1.19647 9.08776 1.08519 9.16981 1.00314C9.25185 0.921094 9.36313 0.875 9.47917 0.875H12.6875C12.8035 0.875 12.9148 0.921094 12.9969 1.00314C13.0789 1.08519 13.125 1.19647 13.125 1.3125V4.52083C13.125 4.63687 13.0789 4.74815 12.9969 4.83019C12.9148 4.91224 12.8035 4.95833 12.6875 4.95833C12.5715 4.95833 12.4602 4.91224 12.3781 4.83019C12.2961 4.74815 12.25 4.63687 12.25 4.52083V2.36833L8.62167 5.99667C8.58161 6.03965 8.53331 6.07413 8.47965 6.09804C8.42598 6.12195 8.36805 6.13481 8.3093 6.13585C8.25056 6.13688 8.19221 6.12608 8.13773 6.10407C8.08326 6.08207 8.03377 6.04932 7.99223 6.00777C7.95068 5.96623 7.91793 5.91674 7.89593 5.86227C7.87392 5.80779 7.86312 5.74944 7.86415 5.6907C7.86519 5.63195 7.87805 5.57402 7.90196 5.52035C7.92587 5.46669 7.96035 5.41839 8.00333 5.37833L11.6317 1.75H9.47917C9.36313 1.75 9.25185 1.70391 9.16981 1.62186C9.08776 1.53981 9.04167 1.42853 9.04167 1.3125Z" fill="#808080"/><path d="M1.45833 2.47917C1.45833 1.91567 1.91567 1.45833 2.47917 1.45833H7.4375C7.55353 1.45833 7.66481 1.50443 7.74686 1.58647C7.82891 1.66852 7.875 1.7798 7.875 1.89583C7.875 2.01187 7.82891 2.12315 7.74686 2.20519C7.66481 2.28724 7.55353 2.33333 7.4375 2.33333H2.47917C2.44049 2.33333 2.4034 2.3487 2.37605 2.37605C2.3487 2.4034 2.33333 2.44049 2.33333 2.47917V11.5208C2.33333 11.6013 2.39867 11.6667 2.47917 11.6667H11.5208C11.5595 11.6667 11.5966 11.6513 11.624 11.624C11.6513 11.5966 11.6667 11.5595 11.6667 11.5208V6.5625C11.6667 6.44647 11.7128 6.33519 11.7948 6.25314C11.8769 6.17109 11.9881 6.125 12.1042 6.125C12.2202 6.125 12.3315 6.17109 12.4135 6.25314C12.4956 6.33519 12.5417 6.44647 12.5417 6.5625V11.5208C12.5417 11.7916 12.4341 12.0512 12.2427 12.2427C12.0512 12.4341 11.7916 12.5417 11.5208 12.5417H2.47917C2.20842 12.5417 1.94877 12.4341 1.75733 12.2427C1.56589 12.0512 1.45833 11.7916 1.45833 11.5208V2.47917Z" fill="#808080"/></svg>
+        </span>
+      </div>
+    </aside>
+
+    <!-- ===================== Main ===================== -->
+    <main class="main">
+      <div class="content">
+        <div class="content__inner">
+          <h1 class="page-title">화면 제목</h1>
+
+          <!-- ▼▼▼ 여기부터 화면 콘텐츠 (mcds.css 컴포넌트/토큰 사용) ▼▼▼ -->
+          <!--
+            예) 폼 행:
+            <div class="row">
+              <div class="row__label"><span>라벨<span class="req">*</span></span></div>
+              <div class="row__field">…필드…</div>
+            </div>
+            예) 버튼: <button class="btn btn--primary">확인</button>
+          -->
+          <!-- ▲▲▲ 화면 콘텐츠 끝 ▲▲▲ -->
+        </div>
+      </div>
+
+      <!-- 하단 고정 버튼바가 필요하면:
+      <div class="bottombar">
+        <a href="이전.html" class="btn btn--secondary" onclick="location.href='이전.html';return false;">취소</a>
+        <a href="다음.html" class="btn btn--primary" onclick="location.href='다음.html';return false;">다음</a>
+      </div>
+      -->
+    </main>
+  </div>
+
+  <!-- 라디오/체크박스 등 상호작용이 필요하면 아래 공용 헬퍼 사용 (불필요하면 삭제)
+  <script>
+    // 라디오: 빈 span .radio__dot 에 data-on 토글 (CSS가 원을 그림)
+    function setDot(dot, on){ if(dot){ on ? dot.setAttribute('data-on','') : dot.removeAttribute('data-on'); } }
+    document.querySelectorAll('[data-radio]').forEach(function(el){
+      if (el.disabled) return;
+      el.addEventListener('click', function(){
+        var g = el.getAttribute('data-radio');
+        document.querySelectorAll('[data-radio="'+g+'"]').forEach(function(p){
+          var sel = p===el;
+          p.setAttribute('aria-checked', sel?'true':'false');
+          setDot(p.querySelector('.radio__dot'), sel);
+          if (p.classList.contains('radio-card')) p.classList.toggle('radio-card--selected', sel);
+        });
+      });
+    });
+    // 체크박스: aria-checked 토글 (CSS가 체크 표시)
+    document.querySelectorAll('[data-check]').forEach(function(el){
+      el.addEventListener('click', function(){
+        if (el.disabled) return;
+        el.setAttribute('aria-checked', el.getAttribute('aria-checked')==='true'?'false':'true');
+      });
+    });
+  </script>
+  -->
+</body>
+</html>
