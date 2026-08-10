@@ -581,6 +581,9 @@ button { font-family: inherit; }
   padding: 14px 12px; font-size: 14px; line-height: 20px; color: var(--fg-default);
   border-bottom: 1px solid var(--border); background: transparent;
 }
+/* 컬럼 구분 세로선(Column-based) — 마지막 컬럼 제외, 바깥 테두리는 .mcds-table-wrap 담당 */
+.mcds-table thead th, .mcds-table tbody td { border-right: 1px solid var(--border); }
+.mcds-table thead th:last-child, .mcds-table tbody td:last-child { border-right: 0; }
 .mcds-table tbody tr { background: var(--fill-light); transition: background-color 120ms ease; }
 .mcds-table tbody tr:hover { background: var(--fill-light-low); }
 .mcds-table tbody tr.is-selected { background: var(--accent-light-low); }
@@ -647,46 +650,15 @@ button { font-family: inherit; }
 .alert__actions { display: flex; align-items: center; justify-content: flex-end; gap: 8px; }
 
 /* ============================================================
-   Prototype scaffolding — Modal · Drawer · Toast · Descriptions ·
-   Card · Tabs · Select · Alert · Empty · 2-depth LNB
-   antd(Modal/Drawer/message/Select/Tabs/Descriptions/Card/Alert/Empty)의
-   MCDS 대체물. Preflight Hi-Fi 목업 생성기가 사용하며 본편에서도 재사용 가능.
-   모든 값은 기존 :root 토큰을 재사용한다.
+   Prototype scaffolding — Drawer · Toast · Descriptions · Card ·
+   Tabs · Select · inline Alert · Empty · 2-depth LNB
+   Modal/Overlay/Alert(dialog)은 위의 공식 .overlay/.modal/.alert 재사용.
+   나머지는 antd(Drawer/message/Select/Tabs/Descriptions/Card/Empty) 대체물로,
+   Preflight Hi-Fi 목업 생성기가 사용하며 본편에서도 재사용 가능. 값은 :root 토큰 재사용.
    ============================================================ */
 
-/* Overlay (Modal/Drawer 공용 딤) */
-.mcds-overlay {
-  position: fixed; inset: 0; z-index: 100;
-  background: rgba(0, 0, 0, 0.45);
-  display: flex; align-items: center; justify-content: center; padding: 24px;
-}
-.mcds-overlay--right { align-items: stretch; justify-content: flex-end; padding: 0; }
-
-/* Modal */
-.mcds-modal {
-  width: 100%; max-width: 520px; max-height: calc(100vh - 96px);
-  display: flex; flex-direction: column;
-  background: var(--fill-light); border-radius: var(--r-8);
-  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.18); overflow: hidden;
-}
-.mcds-modal--wide { max-width: 720px; }
-.mcds-modal--confirm { max-width: 400px; }
-.mcds-modal__header {
-  display: flex; align-items: center; justify-content: space-between; gap: 12px;
-  padding: 20px 24px; border-bottom: 1px solid var(--border-light);
-}
-.mcds-modal__title { font-size: 18px; line-height: 26px; font-weight: 600; color: var(--fg-default); }
-.mcds-modal__close {
-  border: 0; background: transparent; color: var(--fg-muted);
-  font-size: 18px; line-height: 1; cursor: pointer; padding: 4px;
-}
-.mcds-modal__close:hover { color: var(--fg-default); }
-.mcds-modal__body { padding: 24px; overflow-y: auto; display: flex; flex-direction: column; gap: 16px; }
-.mcds-modal--confirm .mcds-modal__body { gap: 8px; font-size: 14px; line-height: 20px; color: var(--fg-subtle); }
-.mcds-modal__footer {
-  display: flex; align-items: center; justify-content: flex-end; gap: 8px;
-  padding: 16px 24px; border-top: 1px solid var(--border-light);
-}
+/* 공식 .overlay를 우측 정렬로 쓰는 Drawer용 modifier */
+.overlay--right { align-items: stretch; justify-content: flex-end; padding: 0; }
 
 /* Drawer (우측 슬라이드 패널) */
 .mcds-drawer {

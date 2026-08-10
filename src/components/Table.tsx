@@ -196,6 +196,9 @@ export function Table<T extends { id: string }>({
   };
 
   const selectColWidth = 44;
+  // 컬럼 구분 세로선(Column-based). 마지막 컬럼 제외, 바깥 테두리는 wrap 담당.
+  const colDivider = `1px solid ${color.borderLightLower}`;
+  const lastColIdx = columns.length - 1;
 
   const rowBg = (id: string, state: RowState) => {
     const isSel = selectedSet.has(id);
@@ -222,6 +225,7 @@ export function Table<T extends { id: string }>({
                     width: selectColWidth,
                     padding: 0,
                     borderBottom: `1px solid ${color.borderLightLower}`,
+                    borderRight: colDivider,
                     textAlign: 'center',
                     verticalAlign: 'middle',
                   }}
@@ -239,7 +243,7 @@ export function Table<T extends { id: string }>({
                   )}
                 </th>
               )}
-              {columns.map((col) => {
+              {columns.map((col, ci) => {
                 const cid = colId(col);
                 const active = sort?.key === cid;
                 const align = col.align ?? (col.cellType === 'numericText' ? 'right' : 'left');
@@ -255,6 +259,7 @@ export function Table<T extends { id: string }>({
                       fontWeight: typography.fontWeight.semibold,
                       color: color.fgDefault,
                       borderBottom: `1px solid ${color.borderLightLower}`,
+                      borderRight: ci === lastColIdx ? undefined : colDivider,
                       whiteSpace: 'nowrap',
                     }}
                     aria-sort={
@@ -339,7 +344,7 @@ export function Table<T extends { id: string }>({
                 >
                   {selectable && (
                     <td
-                      style={{ width: selectColWidth, padding: 0, textAlign: 'center', verticalAlign: 'middle' }}
+                      style={{ width: selectColWidth, padding: 0, textAlign: 'center', verticalAlign: 'middle', borderRight: colDivider }}
                       onClick={(e) => e.stopPropagation()}
                     >
                       <span style={{ display: 'inline-flex', verticalAlign: 'middle' }}>
@@ -363,7 +368,7 @@ export function Table<T extends { id: string }>({
                       </span>
                     </td>
                   )}
-                  {columns.map((col) => {
+                  {columns.map((col, ci) => {
                     const align = col.align ?? (col.cellType === 'numericText' ? 'right' : 'left');
                     const isLink = col.cellType === 'textButton';
                     return (
@@ -377,6 +382,7 @@ export function Table<T extends { id: string }>({
                             : isLink
                               ? color.fgAccent
                               : color.fgDefault,
+                          borderRight: ci === lastColIdx ? undefined : colDivider,
                           fontVariantNumeric:
                             col.cellType === 'numericText' || align === 'right'
                               ? 'tabular-nums'
