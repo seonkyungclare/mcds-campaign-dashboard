@@ -219,8 +219,8 @@
               <button data-cmp="week" class="on">전주 대비</button>
               <button data-cmp="month">전월 대비</button>
             </span>
-            <button class="lbtn">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>간략보기
+            <button class="lbtn" id="briefBtn" onclick="toggleBrief()">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg><span id="briefBtnText">간략보기</span>
             </button>
             <button class="lbtn">성과 리포트 다운로드
               <svg width="10" height="6" viewBox="0 0 9 5" fill="none"><path d="M.35.35 4.48 4.48 8.75.35" stroke="#808080"/></svg>
@@ -232,7 +232,7 @@
         <div class="dh__cards" id="cards"></div>
 
         <!-- 일별 지표 비교 -->
-        <div class="dh__panel">
+        <div class="dh__panel" id="dailyPanel">
           <div class="dh__chart-head">
             <span class="dh__sec-title" style="display:inline-flex;align-items:center;gap:4px;">일별 지표 비교
               <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="6" stroke="#808080"/><path d="M7 6.2v3.6" stroke="#808080" stroke-width="1.2" stroke-linecap="round"/><circle cx="7" cy="4.4" r="0.7" fill="#808080"/></svg>
@@ -551,6 +551,13 @@
   fillSel('g1sel',g1); fillSel('g2sel',g2);
   document.getElementById('g1sel').addEventListener('change',e=>{ g1=e.target.value; renderChart(); });
   document.getElementById('g2sel').addEventListener('change',e=>{ g2=e.target.value; renderChart(); });
+  // 간략보기 ↔ 차트보기: 일별 지표 비교 패널 숨김/표시
+  function toggleBrief(){
+    const panel=document.getElementById('dailyPanel');
+    panel.hidden = !panel.hidden;
+    document.getElementById('briefBtnText').textContent = panel.hidden ? '차트보기' : '간략보기';
+    if(!panel.hidden) renderChart();   // 다시 보일 때 폭 재측정 후 재렌더
+  }
   function applyCompareMode(){
     // 좌측 비교 데이터(vs.~) 및 차트 범례 '비교 기간' 노출 토글
     const vs=document.querySelector('.dh__vs'); if(vs) vs.style.display=noCompare?'none':'';
