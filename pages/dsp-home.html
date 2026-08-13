@@ -228,7 +228,7 @@
               </span>
             </div>
           </div>
-          <div class="dh__legend"><span><i></i>조회 기간</span><span><i class="dash"></i>비교 기간</span></div>
+          <div class="dh__legend"><span><i></i>조회 기간</span><span id="legPrev"><i class="dash"></i>비교 기간</span></div>
           <div class="chartwrap" id="chartwrap">
             <svg class="chart" viewBox="0 0 1000 300" id="chart"></svg>
             <div class="tip" id="tip"></div>
@@ -318,6 +318,7 @@
   };
   const MORDER = ['ctr','reach','click','imp','cost','conv'];
   let g1='ctr', g2='reach';
+  let noCompare=false;   // '비교 없음' 선택 시 true → 비교(prev) 데이터 미노출
   function fillSel(id,val){ document.getElementById(id).innerHTML = MORDER.map(k=>`<option value="${k}" ${k===val?'selected':''}>${METRICS[k].label}</option>`).join(''); }
 
   let CW=1000; const CH=300, PADL=54, PADR=54, PADT=24, PADB=28, N=7;
@@ -335,15 +336,15 @@
     CW=Math.round(wrap?.clientWidth||svg.clientWidth||1000)||1000;
     svg.setAttribute('viewBox',`0 0 ${CW} ${CH}`);
     const m1=METRICS[g1], m2=METRICS[g2];
-    const mx1=Math.max(...m1.cur,...m1.prev)*1.15, mx2=Math.max(...m2.cur,...m2.prev)*1.15;
+    const mx1=Math.max(...m1.cur,...(noCompare?[]:m1.prev))*1.15, mx2=Math.max(...m2.cur,...(noCompare?[]:m2.prev))*1.15;
     let out='';
     for(let i=0;i<=4;i++){ const y=PADT+(CH-PADT-PADB)*i/4; out+=`<line class="yg" x1="${PADL}" y1="${y}" x2="${CW-PADR}" y2="${y}"/>`; }
     // 좌축(지표1) 라벨
     for(let i=0;i<=4;i++){ const y=PADT+(CH-PADT-PADB)*i/4; out+=`<text class="ylab" x="${PADL-8}" y="${y+3}" text-anchor="end">${(mx1*(4-i)/4).toFixed(2)}</text>`; }
-    // 지표2 (파랑) — 비교 뒤, 조회 앞
-    out+=polyline(m2.prev,mx2,'#2b52f0',true)+polyline(m2.cur,mx2,'#2b52f0',false)+dots(m2.cur,mx2,'#2b52f0');
+    // 지표2 (파랑) — 비교 뒤, 조회 앞 (비교 없음 시 비교선 생략)
+    out+=(noCompare?'':polyline(m2.prev,mx2,'#2b52f0',true))+polyline(m2.cur,mx2,'#2b52f0',false)+dots(m2.cur,mx2,'#2b52f0');
     // 지표1 (주황)
-    out+=polyline(m1.prev,mx1,'#ec6f2d',true)+polyline(m1.cur,mx1,'#ec6f2d',false)+dots(m1.cur,mx1,'#ec6f2d');
+    out+=(noCompare?'':polyline(m1.prev,mx1,'#ec6f2d',true))+polyline(m1.cur,mx1,'#ec6f2d',false)+dots(m1.cur,mx1,'#ec6f2d');
     XS.forEach((d,i)=>{ out+=`<text class="xlab" x="${px(i).toFixed(1)}" y="${CH-8}" text-anchor="middle">${d}</text>`; });
     out+=`<line id="guide" x1="0" y1="${PADT}" x2="0" y2="${CH-PADB}"/>`;
     svg.innerHTML=out;
@@ -360,7 +361,7 @@
       [[g1,'o'],[g2,'b']].forEach(([k,dc])=>{
         const m=METRICS[k];
         html+=`<div class="trow"><div class="tm"><span class="dot ${dc}"></span>${m.label}</div>`+
-          `<div class="tl">조회 <b>${m.cur[i]}</b></div><div class="tl">비교 <b>${m.prev[i]}</b></div></div>`;
+          `<div class="tl">조회 <b>${m.cur[i]}</b></div>`+(noCompare?'':`<div class="tl">비교 <b>${m.prev[i]}</b></div>`)+`</div>`;
       });
       tip.innerHTML=html;
       let lp=r.width*(vbX/CW); const tw=200; lp=Math.max(tw/2,Math.min(r.width-tw/2,lp));
@@ -491,8 +492,16 @@
   fillSel('g1sel',g1); fillSel('g2sel',g2);
   document.getElementById('g1sel').addEventListener('change',e=>{ g1=e.target.value; renderChart(); });
   document.getElementById('g2sel').addEventListener('change',e=>{ g2=e.target.value; renderChart(); });
+  function applyCompareMode(){
+    // 좌측 비교 데이터(vs.~) 및 차트 범례 '비교 기간' 노출 토글
+    const vs=document.querySelector('.dh__vs'); if(vs) vs.style.display=noCompare?'none':'';
+    const legPrev=document.getElementById('legPrev'); if(legPrev) legPrev.style.display=noCompare?'none':'';
+    renderChart();
+  }
   document.querySelectorAll('#cmpSeg button').forEach(b=>b.addEventListener('click',()=>{
     document.querySelectorAll('#cmpSeg button').forEach(x=>x.classList.remove('on')); b.classList.add('on');
+    noCompare = b.dataset.cmp==='none';
+    applyCompareMode();
   }));
   document.querySelectorAll('.stepnav__item').forEach(b=>b.addEventListener('click',()=>setTab(b.dataset.tab)));
   // '캠페인 만들기' → 현재 탭 생성 페이지 (캠페인 → campaign-create.html)
