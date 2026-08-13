@@ -240,6 +240,10 @@ button { font-family: inherit; }
   cursor: pointer; text-align: left;
 }
 .radio-card--selected { border-color: var(--accent); }
+.radio-card--disabled { cursor: default; background: var(--fill-light); }
+.radio-card--disabled .radio-card__title, .radio-card--disabled .radio-card__desc { color: var(--fg-disabled); }
+.radio-card--disabled .radio__dot { border-color: #e6e6e6; background: var(--fill-disabled); }
+.radio-card--disabled .tag { color: var(--fg-disabled); border-color: #e6e6e6; background: var(--fill-disabled); }
 .radio-card__head { display: flex; align-items: center; gap: 8px; min-height: 22px; }
 .radio-card__title { font-size: 14px; line-height: 20px; font-weight: 600; color: var(--fg-default); }
 .radio-card__desc { padding-left: 28px; font-size: 14px; line-height: 20px; font-weight: 400; color: var(--fg-muted); }

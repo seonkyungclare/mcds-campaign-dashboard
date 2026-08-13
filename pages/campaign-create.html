@@ -11,7 +11,7 @@
     rel="stylesheet"
     href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css"
   />
-  <link rel="stylesheet" href="mcds.css?v=20260813g" />
+  <link rel="stylesheet" href="mcds.css?v=20260813h" />
 </head>
 <body>
   <!-- ===================== GNB ===================== -->
@@ -98,11 +98,11 @@
               <div class="row__label"><span>광고 유형 선택</span></div>
               <div class="row__field">
                 <div class="radio-group" role="radiogroup" aria-label="광고 유형 선택">
-                  <button type="button" class="radio" role="radio" aria-checked="true" data-radio="adtype">
+                  <button type="button" class="radio" role="radio" aria-checked="true" data-radio="adtype" data-value="ad">
                     <span class="radio__dot" data-on></span>
-                    <span class="radio__label">광고(유료)</span>
+                    <span class="radio__label">광고</span>
                   </button>
-                  <button type="button" class="radio" role="radio" aria-checked="false" data-radio="adtype">
+                  <button type="button" class="radio" role="radio" aria-checked="false" data-radio="adtype" data-value="free">
                     <span class="radio__dot"></span>
                     <span class="radio__label">비광고(무료)</span>
                   </button>
@@ -115,26 +115,13 @@
               <div class="row__label"><span>구매 유형</span></div>
               <div class="row__field">
                 <div class="purchase">
-                  <div class="purchase__cards" role="radiogroup" aria-label="구매 유형">
-                    <button type="button" class="radio-card radio-card--selected" role="radio" aria-checked="true" data-radio="purchase">
-                      <div class="radio-card__head">
-                        <span class="radio__dot" data-on></span>
-                        <span class="radio-card__title">프로모티드</span>
-                      </div>
-                      <p class="radio-card__desc">프로모티드는 지정한 기간 동안 이 소재를 ‘우선 고정’으로 노출하는 유형입니다.</p>
-                    </button>
-                    <button type="button" class="radio-card" role="radio" aria-checked="false" data-radio="purchase">
-                      <div class="radio-card__head">
-                        <span class="radio__dot"></span>
-                        <span class="radio-card__title">오가닉</span>
-                      </div>
-                      <p class="radio-card__desc">오가닉은 반응할 만한 유저에게 개인화 로직으로 알아서 노출하는 유형입니다..</p>
-                    </button>
-                  </div>
+                  <div class="purchase__cards" id="purchaseCards" role="radiogroup" aria-label="구매 유형"></div>
 
-                  <!-- info panel -->
+                  <!-- info panel (구매유형별 동적 렌더) -->
                   <section class="info">
-                    <div class="info__row">
+                    <div class="info__row" id="infoRow"></div>
+                  </section>
+                  <template id="infoRowStatic" hidden><div class="info__row">
                       <!-- item 1: 고정 노출 -->
                       <div class="info__item">
                         <div class="gicon" aria-hidden="true">
@@ -172,8 +159,7 @@
                           <p class="info__desc">비용은 들지 않지만, 노출수가 보장되지는 않습니다.</p>
                         </div>
                       </div>
-                    </div>
-                  </section>
+                    </div></template>
 
                   <!-- guide -->
                   <div class="guide">
@@ -200,17 +186,99 @@
   <script>
     // MCDS radio: CSS 구동 dot — [data-on] 속성 토글로 상태 표시
     function setDot(dot, on) { if (dot) { if (on) dot.setAttribute('data-on', ''); else dot.removeAttribute('data-on'); } }
-    document.querySelectorAll('[data-radio]').forEach(function (el) {
-      el.addEventListener('click', function () {
-        var group = el.getAttribute('data-radio');
-        document.querySelectorAll('[data-radio="' + group + '"]').forEach(function (peer) {
+
+    // ── 광고유형 → 구매유형 → info 데이터 (아이콘 3종은 상태 무관 동일: 벨/태그/뱃지) ──
+    var GI = document.getElementById('infoRowStatic').content.querySelectorAll('.gicon');
+    function gicon(i){ return GI[i] ? GI[i].outerHTML : ''; }
+
+    var PURCHASE = {
+      ad: {   // 광고
+        def: 'guaranteed',
+        cards: [
+          { id:'guaranteed', title:'보장형', badge:'CPM', desc:'보장형은 고정 CPM 단가로 운영되며, 설정한 기간 동안 목표 노출수를 보장합니다.' },
+          { id:'auction',    title:'경매형', badge:'CPM', desc:'준비중입니다.', disabled:true }
+        ],
+        info: {
+          guaranteed: [
+            ['노출수 보장','설정한 목표 노출수를 집행 기간 안에 채우도록 보장합니다.'],
+            ['기간 예약형','원하는 구좌·기간을 미리 예약해 안정적으로 노출합니다.'],
+            ['유료광고','노출 단가(CPM) 기준으로 예산과 목표 노출수를 직접 설정합니다.']
+          ]
+        }
+      },
+      free: { // 비광고(무료)
+        def: 'promoted',
+        cards: [
+          { id:'promoted', title:'프로모티드', desc:'프로모티드는 지정한 기간 동안 이 소재를 ‘우선 고정’으로 노출하는 유형입니다.' },
+          { id:'organic',  title:'오가닉',   desc:'오가닉은 반응할 만한 유저에게 개인화 로직으로 알아서 노출하는 유형입니다.' }
+        ],
+        info: {
+          promoted: [
+            ['고정 노출','개인화 알고리즘을 거치지 않고, 지정 슬롯에 먼저 고정으로 노출됩니다.'],
+            ['전사 프로모션','메가 이벤트·시즌 프로모션처럼 꼭 노출해야 할 때 사용합니다.'],
+            ['무료광고','비용은 들지 않지만, 노출수가 보장되지는 않습니다.']
+          ],
+          organic: [
+            ['개인화 자동 노출','추천 로직이 유저마다 알맞게 자동으로 적용됩니다.'],
+            ['상시 노출','후순위 슬롯에서 자연스럽게 상시노출됩니다.'],
+            ['성과 기반','비용 없이, 성과가 좋을수록 더 많이 노출됩니다.']
+          ]
+        }
+      }
+    };
+
+    function renderInfo(adType, pid){
+      var cfg = PURCHASE[adType];
+      var rows = cfg.info[pid] || cfg.info[cfg.def];
+      document.getElementById('infoRow').innerHTML = rows.map(function(it,i){
+        return '<div class="info__item">'+gicon(i)+
+          '<div class="info__text"><p class="info__title">'+it[0]+'</p><p class="info__desc">'+it[1]+'</p></div></div>';
+      }).join('');
+    }
+
+    function selectPurchase(adType, pid){
+      document.querySelectorAll('#purchaseCards .radio-card').forEach(function(c){
+        var on = c.getAttribute('data-pid') === pid;
+        c.classList.toggle('radio-card--selected', on);
+        c.setAttribute('aria-checked', on ? 'true' : 'false');
+        setDot(c.querySelector('.radio__dot'), on);
+      });
+      renderInfo(adType, pid);
+    }
+
+    function renderPurchase(adType){
+      var cfg = PURCHASE[adType];
+      var wrap = document.getElementById('purchaseCards');
+      wrap.innerHTML = cfg.cards.map(function(c){
+        var sel = c.id === cfg.def && !c.disabled;
+        var badge = c.badge ? '<span class="tag tag--gray">'+c.badge+'</span>' : '';
+        return '<button type="button" class="radio-card'+(sel?' radio-card--selected':'')+(c.disabled?' radio-card--disabled':'')+
+          '" role="radio" aria-checked="'+(sel?'true':'false')+'"'+(c.disabled?' aria-disabled="true"':'')+' data-pid="'+c.id+'">'+
+          '<div class="radio-card__head"><span class="radio__dot'+(sel?'" data-on':'"')+'></span>'+
+          '<span class="radio-card__title">'+c.title+'</span>'+badge+'</div>'+
+          '<p class="radio-card__desc">'+c.desc+'</p></button>';
+      }).join('');
+      wrap.querySelectorAll('.radio-card').forEach(function(c){
+        if (c.classList.contains('radio-card--disabled')) return;
+        c.addEventListener('click', function(){ selectPurchase(adType, c.getAttribute('data-pid')); });
+      });
+      selectPurchase(adType, cfg.def);
+    }
+
+    // 광고유형 라디오 → 구매유형/ info 재구성
+    document.querySelectorAll('[data-radio="adtype"]').forEach(function(el){
+      el.addEventListener('click', function(){
+        document.querySelectorAll('[data-radio="adtype"]').forEach(function(peer){
           var selected = peer === el;
           peer.setAttribute('aria-checked', selected ? 'true' : 'false');
           setDot(peer.querySelector('.radio__dot'), selected);
-          if (peer.classList.contains('radio-card')) peer.classList.toggle('radio-card--selected', selected);
         });
+        renderPurchase(el.getAttribute('data-value'));
       });
     });
+
+    renderPurchase('ad'); // 기본: 광고 → 보장형
+
     (function () {
       var input = document.querySelector('.textfield__input');
       var count = document.getElementById('nameCount');
