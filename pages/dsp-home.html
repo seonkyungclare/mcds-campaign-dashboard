@@ -8,7 +8,7 @@
   <title>디스플레이 광고 관리</title>
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
-  <link rel="stylesheet" href="mcds.css?v=20260813f" />
+  <link rel="stylesheet" href="mcds.css?v=20260813g" />
   <style>
     /* ===== 디스플레이 광고 관리 홈 — Figma 디자인 기준 (MCDS 토큰) ===== */
     .dh { display: flex; flex-direction: column; gap: 24px; padding: 32px; width: 100%; }
@@ -221,8 +221,9 @@
               <button data-cmp="week" class="on">전주 대비</button>
               <button data-cmp="month">전월 대비</button>
             </span>
-            <button class="lbtn" id="briefBtn" onclick="toggleBrief()">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg><span id="briefBtnText">간략보기</span>
+            <button type="button" class="mcds-switch" id="chartSwitch" role="switch" aria-checked="true" onclick="toggleBrief()">
+              <span class="mcds-switch__track"></span>
+              <span class="mcds-switch__label">비교 차트 보기</span>
             </button>
             <button class="lbtn">성과 리포트 다운로드
               <svg width="10" height="6" viewBox="0 0 9 5" fill="none"><path d="M.35.35 4.48 4.48 8.75.35" stroke="#808080"/></svg>
@@ -556,11 +557,13 @@
   // 간략보기 ↔ 차트보기: 일별 지표 비교 패널 숨김/표시
   var briefMode=false;
   function toggleBrief(){
+    const sw=document.getElementById('chartSwitch');
+    const on = sw.getAttribute('aria-checked')!=='true';   // 토글 후 상태(on=차트 표시)
+    sw.setAttribute('aria-checked', on?'true':'false');
     const panel=document.getElementById('dailyPanel');
-    panel.hidden = !panel.hidden;
+    panel.hidden = !on;                 // on → 표시 / off → hidden
     briefMode = panel.hidden;
-    document.getElementById('briefBtnText').textContent = panel.hidden ? '차트보기' : '간략보기';
-    if(!panel.hidden) renderChart();   // 다시 보일 때 폭 재측정 후 재렌더
+    if(on) renderChart();               // 다시 보일 때 폭 재측정 후 재렌더
     fitTable();
   }
   // 차트보기·간략보기 공통: 브라우저 높이에 맞춰 테이블 높이 가변(하단 80px 유지).
