@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>MCDS Select 미리보기</title>
+<link rel="stylesheet" href="mcds.css" />
+<style>
+  body { padding: 32px; background: #fff; min-width: 0; }
+  h1 { font-size: 20px; margin: 0 0 20px; }
+  .row { display: flex; gap: 20px; align-items: center; flex-wrap: wrap; margin-bottom: 20px; }
+  .lab { width: 110px; font-size: 13px; color: #808080; }
+</style>
+</head>
+<body>
+<h1>MCDS Select (.mcds-select)</h1>
+
+<div class="row">
+  <span class="lab">enabled</span>
+  <select class="mcds-select"><option>기본 싱글 셀렉트</option><option>셀렉트 아이템 1</option><option>셀렉트 아이템 2</option></select>
+  <select class="mcds-select"><option>선택된 아이템</option><option>셀렉트 아이템 1</option></select>
+</div>
+<div class="row">
+  <span class="lab">focus (클릭)</span>
+  <select class="mcds-select" autofocus><option>포커스 상태</option><option>셀렉트 아이템 1</option></select>
+</div>
+<div class="row">
+  <span class="lab">error</span>
+  <select class="mcds-select mcds-select--error"><option>기본 싱글 셀렉트</option><option>셀렉트 아이템 1</option></select>
+</div>
+<div class="row">
+  <span class="lab">disabled</span>
+  <select class="mcds-select" disabled><option>기본 싱글 셀렉트</option></select>
+</div>
+<div class="row">
+  <span class="lab">size 32/36/40</span>
+  <select class="mcds-select mcds-select--32"><option>size 32</option></select>
+  <select class="mcds-select"><option>size 36</option></select>
+  <select class="mcds-select mcds-select--40"><option>size 40</option></select>
+</div>
+<p style="font-size:13px;color:#808080;">hover: 커서를 셀렉트 위에 올리면 테두리가 연한 파랑(#bacbff)으로 바뀝니다.</p>
+
+<h1 style="margin-top:40px;">Select Menu (드롭다운 목록)</h1>
+<div style="width:360px;">
+  <select class="mcds-select mcds-select--40" style="width:100%; border-color:#2b52f0;"><option>선택된 아이템</option></select>
+  <ul class="mcds-select-menu" style="margin-top:4px;">
+    <li><button class="mcds-select-menu__item mcds-select-menu__item--selected" type="button">셀렉트 아이템
+      <svg class="mcds-select-menu__check" viewBox="0 0 16 16" fill="none"><path d="M3 8.5 6.5 12 13 4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button></li>
+    <li><button class="mcds-select-menu__item" type="button">셀렉트 아이템</button></li>
+    <li><button class="mcds-select-menu__item" type="button">셀렉트 아이템</button></li>
+    <li><button class="mcds-select-menu__item" type="button">셀렉트 아이템</button></li>
+    <li><button class="mcds-select-menu__item" type="button">셀렉트 아이템</button></li>
+    <li><button class="mcds-select-menu__item" type="button" disabled>비활성 아이템</button></li>
+  </ul>
+</div>
+</body>
+</html>

@@ -390,7 +390,9 @@
 
   /* ================= 테이블 (Figma 컬럼 + HTML 데이터) ================= */
   const on='<span class="tg on"></span>', off='<span class="tg"></span>';
-  function stat(c,t){ return `<span class="stat stat-${c}">${t}</span>`; }
+  // 상태 → MCDS Tag 색 매핑
+  const STAT_TONE={ live:'green', wait:'blue', del:'red', pause:'yellow', end:'gray', draft:'purple' };
+  function stat(c,t){ return `<span class="tag tag--${STAT_TONE[c]||'gray'}">${t}</span>`; }
   function link(t){ return `<span class="mcds-table__link">${t}</span>`; }
   const AC_CAMP=['수정','광고그룹 추가','복제'], AC_GRP=['수정','광고 추가','복제'], AC_AD=['수정','복제'];
   function acts(list){ return '<span style="display:inline-flex;gap:6px">'+list.map(a=>`<span class="abtn">${a}</span>`).join('')+'</span>'; }

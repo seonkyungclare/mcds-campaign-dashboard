@@ -3,7 +3,7 @@ export { Checkbox, type CheckboxProps, type CheckboxState } from './Checkbox';
 export { Chip, type ChipProps, type ChipTone, type ChipSize, type ChipState } from './Chip';
 export { Switch, type SwitchProps, type SwitchState, type SwitchSize } from './Switch';
 export { TextField, type TextFieldProps } from './TextField';
-export { Select, type SelectProps, type SelectOption } from './Select';
+export { Select, type SelectProps, type SelectOption, type SelectSize } from './Select';
 export {
   Table,
   type TableProps,
@@ -12,6 +12,7 @@ export {
   type RowState,
 } from './Table';
 export { Badge, type BadgeProps, type BadgeTone } from './Badge';
+export { Tag, type TagProps, type TagColor } from './Tag';
 export {
   Button,
   type ButtonProps,

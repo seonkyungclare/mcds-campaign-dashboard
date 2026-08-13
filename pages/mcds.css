@@ -619,6 +619,21 @@ button { font-family: inherit; }
 .pagination__item--ellipsis { color: var(--fg-muted); cursor: default; }
 .pagination__item[disabled] { color: var(--fg-disabled); cursor: not-allowed; }
 
+/* ===================== Tag ===================== */
+/* Figma "Tag": 6색 테두리 pill (height 22, 12/18, radius 4, border 1). */
+.tag {
+  display: inline-flex; align-items: center; box-sizing: border-box; height: 22px; padding: 0 8px;
+  border: 1px solid #d9d9d9; border-radius: var(--r-4);
+  font-size: 12px; line-height: 18px; font-weight: 400; white-space: nowrap;
+  background: #fafafa; color: #666666;
+}
+.tag--gray   { background: #fafafa; border-color: #d9d9d9; color: #666666; }
+.tag--blue   { background: #edf3ff; border-color: #bacbff; color: #2b52f0; }
+.tag--green  { background: #f7fff0; border-color: #b2e58a; color: #3da600; }
+.tag--red    { background: #fff3f1; border-color: #ffc5c0; color: #fc3f45; }
+.tag--yellow { background: #fff7eb; border-color: #ffcf94; color: #ff6b08; }
+.tag--purple { background: #f9f0ff; border-color: #d3adf7; color: #722ed1; }
+
 /* ===================== Overlay / Modal / Alert ===================== */
 /* Figma "Popup"(Modal) + Alert. dim 배경 위 흰 카드 radius 12, 헤더/푸터 구분선 #e6e6e6. */
 .overlay {
@@ -732,18 +747,45 @@ button { font-family: inherit; }
 .mcds-tab:hover { color: var(--fg-default); }
 .mcds-tab--active { color: var(--accent); border-bottom-color: var(--accent); font-weight: 600; }
 
-/* Select (native, styled) */
+/* Select (native, styled) — Figma states: enabled/hover/focus/error/disabled × size 32/36/40 */
 .mcds-select {
-  height: 36px; min-width: 160px; padding: 0 32px 0 8px;
+  height: 36px; min-width: 160px; padding: 0 32px 0 12px;
   border: 1px solid var(--border); border-radius: var(--r-4);
   background-color: var(--fill-light);
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23808080' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
   background-repeat: no-repeat; background-position: right 8px center;
   font-family: inherit; font-size: 14px; line-height: 20px; color: var(--fg-default);
   appearance: none; -webkit-appearance: none; cursor: pointer;
+  transition: border-color 150ms ease;
 }
+.mcds-select--32 { height: 32px; }
+.mcds-select--40 { height: 40px; font-size: 16px; line-height: 24px; }
+.mcds-select:hover:not(:disabled):not(:focus) { border-color: var(--border-accent-light); }
 .mcds-select:focus { outline: 0; border-color: var(--accent); }
-.mcds-select:disabled { background-color: var(--fill-disabled); color: var(--fg-disabled); cursor: not-allowed; }
+.mcds-select--error, .mcds-select--error:focus { border-color: var(--critical-border); }
+.mcds-select:disabled {
+  background-color: var(--fill-disabled); border-color: var(--border-disabled);
+  color: var(--fg-disabled); cursor: not-allowed;
+}
+
+/* Select Menu (커스텀 드롭다운 목록 — 네이티브 select의 OS 드롭다운 대체용).
+   Figma "Select Menu": 항목 36px, 좌우 12, 텍스트 14/20, 선택/hover 하이라이트. */
+.mcds-select-menu {
+  padding: 4px; margin: 0; list-style: none; background: var(--fill-light);
+  border: 1px solid var(--border-disabled); border-radius: var(--r-8);
+  box-shadow: 0 0 1px 1px rgba(0,0,0,.06), 0 12px 16px -4px rgba(0,0,0,.08), 0 4px 10px -1px rgba(0,0,0,.06);
+  max-height: 260px; overflow-y: auto;
+}
+.mcds-select-menu__item {
+  display: flex; align-items: center; justify-content: space-between; gap: 8px;
+  width: 100%; height: 36px; padding: 0 12px; border: 0; border-radius: var(--r-4);
+  background: transparent; font-family: inherit; font-size: 14px; line-height: 20px;
+  color: var(--fg-default); text-align: left; white-space: nowrap; cursor: pointer;
+}
+.mcds-select-menu__item:hover { background: var(--fill-light-hovered); }
+.mcds-select-menu__item--selected { background: var(--accent-light-low); font-weight: 500; }
+.mcds-select-menu__item:disabled { color: var(--fg-disabled); cursor: not-allowed; background: transparent; }
+.mcds-select-menu__check { flex: 0 0 16px; width: 16px; height: 16px; color: var(--accent); }
 
 /* ===================== Switch (MCDS) ===================== */
 .mcds-switch { display: inline-flex; align-items: center; gap: 8px; border: 0; background: none; padding: 0; cursor: pointer; font-family: inherit; }
