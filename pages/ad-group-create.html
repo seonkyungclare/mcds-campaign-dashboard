@@ -454,9 +454,14 @@
         if (bigRow) bigRow.style.display = pkg ? 'none' : '';
         if (pkg) {
           if (big) setChecked(big, false);
+          // 세트 구좌(스플래시·퀵메뉴)는 선택 불가(readonly): 체크박스 숨김 + 비상호작용
           setDisabled(splash, false); setDisabled(quick, false);
-          setChecked(splash, true); setChecked(quick, true);
+          setChecked(splash, false); setChecked(quick, false);
+          splash.classList.add('slot-card--readonly');
+          quick.classList.add('slot-card--readonly');
         } else {
+          splash.classList.remove('slot-card--readonly');
+          quick.classList.remove('slot-card--readonly');
           syncExclusive();
         }
       }
