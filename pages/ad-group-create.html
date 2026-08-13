@@ -104,7 +104,7 @@
 
               <!-- 상품 선택 -->
               <div class="row">
-                <div class="row__label"><span>상품 선택</span></div>
+                <div class="row__label"><span>상품 유형 선택</span></div>
                 <div class="row__field">
                   <div class="field-stack">
                     <div>
@@ -122,6 +122,10 @@
                         <li>일반형 : 원하는 구좌를 골라 개별로 운영하는 기본 유형입니다.</li>
                         <li>패키지형 : 앱 스플래시와 하이라이트 퀵메뉴를 세트로 묶어 연동 노출하는 유형입니다.</li>
                       </ul>
+                      <!-- 패키지형 선택 시에만 노출되는 구성 셀렉트 -->
+                      <select class="mcds-select" id="pkgSelect" aria-label="패키지 구성" style="display:none; margin-top:12px; min-width:280px;">
+                        <option>하이라이트 퀵메뉴 + 스플래시</option>
+                      </select>
                     </div>
                   </div>
                 </div>
@@ -190,7 +194,7 @@
               </div>
 
               <!-- 빅배너 카테고리 -->
-              <div class="row">
+              <div class="row" id="bigbannerCatRow">
                 <div class="row__label"><span>빅배너<span class="req">*</span></span></div>
                 <div class="row__field">
                   <div class="radio-group" role="group" aria-label="빅배너 카테고리">
@@ -415,9 +419,12 @@
         card.classList.toggle('slot-card--disabled', disabled);
         if (disabled && isOn(card)) setChecked(card, false); // 비활성 시 선택 해제
       }
-      // 상호배타 반영: 한쪽이 켜져 있으면 반대쪽을 Disabled
+      var isPackage = false;
+      // 상호배타 반영(일반형에서만): 한쪽이 켜져 있으면 반대쪽을 Disabled.
+      // 패키지형은 스플래시+퀵메뉴를 세트로 함께 선택하므로 배타 해제.
       function syncExclusive() {
         if (!splash || !quick) return;
+        if (isPackage) { setDisabled(quick, false); setDisabled(splash, false); return; }
         setDisabled(quick, isOn(splash));
         setDisabled(splash, isOn(quick));
       }
@@ -433,7 +440,32 @@
         card.addEventListener('click', toggle);
         card.addEventListener('keydown', function (e) { if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); toggle(); } });
       });
-      syncExclusive();
+
+      // ---- 상품 유형(일반형/패키지형) 연동 ----
+      // 일반형: 3개 카드(빅배너·스플래시·하이라이트 퀵메뉴)
+      // 패키지형: 구성 셀렉트 노출 + 빅배너 숨김 → 2개 카드(스플래시·하이라이트 퀵메뉴), 둘 다 선택(세트)
+      var big = document.querySelector('[data-slot-id="bigbanner"]');
+      var pkgSelect = document.getElementById('pkgSelect');
+      var bigRow = document.getElementById('bigbannerCatRow');
+      function applyProductType(pkg) {
+        isPackage = pkg;
+        if (pkgSelect) pkgSelect.style.display = pkg ? '' : 'none';
+        if (big) big.style.display = pkg ? 'none' : '';
+        if (bigRow) bigRow.style.display = pkg ? 'none' : '';
+        if (pkg) {
+          if (big) setChecked(big, false);
+          setDisabled(splash, false); setDisabled(quick, false);
+          setChecked(splash, true); setChecked(quick, true);
+        } else {
+          syncExclusive();
+        }
+      }
+      document.querySelectorAll('[data-radio="product"]').forEach(function (r) {
+        r.addEventListener('click', function () {
+          applyProductType(r.querySelector('.radio__label').textContent.trim() === '패키지형');
+        });
+      });
+      applyProductType(false);
     })();
 
     // ---- 계약 금액 자동 계산 (목표 노출수 × CPM ÷ 1000) ----
