@@ -117,6 +117,8 @@
     /* 홈 테이블 컬럼 너비: 최소 110px, 이름 컬럼(캠페인명/광고그룹명/광고명) 220px */
     .mcds-table th:not(.mcds-table__sel), .mcds-table td:not(.mcds-table__sel) { min-width: 110px; }
     .mcds-table th.mcds-table__name, .mcds-table td.mcds-table__name { width: 220px; min-width: 220px; }
+    /* 액션 버튼 컬럼: 내용에 맞춤(hug) */
+    .mcds-table th.mcds-table__act, .mcds-table td.mcds-table__act { width: 1%; min-width: 0; white-space: nowrap; }
     /* 캠페인 선택 모달 */
     .cs-desc { font-size: 14px; line-height: 20px; color: var(--fg-subtle); margin-bottom: 16px; }
     .cs-filter { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; background: var(--fill-light-low); border: 1px solid var(--border); border-radius: var(--r-8); padding: 16px; margin-bottom: 16px; }
@@ -475,7 +477,8 @@
     document.getElementById('createBtn').textContent=d.create;
     const chk='<button type="button" class="checkbox" role="checkbox" aria-checked="false" id="chkall" onclick="toggleAll()">'+CB_BOX+'</button>';
     const NAMECOLS=['캠페인명','광고그룹명','광고명'];
-    const colCls=(i)=>`${d.numcols.includes(i)?'mcds-table__num':''}${NAMECOLS.includes(d.head[i])?' mcds-table__name':''}`;
+    const ACTCOLS=['수정','복제','광고그룹 추가','광고 추가'];
+    const colCls=(i)=>`${d.numcols.includes(i)?'mcds-table__num':''}${NAMECOLS.includes(d.head[i])?' mcds-table__name':''}${ACTCOLS.includes(d.head[i])?' mcds-table__act':''}`;
     document.getElementById('thead').innerHTML='<tr><th class="mcds-table__sel">'+chk+'</th>'+d.head.map((h,i)=>`<th class="${colCls(i)}">${h}</th>`).join('')+'</tr>';
     document.getElementById('tbody').innerHTML = d.rows.map((r,ri)=>
       '<tr><td class="mcds-table__sel"><button type="button" class="checkbox rowchk" role="checkbox" aria-checked="false" data-idx="'+ri+'" onclick="toggleRow(this)">'+CB_BOX+'</button></td>'+
