@@ -8,7 +8,7 @@
   <title>디스플레이 광고 관리</title>
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
-  <link rel="stylesheet" href="mcds.css?v=20260813c" />
+  <link rel="stylesheet" href="mcds.css?v=20260813d" />
   <style>
     /* ===== 디스플레이 광고 관리 홈 — Figma 디자인 기준 (MCDS 토큰) ===== */
     .dh { display: flex; flex-direction: column; gap: 24px; padding: 32px; width: 100%; }
@@ -98,7 +98,7 @@
 
     /* 테이블 셀 콘텐츠 — 구조/페이지네이션은 mcds.css의 .mcds-table / .pagination 사용 */
     .idtxt { color: var(--fg-muted); }
-    .abtn { border: 1px solid var(--border); background: #fff; border-radius: var(--r-4); padding: 5px 9px; font-size: 12px; font-weight: 500; color: var(--fg-subtle); cursor: pointer; white-space: nowrap; }
+    .abtn { display: inline-flex; align-items: center; justify-content: center; height: 32px; box-sizing: border-box; border: 1px solid var(--border); background: #fff; border-radius: var(--r-4); padding: 0 12px; font-size: 12px; font-weight: 500; color: var(--fg-subtle); cursor: pointer; white-space: nowrap; }
     .abtn:hover { border-color: var(--border-light-lower-hovered); }
     /* 토글 (cellType=switch) */
     .tg { width: 34px; height: 20px; border-radius: 20px; background: #d1d6db; position: relative; display: inline-block; cursor: pointer; vertical-align: middle; }
@@ -114,6 +114,9 @@
     .stat-end { color: var(--fg-muted); background: var(--fill-light-lower); }
     .stat-draft { color: #7c3aed; background: #f3ecff; }
     .rv-appr { color: #0a8f52; background: #e7f7ef; } .rv-rej { color: #e5231b; background: #fdeaec; }
+    /* 홈 테이블 컬럼 너비: 최소 110px, 이름 컬럼(캠페인명/광고그룹명/광고명) 220px */
+    .mcds-table th:not(.mcds-table__sel), .mcds-table td:not(.mcds-table__sel) { min-width: 110px; }
+    .mcds-table th.mcds-table__name, .mcds-table td.mcds-table__name { width: 220px; min-width: 220px; }
   </style>
 </head>
 <body>
@@ -459,10 +462,12 @@
     const d=TABLES[t];
     document.getElementById('createBtn').textContent=d.create;
     const chk='<button type="button" class="checkbox" role="checkbox" aria-checked="false" id="chkall" onclick="toggleAll()">'+CB_BOX+'</button>';
-    document.getElementById('thead').innerHTML='<tr><th class="mcds-table__sel">'+chk+'</th>'+d.head.map((h,i)=>`<th class="${d.numcols.includes(i)?'mcds-table__num':''}">${h}</th>`).join('')+'</tr>';
+    const NAMECOLS=['캠페인명','광고그룹명','광고명'];
+    const colCls=(i)=>`${d.numcols.includes(i)?'mcds-table__num':''}${NAMECOLS.includes(d.head[i])?' mcds-table__name':''}`;
+    document.getElementById('thead').innerHTML='<tr><th class="mcds-table__sel">'+chk+'</th>'+d.head.map((h,i)=>`<th class="${colCls(i)}">${h}</th>`).join('')+'</tr>';
     document.getElementById('tbody').innerHTML = d.rows.map((r,ri)=>
       '<tr><td class="mcds-table__sel"><button type="button" class="checkbox rowchk" role="checkbox" aria-checked="false" data-idx="'+ri+'" onclick="toggleRow(this)">'+CB_BOX+'</button></td>'+
-      r.map((c,i)=>`<td class="${d.numcols.includes(i)?'mcds-table__num':''}">${c}</td>`).join('')+'</tr>'
+      r.map((c,i)=>`<td class="${colCls(i)}">${c}</td>`).join('')+'</tr>'
     ).join('');
     // 선택 상태 복원(탭 이동과 무관하게 유지)
     document.querySelectorAll('#tbody .rowchk').forEach(el=>{ if(SEL[curTab].has(+el.dataset.idx)) cbSet(el,true); });

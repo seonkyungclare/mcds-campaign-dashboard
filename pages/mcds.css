@@ -372,6 +372,9 @@ button { font-family: inherit; }
 }
 .datepicker__input::placeholder { color: var(--fg-muted); }
 .datepicker__icon { flex: 0 0 16px; width: 16px; height: 16px; color: var(--fg-muted); }
+.datepicker--disabled { background: var(--fill-disabled); border-color: var(--border-disabled); cursor: not-allowed; }
+.datepicker--disabled .datepicker__input { color: var(--fg-disabled); }
+.datepicker--disabled .datepicker__icon { color: var(--fg-disabled); opacity: .6; }
 .date-range { display: flex; align-items: center; gap: 8px; }
 .date-range__tilde { font-size: 14px; color: var(--fg-muted); }
 
