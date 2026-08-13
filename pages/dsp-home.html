@@ -552,11 +552,25 @@
   document.getElementById('g1sel').addEventListener('change',e=>{ g1=e.target.value; renderChart(); });
   document.getElementById('g2sel').addEventListener('change',e=>{ g2=e.target.value; renderChart(); });
   // 간략보기 ↔ 차트보기: 일별 지표 비교 패널 숨김/표시
+  var briefMode=false;
   function toggleBrief(){
     const panel=document.getElementById('dailyPanel');
     panel.hidden = !panel.hidden;
+    briefMode = panel.hidden;
     document.getElementById('briefBtnText').textContent = panel.hidden ? '차트보기' : '간략보기';
     if(!panel.hidden) renderChart();   // 다시 보일 때 폭 재측정 후 재렌더
+    fitTable();
+  }
+  // 간략보기 모드: 브라우저 높이에 맞춰 테이블 높이 가변(하단 80px 유지).
+  // min-height로 적용 → 남는 공간이 있을 때만 채워 늘리고, 내용이 더 크면 자연 높이 유지.
+  function fitTable(){
+    const wrap=document.querySelector('.mcds-table-wrap');
+    if(!wrap) return;
+    wrap.style.minHeight='';                       // 자연 상태로 초기화 후 측정
+    if(!briefMode) return;
+    const anchor=document.querySelector('.pagination')||wrap;   // 표 하단 기준(페이지네이션 포함)
+    const grow=Math.round(window.innerHeight - 80 - anchor.getBoundingClientRect().bottom); // 하단 80px 남기려면 늘릴 양
+    if(grow>0) wrap.style.minHeight = Math.round(wrap.getBoundingClientRect().height + grow) + 'px';
   }
   function applyCompareMode(){
     // 좌측 비교 데이터(vs.~) 및 차트 범례 '비교 기간' 노출 토글
@@ -580,7 +594,7 @@
   var _initTab = new URLSearchParams(location.search).get('tab');
   renderChart(); initHover(); setTab(['camp','grp','ad'].includes(_initTab) ? _initTab : 'camp');
   // 컨테이너 폭 변경 시 차트 재렌더(폭 기준 좌표 갱신)
-  let _rz; window.addEventListener('resize',()=>{ clearTimeout(_rz); _rz=setTimeout(renderChart,120); });
+  let _rz; window.addEventListener('resize',()=>{ clearTimeout(_rz); _rz=setTimeout(()=>{ renderChart(); fitTable(); },120); });
   </script>
 
   <!-- 캠페인 선택 모달 (광고그룹 탭에서 '광고그룹 만들기' 클릭 시) -->
