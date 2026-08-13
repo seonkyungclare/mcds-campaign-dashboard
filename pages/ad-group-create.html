@@ -209,6 +209,18 @@
                   </div>
                 </div>
               </div>
+
+              <!-- 하이라이트 퀵메뉴 카테고리 (퀵메뉴 카드 체크 시 노출) -->
+              <div class="row" id="quickCatRow" style="display:none;">
+                <div class="row__label"><span>하이라이트 퀵메뉴<span class="req">*</span></span></div>
+                <div class="row__field">
+                  <div class="radio-group" role="group" aria-label="하이라이트 퀵메뉴 카테고리">
+                    <button type="button" class="checkbox" role="checkbox" aria-checked="true" data-check><span class="checkbox__box"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.2 4.7 8.9 10 3.2" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="checkbox__label">메인스토어</span></button>
+                    <button type="button" class="checkbox" role="checkbox" aria-checked="false" data-check><span class="checkbox__box"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.2 4.7 8.9 10 3.2" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="checkbox__label">뷰티</span></button>
+                    <button type="button" class="checkbox" role="checkbox" aria-checked="false" data-check><span class="checkbox__box"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.2 4.7 8.9 10 3.2" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="checkbox__label">키즈</span></button>
+                  </div>
+                </div>
+              </div>
             </form>
           </section>
 
@@ -436,6 +448,7 @@
           if (card.classList.contains('slot-card--disabled') || card.classList.contains('slot-card--readonly')) return;
           setChecked(card, !isOn(card));
           syncExclusive();
+          updateSlotCategories();
         }
         card.addEventListener('click', toggle);
         card.addEventListener('keydown', function (e) { if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); toggle(); } });
@@ -447,11 +460,22 @@
       var big = document.querySelector('[data-slot-id="bigbanner"]');
       var pkgSelect = document.getElementById('pkgSelect');
       var bigRow = document.getElementById('bigbannerCatRow');
+      var quickRow = document.getElementById('quickCatRow');
+      // 구좌 카드가 활성(체크됨 / 패키지형 readonly로 포함)일 때만 해당 카테고리 속성 노출
+      function slotActive(card) {
+        if (!card) return false;
+        if (card.style.display === 'none') return false;
+        if (card.classList.contains('slot-card--readonly')) return true;
+        return card.getAttribute('aria-checked') === 'true';
+      }
+      function updateSlotCategories() {
+        if (bigRow) bigRow.style.display = slotActive(big) ? '' : 'none';
+        if (quickRow) quickRow.style.display = slotActive(quick) ? '' : 'none';
+      }
       function applyProductType(pkg) {
         isPackage = pkg;
         if (pkgSelect) pkgSelect.style.display = pkg ? '' : 'none';
         if (big) big.style.display = pkg ? 'none' : '';
-        if (bigRow) bigRow.style.display = pkg ? 'none' : '';
         if (pkg) {
           if (big) setChecked(big, false);
           // 세트 구좌(스플래시·퀵메뉴)는 선택 불가(readonly): 체크박스 숨김 + 비상호작용
@@ -464,6 +488,7 @@
           quick.classList.remove('slot-card--readonly');
           syncExclusive();
         }
+        updateSlotCategories();
       }
       document.querySelectorAll('[data-radio="product"]').forEach(function (r) {
         r.addEventListener('click', function () {
