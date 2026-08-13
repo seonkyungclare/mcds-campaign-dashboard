@@ -376,6 +376,11 @@
   function link(t){ return `<span class="mcds-table__link">${t}</span>`; }
   const AC_CAMP=['수정','광고그룹 추가','복제'], AC_GRP=['수정','광고 추가','복제'], AC_AD=['수정','복제'];
   function acts(list){ return '<span style="display:inline-flex;gap:6px">'+list.map(a=>`<span class="abtn">${a}</span>`).join('')+'</span>'; }
+  // 관리 액션을 컬럼별로 분리(버튼 1개 = 셀 1개)
+  function ab(l){ return `<span class="abtn">${l}</span>`; }
+  const ACT_CAMP=[ab('수정'),ab('광고그룹 추가'),ab('복제')];
+  const ACT_GRP=[ab('수정'),ab('광고 추가'),ab('복제')];
+  const ACT_AD=[ab('수정'),ab('복제')];
 
   // 검수(광고) 배지 + 미리보기 썸네일
   function rev(s){ return s==='승인'?'<span class="stat rv-appr">승인</span>':s==='반려'?'<span class="stat rv-rej">반려</span>':s==='검수중'?'<span class="stat stat-wait">검수중</span>':'<span class="idtxt">–</span>'; }
@@ -432,19 +437,19 @@
     [acts(AC_AD),on,stat('wait','검수중'),rev('검수중'),'AD-4580',link('260830_광고_브리지_위캔더스'),'GRP-126537',AGNAME,CID,CNAME,URL('75'),'이미지',thumb,'광고','보장형','일반형','한국',SLOT,TGT,PERIOD],
   ];
 
-  const CAMP_HEAD=['관리','ON/OFF','상태','캠페인ID','캠페인명','캠페인유형','구매유형','패키지유형','브랜드','국가','구좌','계약금액','ROAS','목표 노출수','목표 달성률'].concat(TAIL_HEAD);
-  const GRP_HEAD=['관리','ON/OFF','상태','광고그룹ID','광고그룹명','캠페인ID','캠페인명','캠페인유형','구매유형','패키지유형','국가','구좌','타겟팅','기간','CPM 단가','계약 금액','ROAS','목표 노출수','목표 달성률'].concat(TAIL_HEAD);
-  const AD_HEAD=['관리','ON/OFF','상태','검수','광고ID','광고명','광고그룹ID','광고그룹명','캠페인ID','캠페인명','랜딩 URL','광고 타입','미리보기','캠페인유형','구매유형','패키지유형','국가','구좌','타겟팅','기간'].concat(TAIL_HEAD);
+  const CAMP_HEAD=['수정','광고그룹 추가','복제','ON/OFF','상태','캠페인ID','캠페인명','캠페인유형','구매유형','패키지유형','브랜드','국가','구좌','계약금액','ROAS','목표 노출수','목표 달성률'].concat(TAIL_HEAD);
+  const GRP_HEAD=['수정','광고 추가','복제','ON/OFF','상태','광고그룹ID','광고그룹명','캠페인ID','캠페인명','캠페인유형','구매유형','패키지유형','국가','구좌','타겟팅','기간','CPM 단가','계약 금액','ROAS','목표 노출수','목표 달성률'].concat(TAIL_HEAD);
+  const AD_HEAD=['수정','복제','ON/OFF','상태','검수','광고ID','광고명','광고그룹ID','광고그룹명','캠페인ID','캠페인명','랜딩 URL','광고 타입','미리보기','캠페인유형','구매유형','패키지유형','국가','구좌','타겟팅','기간'].concat(TAIL_HEAD);
   const TABLES = {
     camp:{ create:'캠페인 만들기', count:'8', head:CAMP_HEAD,
-      numcols:[11,12,13,14,15,16,17,18,19,20,21,22,23,24,25],
-      rows: campLead.map((r,i)=>r.concat(TAIL[i])) },
+      numcols:[13,14,15,16,17,18,19,20,21,22,23,24,25,26,27],
+      rows: campLead.map((r,i)=>ACT_CAMP.concat(r.slice(1), TAIL[i])) },
     grp:{ create:'광고그룹 만들기', count:'8', head:GRP_HEAD,
-      numcols:[14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29],
-      rows: grpLead.map((r,i)=>r.concat(TAIL[i])) },
+      numcols:[16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31],
+      rows: grpLead.map((r,i)=>ACT_GRP.concat(r.slice(1), TAIL[i])) },
     ad:{ create:'광고 만들기', count:'8', head:AD_HEAD,
-      numcols:[20,21,22,23,24,25,26,27,28,29,30],
-      rows: adLead.map((r,i)=>r.concat(TAIL[i])) },
+      numcols:[21,22,23,24,25,26,27,28,29,30,31],
+      rows: adLead.map((r,i)=>ACT_AD.concat(r.slice(1), TAIL[i])) },
   };
   const CREATE_LINK={ camp:'campaign-create.html', grp:'ad-group-create.html', ad:'ad-create.html' };
   let curTab='camp';
