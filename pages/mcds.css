@@ -135,7 +135,14 @@ button { font-family: inherit; }
 /* ===================== Main ===================== */
 .main { flex: 1; min-width: 0; display: flex; flex-direction: column; min-height: calc(100vh - var(--gnb-h)); }
 .content { flex: 1; display: flex; flex-direction: column; gap: 32px; align-items: flex-start; padding: 32px 32px 80px; }
-.content__inner { width: 100%; max-width: 1326px; display: flex; flex-direction: column; gap: 32px; }
+.content__inner { width: 100%; display: flex; flex-direction: column; gap: 32px; }
+/* 생성 페이지: 영역 구분 divider(hr)는 콘텐츠 전체 폭으로 해상도에 따라 늘어나고,
+   폼/콘텐츠 블록은 가독 폭(1326px)을 유지 */
+.content__inner .page-title,
+.content__inner .camp-info,
+.content__inner .section,
+.content__inner .cols,
+.content__inner > .form { max-width: 1326px; }
 .page-title { font-size: 24px; line-height: 34px; font-weight: 700; color: var(--fg-default); }
 
 /* ===================== Section ===================== */
