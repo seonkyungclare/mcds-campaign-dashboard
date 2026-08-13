@@ -63,7 +63,7 @@
     .dh__legend i.dash { border-top-style: dashed; }
     .chartwrap { position: relative; }
     /* 일별 지표 비교 차트 높이 — 세로 해상도(뷰포트 높이) 구간별 */
-    svg.chart { width: 100%; height: 400px; display: block; }                                       /* H<1000: 400 */
+    svg.chart { width: 100%; height: clamp(380px, calc(10vh + 300px), 400px); display: block; }      /* H<1000: 380~400 (최소 380) */
     @media (min-height: 1000px){ svg.chart { height: clamp(400px, calc(125vh - 850px), 500px); } }  /* 1000~1079: 400→500 */
     @media (min-height: 1080px){ svg.chart { height: clamp(500px, calc(47.62vh - 14px), 700px); } } /* 1080~1499: 500→700, ≥1500 700 */
     .yg { stroke: var(--border-light); stroke-width: 1; }
