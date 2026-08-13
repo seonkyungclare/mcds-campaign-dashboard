@@ -562,7 +562,8 @@
   document.querySelectorAll('.stepnav__item').forEach(b=>b.addEventListener('click',()=>setTab(b.dataset.tab)));
   // '캠페인 만들기' → 현재 탭 생성 페이지 (캠페인 → campaign-create.html)
   document.getElementById('createBtn').addEventListener('click',()=>{
-    if(curTab==='grp'){ openCampSelect(); return; }   // 광고그룹: 상위 캠페인 선택 모달
+    if(curTab==='grp'){ openCampSelect(); return; }    // 광고그룹: 상위 캠페인 선택 모달
+    if(curTab==='ad'){ openGroupSelect(); return; }    // 광고: 상위 광고그룹 선택 모달
     location.href=CREATE_LINK[curTab];
   });
   // URL ?tab=camp|grp|ad 로 초기 탭 지정(생성 완료 후 홈 진입 시 해당 탭 선택)
@@ -638,6 +639,75 @@
       var ov=document.getElementById('campSelectOverlay');
       ov.addEventListener('mousedown', function(e){ if(e.target===ov) closeCampSelect(); });
       document.addEventListener('keydown', function(e){ if(e.key==='Escape' && !ov.hidden) closeCampSelect(); });
+    })();
+  </script>
+
+  <!-- 광고그룹 선택 모달 (광고 탭에서 '광고 만들기' 클릭 시) -->
+  <div class="overlay" id="groupSelectOverlay" hidden>
+    <div class="modal modal--1020" role="dialog" aria-modal="true" aria-labelledby="gsTitle">
+      <div class="modal__header">
+        <span class="modal__title" id="gsTitle">광고그룹 선택</span>
+        <button type="button" class="modal__close" onclick="closeGroupSelect()" aria-label="닫기">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M5 5l10 10M15 5L5 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+      <div class="modal__body">
+        <p class="cs-desc">광고를 생성할 상위 광고그룹을 선택해주세요.</p>
+        <div class="cs-filter">
+          <label for="gsFilterId">광고그룹 ID</label>
+          <input type="text" id="gsFilterId" placeholder="광고그룹 ID 입력">
+          <label for="gsFilterName">광고그룹명</label>
+          <input type="text" id="gsFilterName" placeholder="광고그룹명 입력">
+          <button type="button" class="btn btn--primary btn--36" onclick="renderGroupSelect()">검색</button>
+          <button type="button" class="btn btn--secondary btn--36" onclick="resetGroupSelect()">초기화</button>
+        </div>
+        <div class="cs-count">전체 (<span>354</span>)건</div>
+        <div class="cs-tablewrap">
+          <div class="mcds-table-wrap">
+            <table class="mcds-table">
+              <thead><tr><th class="mcds-table__sel"></th><th>광고그룹 ID</th><th>광고그룹명</th><th>캠페인 ID</th><th>캠페인명</th><th>작성일시</th></tr></thead>
+              <tbody id="gsBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="modal__footer">
+        <button type="button" class="btn btn--secondary" onclick="closeGroupSelect()">취소</button>
+        <button type="button" class="btn btn--primary" onclick="location.href='ad-create.html'">확인</button>
+      </div>
+    </div>
+  </div>
+  <script>
+    var GRPS=[
+      {gid:'GRP-1264', gname:'260830_광고 그룹_킨치 x 오스트리야', cid:'CMP-426548', cname:'롤링스톤즈 | 아크메드라비 컬렉션', date:'2026-08-24'},
+      {gid:'GRP-1264', gname:'260830_광고 그룹_킨치 x 오스트리야', cid:'CMP-245135', cname:'식스핏 패션플래닛 pick', date:'2026-08-23'},
+      {gid:'GRP-1264', gname:'260830_광고 그룹_킨치 x 오스트리야', cid:'CMP-369742', cname:'캠페인_킨치 x 오스트리야', date:'2026-08-22'},
+      {gid:'GRP-1264', gname:'260830_광고 그룹_킨치 x 오스트리야', cid:'CMP-582930', cname:'클래식 트렌치코트 & 재킷', date:'2026-08-19'},
+      {gid:'GRP-1264', gname:'260830_광고 그룹_킨치 x 오스트리야', cid:'CMP-174856', cname:'해변을 닮은 서머 드레스', date:'2026-08-19'},
+      {gid:'GRP-1264', gname:'260830_광고 그룹_킨치 x 오스트리야', cid:'CMP-903482', cname:'럭셔리 스니커즈 셀렉션', date:'2026-08-18'},
+      {gid:'GRP-1264', gname:'260830_광고 그룹_킨치 x 오스트리야', cid:'CMP-618274', cname:'친환경 패브릭 브랜드 소개', date:'2026-08-17'},
+      {gid:'GRP-1264', gname:'260830_광고 그룹_킨치 x 오스트리야', cid:'CMP-752619', cname:'트렌드 세터를 위한 액세서리', date:'2026-08-16'}
+    ];
+    var gsSelected=1;
+    function renderGroupSelect(){
+      var fid=(document.getElementById('gsFilterId').value||'').trim();
+      var fname=(document.getElementById('gsFilterName').value||'').trim();
+      document.getElementById('gsBody').innerHTML=GRPS.map(function(g,i){
+        if((fid && !g.gid.includes(fid)) || (fname && !g.gname.includes(fname))) return '';
+        var on=i===gsSelected;
+        return '<tr class="'+(on?'is-selected':'')+'" onclick="selectGroup('+i+')" style="cursor:pointer">'+
+          '<td class="mcds-table__sel"><span class="cs-radio" aria-checked="'+(on?'true':'false')+'"></span></td>'+
+          '<td>'+g.gid+'</td><td>'+g.gname+'</td><td>'+g.cid+'</td><td>'+g.cname+'</td><td>'+g.date+'</td></tr>';
+      }).join('');
+    }
+    function selectGroup(i){ gsSelected=i; renderGroupSelect(); }
+    function resetGroupSelect(){ document.getElementById('gsFilterId').value=''; document.getElementById('gsFilterName').value=''; renderGroupSelect(); }
+    function openGroupSelect(){ document.getElementById('groupSelectOverlay').hidden=false; renderGroupSelect(); }
+    function closeGroupSelect(){ document.getElementById('groupSelectOverlay').hidden=true; }
+    (function(){
+      var ov=document.getElementById('groupSelectOverlay');
+      ov.addEventListener('mousedown', function(e){ if(e.target===ov) closeGroupSelect(); });
+      document.addEventListener('keydown', function(e){ if(e.key==='Escape' && !ov.hidden) closeGroupSelect(); });
     })();
   </script>
 </body>
