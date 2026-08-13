@@ -379,8 +379,7 @@
 
       <!-- ===================== Bottom bar ===================== -->
       <div class="bottombar">
-        <a href="campaign-create.html" class="btn btn--secondary" onclick="location.href='campaign-create.html';return false;">취소</a>
-        <button type="button" class="btn btn--secondary" id="draftBtn" onclick="showSaveToast()">임시저장</button>
+        <button type="button" class="btn btn--secondary" onclick="openCancelAlert()">취소</button>
         <button type="button" class="btn btn--primary" id="createBtn" onclick="openCreateAlert()">생성</button>
       </div>
     </main>
@@ -540,13 +539,19 @@
       </div>
       <div class="alert__actions">
         <button type="button" class="btn btn--secondary btn--36" onclick="location.href='dsp-home.html'">나가기</button>
-        <button type="button" class="btn btn--primary btn--36" onclick="location.href='ad-create.html'">이어서 광고 만들기</button>
+        <button type="button" class="btn btn--primary btn--36" onclick="goCreateAd()">이어서 광고 만들기</button>
       </div>
     </div>
   </div>
   <script>
     function openCreateAlert(){ document.getElementById('createAlert').hidden = false; }
     function closeCreateAlert(){ document.getElementById('createAlert').hidden = true; }
+    // 이어서 광고 만들기: 패키지형이면 세트 광고 생성 페이지로 연결
+    function goCreateAd(){
+      var sel = document.querySelector('[data-radio="product"][aria-checked="true"] .radio__label');
+      var isPkg = sel && sel.textContent.trim() === '패키지형';
+      location.href = isPkg ? 'ad-create-set.html' : 'ad-create.html';
+    }
     // 임시저장 토스트 (Figma 3323-123625): 흰 알약 + ⓘ 아이콘, 상단 중앙, 자동 소멸
     function showSaveToast(){
       var t = document.createElement('div');
@@ -561,6 +566,29 @@
       var ov = document.getElementById('createAlert');
       ov.addEventListener('mousedown', function (e) { if (e.target === ov) closeCreateAlert(); });
       document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !ov.hidden) closeCreateAlert(); });
+    })();
+  </script>
+
+  <!-- 취소 → 나가기 확인 알럿 (계속 작성=닫고 편집 계속 / 나가기=닫고 편집 내용 폐기) -->
+  <div class="overlay" id="cancelAlert" hidden>
+    <div class="alert" role="alertdialog" aria-modal="true" aria-labelledby="cancelAlertTitle">
+      <div class="alert__text">
+        <span class="alert__title" id="cancelAlertTitle">입력중인 내용이 있습니다.<br>저장하지 않은 내용은 모두 사라집니다.</span>
+        <span class="alert__desc">수정하지 않고 나가시겠습니까?</span>
+      </div>
+      <div class="alert__actions">
+        <button type="button" class="btn btn--secondary btn--36" onclick="closeCancelAlert()">계속 작성</button>
+        <button type="button" class="btn btn--primary btn--36" onclick="location.href='campaign-create.html'">나가기</button>
+      </div>
+    </div>
+  </div>
+  <script>
+    function openCancelAlert(){ document.getElementById('cancelAlert').hidden = false; }
+    function closeCancelAlert(){ document.getElementById('cancelAlert').hidden = true; }
+    (function () {
+      var ov = document.getElementById('cancelAlert');
+      ov.addEventListener('mousedown', function (e) { if (e.target === ov) closeCancelAlert(); });
+      document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !ov.hidden) closeCancelAlert(); });
     })();
   </script>
 </body>

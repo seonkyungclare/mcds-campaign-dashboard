@@ -236,7 +236,7 @@
 
       <!-- ===================== Bottom bar ===================== -->
       <div class="bottombar">
-        <a href="ad-group-create.html" class="btn btn--secondary" onclick="location.href='ad-group-create.html';return false;">취소</a>
+        <button type="button" class="btn btn--secondary" onclick="openCancelAlert()">취소</button>
         <button type="button" class="btn btn--secondary" id="draftBtn">임시저장</button>
         <button type="button" class="btn btn--primary is-disabled" id="createBtn" disabled onclick="openCreateAlert()">광고 생성</button>
       </div>
@@ -338,5 +338,28 @@
       </div>
     </div>
   </div>
+
+  <!-- 취소 → 나가기 확인 알럿 (계속 작성=닫고 편집 계속 / 나가기=닫고 편집 내용 폐기) -->
+  <div class="overlay" id="cancelAlert" hidden>
+    <div class="alert" role="alertdialog" aria-modal="true" aria-labelledby="cancelAlertTitle">
+      <div class="alert__text">
+        <span class="alert__title" id="cancelAlertTitle">입력중인 내용이 있습니다.<br>저장하지 않은 내용은 모두 사라집니다.</span>
+        <span class="alert__desc">수정하지 않고 나가시겠습니까?</span>
+      </div>
+      <div class="alert__actions">
+        <button type="button" class="btn btn--secondary btn--36" onclick="closeCancelAlert()">계속 작성</button>
+        <button type="button" class="btn btn--primary btn--36" onclick="location.href='ad-group-create.html'">나가기</button>
+      </div>
+    </div>
+  </div>
+  <script>
+    function openCancelAlert(){ document.getElementById('cancelAlert').hidden = false; }
+    function closeCancelAlert(){ document.getElementById('cancelAlert').hidden = true; }
+    (function () {
+      var ov = document.getElementById('cancelAlert');
+      ov.addEventListener('mousedown', function (e) { if (e.target === ov) closeCancelAlert(); });
+      document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !ov.hidden) closeCancelAlert(); });
+    })();
+  </script>
 </body>
 </html>
