@@ -11,7 +11,7 @@
     rel="stylesheet"
     href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css"
   />
-  <link rel="stylesheet" href="mcds.css?v=20260813h" />
+  <link rel="stylesheet" href="mcds.css?v=20260813i" />
 </head>
 <body>
   <!-- ===================== GNB ===================== -->
@@ -80,7 +80,7 @@
           <form class="form" onsubmit="return false;">
             <!-- 캠페인명 -->
             <div class="row">
-              <div class="row__label"><span>캠페인명</span></div>
+              <div class="row__label"><span>캠페인명<span class="req">*</span></span></div>
               <div class="row__field">
                 <div class="textfield">
                   <label class="textfield__box">
@@ -95,7 +95,7 @@
 
             <!-- 광고 유형 선택 -->
             <div class="row">
-              <div class="row__label"><span>광고 유형 선택</span></div>
+              <div class="row__label"><span>광고 유형 선택<span class="req">*</span></span></div>
               <div class="row__field">
                 <div class="radio-group" role="radiogroup" aria-label="광고 유형 선택">
                   <button type="button" class="radio" role="radio" aria-checked="true" data-radio="adtype" data-value="ad">
@@ -112,7 +112,7 @@
 
             <!-- 구매 유형 -->
             <div class="row">
-              <div class="row__label"><span>구매 유형</span></div>
+              <div class="row__label"><span>구매 유형<span class="req">*</span></span></div>
               <div class="row__field">
                 <div class="purchase">
                   <div class="purchase__cards" id="purchaseCards" role="radiogroup" aria-label="구매 유형"></div>

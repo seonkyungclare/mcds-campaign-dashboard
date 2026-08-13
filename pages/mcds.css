@@ -174,7 +174,8 @@ button { font-family: inherit; }
 .row { display: flex; gap: 8px; align-items: flex-start; }
 .row__label { flex: 0 0 140px; width: 140px; max-width: 140px; min-height: 36px; display: flex; align-items: center; }
 .row__label span { font-size: 14px; line-height: 20px; font-weight: 500; color: var(--fg-subtle); white-space: nowrap; }
-.req { color: var(--accent); margin-left: 2px; }
+.req { color: var(--critical-border); margin-left: 2px; }
+.row__label .req, .trow__label .req { color: var(--critical-border); }
 .row__field { flex: 1; min-width: 0; }
 .help { font-size: 12px; line-height: 18px; color: var(--fg-muted); }
 .help--pad { padding: 0 2px; }
