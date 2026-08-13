@@ -56,7 +56,7 @@
     .dh__metricsel { display: flex; align-items: center; gap: 12px; }
     .msel { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; color: var(--fg-default); }
     .msel .dot { width: 8px; height: 8px; border-radius: 50%; }
-    .msel select { height: 30px; border: 1px solid var(--border); border-radius: var(--r-4); font-size: 13px; padding: 0 6px; color: var(--fg-default); background: #fff; font-family: inherit; }
+    .msel .mcds-select { min-width: 132px; }
     .dot.o { background: #ec6f2d; } .dot.b { background: var(--accent); }
     .dh__legend { display: flex; gap: 14px; font-size: 12px; color: var(--fg-muted); margin-bottom: 6px; }
     .dh__legend i { display: inline-block; width: 16px; height: 0; border-top: 2px solid var(--fg-muted); margin-right: 5px; vertical-align: middle; }
@@ -95,7 +95,7 @@
     .tsearch { display: inline-flex; align-items: center; gap: 7px; height: 36px; border: 1px solid var(--border); border-radius: var(--r-4); padding: 0 10px; min-width: 300px; background: #fff; }
     .tsearch input { border: 0; outline: 0; font-size: 13px; width: 100%; background: transparent; font-family: inherit; }
     .tsearch svg { color: var(--fg-muted); flex: none; }
-    .tsel { height: 36px; border: 1px solid var(--border); border-radius: var(--r-4); padding: 0 8px; font-size: 13px; background: #fff; color: var(--fg-default); font-family: inherit; }
+    /* 개수 셀렉트는 MCDS .mcds-select(mcds.css) 사용 */
 
     /* 테이블 셀 콘텐츠 — 구조/페이지네이션은 mcds.css의 .mcds-table / .pagination 사용 */
     .idtxt { color: var(--fg-muted); }
@@ -107,14 +107,7 @@
     .tg::after { content: ""; position: absolute; width: 16px; height: 16px; border-radius: 50%; background: #fff; top: 2px; left: 2px; transition: left .12s; }
     .tg.on::after { left: 16px; }
     /* 상태 뱃지 (cellType=tag) */
-    .stat { font-size: 12px; font-weight: 600; border-radius: var(--r-4); padding: 3px 8px; display: inline-block; white-space: nowrap; }
-    .stat-live { color: var(--accent); background: var(--accent-light-low); }
-    .stat-wait { color: #1d4ed8; background: #eaf0ff; }
-    .stat-del { color: #e5231b; background: #fdeaec; }
-    .stat-pause { color: #9a6a00; background: #fff6e9; }
-    .stat-end { color: var(--fg-muted); background: var(--fill-light-lower); }
-    .stat-draft { color: #7c3aed; background: #f3ecff; }
-    .rv-appr { color: #0a8f52; background: #e7f7ef; } .rv-rej { color: #e5231b; background: #fdeaec; }
+    /* 상태/검수 배지는 MCDS .tag(mcds.css) 사용 — stat()/rev() 헬퍼에서 렌더 */
     /* 홈 테이블 컬럼 너비: 최소 110px, 이름 컬럼(캠페인명/광고그룹명/광고명) 220px */
     .mcds-table th:not(.mcds-table__sel), .mcds-table td:not(.mcds-table__sel) { min-width: 110px; }
     .mcds-table th.mcds-table__name, .mcds-table td.mcds-table__name { width: 220px; min-width: 220px; }
@@ -240,10 +233,10 @@
             </span>
             <div class="dh__metricsel">
               <span class="msel"><span class="dot o"></span>지표 1
-                <select id="g1sel"></select>
+                <select id="g1sel" class="mcds-select mcds-select--32"></select>
               </span>
               <span class="msel"><span class="dot b"></span>지표 2
-                <select id="g2sel"></select>
+                <select id="g2sel" class="mcds-select mcds-select--32"></select>
               </span>
             </div>
           </div>
@@ -282,7 +275,7 @@
               <input id="searchInput" placeholder="캠페인명·캠페인ID·랜딩URL·이름 검색">
             </div>
             <button class="tbtn">검색</button>
-            <select class="tsel"><option>1000개</option><option>100개</option><option>50개</option></select>
+            <select class="mcds-select mcds-select--32"><option>1000개</option><option>100개</option><option>50개</option></select>
           </div>
 
 
@@ -403,7 +396,7 @@
   const ACT_AD=[ab('수정'),ab('복제')];
 
   // 검수(광고) 배지 + 미리보기 썸네일
-  function rev(s){ return s==='승인'?'<span class="stat rv-appr">승인</span>':s==='반려'?'<span class="stat rv-rej">반려</span>':s==='검수중'?'<span class="stat stat-wait">검수중</span>':'<span class="idtxt">–</span>'; }
+  function rev(s){ return s==='승인'?'<span class="tag tag--green">승인</span>':s==='반려'?'<span class="tag tag--red">반려</span>':s==='검수중'?'<span class="tag tag--yellow">검수중</span>':'<span class="idtxt">–</span>'; }
   const thumb='<img src="assets/slot-quickmenu.png" alt="미리보기" style="width:30px;height:38px;object-fit:cover;border-radius:4px;border:1px solid var(--border);vertical-align:middle">';
   const URL=n=>link('https://www.musinsa.com/content/1491347373649902'+n);
 
