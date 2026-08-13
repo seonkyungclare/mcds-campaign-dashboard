@@ -62,7 +62,8 @@
     .dh__legend i { display: inline-block; width: 16px; height: 0; border-top: 2px solid var(--fg-muted); margin-right: 5px; vertical-align: middle; }
     .dh__legend i.dash { border-top-style: dashed; }
     .chartwrap { position: relative; }
-    svg.chart { width: 100%; height: 300px; display: block; }
+    /* 해상도(폭)가 커질수록 차트 높이도 커짐: 최소 300 ~ 최대 440px */
+    svg.chart { width: 100%; height: clamp(300px, 26vw, 440px); display: block; }
     .yg { stroke: var(--border-light); stroke-width: 1; }
     .xlab, .ylab { font-size: 10px; fill: var(--fg-muted); }
     #guide { stroke: #c4c9d0; stroke-width: 1; stroke-dasharray: 3 3; opacity: 0; }
@@ -338,7 +339,7 @@
   let noCompare=false;   // '비교 없음' 선택 시 true → 비교(prev) 데이터 미노출
   function fillSel(id,val){ document.getElementById(id).innerHTML = MORDER.map(k=>`<option value="${k}" ${k===val?'selected':''}>${METRICS[k].label}</option>`).join(''); }
 
-  let CW=1000; const CH=300, PADL=54, PADR=54, PADT=24, PADB=28, N=7;
+  let CW=1000, CH=300; const PADL=54, PADR=54, PADT=24, PADB=28, N=7;
   function scaleY(v, mx){ return CH-PADB-(CH-PADT-PADB)*(v/mx); }
   function px(i){ const slot=(CW-PADL-PADR)/(N-1); return PADL+slot*i; }
   function polyline(arr, mx, color, dash){
@@ -351,6 +352,8 @@
     // 실제 컨테이너 픽셀 폭에 맞춰 viewBox를 잡아, 좌우 늘어남(왜곡) 없이 렌더
     const wrap=document.getElementById('chartwrap');
     CW=Math.round(wrap?.clientWidth||svg.clientWidth||1000)||1000;
+    // 실제 렌더 높이(CSS clamp)로 viewBox 높이를 맞춰 세로 왜곡 없이 커지게 함
+    CH=Math.round(svg.getBoundingClientRect().height)||300;
     svg.setAttribute('viewBox',`0 0 ${CW} ${CH}`);
     const m1=METRICS[g1], m2=METRICS[g2];
     const mx1=Math.max(...m1.cur,...(noCompare?[]:m1.prev))*1.15, mx2=Math.max(...m2.cur,...(noCompare?[]:m2.prev))*1.15;
