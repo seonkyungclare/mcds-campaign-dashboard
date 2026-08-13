@@ -339,7 +339,7 @@
       <!-- ===================== Bottom bar ===================== -->
       <div class="bottombar">
         <a href="campaign-create.html" class="btn btn--secondary" onclick="location.href='campaign-create.html';return false;">취소</a>
-        <a href="ad-create.html" class="btn btn--primary" id="createBtn" onclick="location.href='ad-create.html';return false;">생성</a>
+        <button type="button" class="btn btn--primary" id="createBtn" onclick="openCreateAlert()">생성</button>
       </div>
     </main>
   </div>
@@ -435,6 +435,28 @@
       var g = document.querySelector('#grpCount');
       var input = document.querySelector('.textfield__input');
       if (g && input) g.textContent = input.value.length;
+    })();
+  </script>
+
+  <!-- 생성 완료 알럿 (CTA 클릭 시) -->
+  <div class="overlay" id="createAlert" hidden>
+    <div class="alert" role="alertdialog" aria-modal="true" aria-labelledby="createAlertTitle">
+      <div class="alert__text">
+        <span class="alert__title" id="createAlertTitle">입력하신 정보로 새 광고그룹을 생성했습니다.<br>이어서 광고를 만들까요?</span>
+      </div>
+      <div class="alert__actions">
+        <button type="button" class="btn btn--secondary btn--36" onclick="closeCreateAlert()">닫기</button>
+        <button type="button" class="btn btn--primary btn--36" onclick="location.href='ad-create.html'">이어서 광고 만들기</button>
+      </div>
+    </div>
+  </div>
+  <script>
+    function openCreateAlert(){ document.getElementById('createAlert').hidden = false; }
+    function closeCreateAlert(){ document.getElementById('createAlert').hidden = true; }
+    (function () {
+      var ov = document.getElementById('createAlert');
+      ov.addEventListener('mousedown', function (e) { if (e.target === ov) closeCreateAlert(); });
+      document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !ov.hidden) closeCreateAlert(); });
     })();
   </script>
 </body>

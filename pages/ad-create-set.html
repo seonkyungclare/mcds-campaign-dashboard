@@ -238,7 +238,7 @@
       <div class="bottombar">
         <a href="ad-group-create.html" class="btn btn--secondary" onclick="location.href='ad-group-create.html';return false;">취소</a>
         <button type="button" class="btn btn--secondary" id="draftBtn">임시저장</button>
-        <button type="button" class="btn btn--primary is-disabled" id="createBtn" disabled>광고 생성</button>
+        <button type="button" class="btn btn--primary is-disabled" id="createBtn" disabled onclick="openCreateAlert()">광고 생성</button>
       </div>
     </main>
   </div>
@@ -315,6 +315,28 @@
 
     // init
     renderPreview();
+
+    // ---- 생성 완료 알럿 (CTA 클릭 시) ----
+    function openCreateAlert(){ document.getElementById('createAlert').hidden = false; }
+    function closeCreateAlert(){ document.getElementById('createAlert').hidden = true; }
+    (function () {
+      var ov = document.getElementById('createAlert');
+      ov.addEventListener('mousedown', function (e) { if (e.target === ov) closeCreateAlert(); });
+      document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !ov.hidden) closeCreateAlert(); });
+    })();
   </script>
+
+  <!-- 생성 완료 알럿 -->
+  <div class="overlay" id="createAlert" hidden>
+    <div class="alert" role="alertdialog" aria-modal="true" aria-labelledby="createAlertTitle">
+      <div class="alert__text">
+        <span class="alert__title" id="createAlertTitle">광고를 생성했습니다. 이어서 다른 광고를 만들까요?</span>
+      </div>
+      <div class="alert__actions">
+        <button type="button" class="btn btn--secondary btn--36" onclick="closeCreateAlert()">닫기</button>
+        <button type="button" class="btn btn--primary btn--36" onclick="location.href='ad-create.html'">이어서 광고 만들기</button>
+      </div>
+    </div>
+  </div>
 </body>
 </html>
