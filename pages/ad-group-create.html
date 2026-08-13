@@ -469,8 +469,9 @@
         return card.getAttribute('aria-checked') === 'true';
       }
       function updateSlotCategories() {
-        if (bigRow) bigRow.style.display = slotActive(big) ? '' : 'none';
-        if (quickRow) quickRow.style.display = slotActive(quick) ? '' : 'none';
+        // 패키지형은 메인스토어만 제공하므로 스토어 설정(카테고리 행)을 숨김
+        if (bigRow) bigRow.style.display = (!isPackage && slotActive(big)) ? '' : 'none';
+        if (quickRow) quickRow.style.display = (!isPackage && slotActive(quick)) ? '' : 'none';
       }
       function applyProductType(pkg) {
         isPackage = pkg;
