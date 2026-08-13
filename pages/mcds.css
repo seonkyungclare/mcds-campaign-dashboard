@@ -135,7 +135,7 @@ button { font-family: inherit; }
 /* ===================== Main ===================== */
 .main { flex: 1; min-width: 0; display: flex; flex-direction: column; min-height: calc(100vh - var(--gnb-h)); }
 .content { flex: 1; display: flex; flex-direction: column; gap: 32px; align-items: flex-start; padding: 32px 32px 80px; }
-.content__inner { width: 100%; display: flex; flex-direction: column; gap: 32px; }
+.content__inner { width: 100%; display: flex; flex-direction: column; gap: 24px; }
 /* 생성 페이지: 영역 구분 divider(hr)는 콘텐츠 전체 폭으로 해상도에 따라 늘어나고,
    폼/콘텐츠 블록은 가독 폭(1326px)을 유지 */
 .content__inner .page-title,
@@ -150,8 +150,8 @@ button { font-family: inherit; }
 .section { display: flex; flex-direction: column; gap: 16px; width: 100%; }
 
 /* 광고 그룹 생성: 캠페인 정보 ↔ 섹션그룹 = 32px(구분선 중앙), 섹션끼리 = 24px(구분선 중앙) */
-.ag-body { display: flex; flex-direction: column; gap: 16px; width: 100%; }
-.ag-sections { display: flex; flex-direction: column; gap: 12px; width: 100%; }
+.ag-body { display: flex; flex-direction: column; gap: 24px; width: 100%; }
+.ag-sections { display: flex; flex-direction: column; gap: 24px; width: 100%; }
 .section__title { margin: 0; font-size: 16px; line-height: 24px; font-weight: 600; color: var(--fg-default); }
 .divider { height: 1px; background: var(--border-light); border: 0; margin: 0; width: 100%; }
 
