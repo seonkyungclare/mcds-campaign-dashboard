@@ -62,10 +62,10 @@
     .dh__legend i { display: inline-block; width: 16px; height: 0; border-top: 2px solid var(--fg-muted); margin-right: 5px; vertical-align: middle; }
     .dh__legend i.dash { border-top-style: dashed; }
     .chartwrap { position: relative; }
-    /* 일별 지표 비교 차트 높이 — 가로 해상도 구간별 */
-    svg.chart { width: 100%; height: 500px; display: block; }                                        /* <1600: 500 */
-    @media (min-width: 1600px){ svg.chart { height: clamp(500px, calc(62.5vw - 500px), 700px); } }   /* 1600~1919: ~500→700 */
-    @media (min-width: 1920px){ svg.chart { height: clamp(700px, calc(46.875vw - 200px), 1000px); } } /* 1920~: ~700→1000(2560에서 1000) */
+    /* 일별 지표 비교 차트 높이 — 세로 해상도(뷰포트 높이) 구간별 */
+    svg.chart { width: 100%; height: 400px; display: block; }                                       /* H<1000: 400 */
+    @media (min-height: 1000px){ svg.chart { height: clamp(400px, calc(125vh - 850px), 500px); } }  /* 1000~1079: 400→500 */
+    @media (min-height: 1080px){ svg.chart { height: clamp(500px, calc(47.62vh - 14px), 700px); } } /* 1080~1499: 500→700, ≥1500 700 */
     .yg { stroke: var(--border-light); stroke-width: 1; }
     .xlab, .ylab { font-size: 10px; fill: var(--fg-muted); }
     #guide { stroke: #c4c9d0; stroke-width: 1; stroke-dasharray: 3 3; opacity: 0; }
@@ -96,8 +96,6 @@
     .tsearch input { border: 0; outline: 0; font-size: 13px; width: 100%; background: transparent; font-family: inherit; }
     .tsearch svg { color: var(--fg-muted); flex: none; }
     .tsel { height: 36px; border: 1px solid var(--border); border-radius: var(--r-4); padding: 0 8px; font-size: 13px; background: #fff; color: var(--fg-default); font-family: inherit; }
-    .dh__bulk { display: none; align-items: center; gap: 10px; background: var(--accent-light-low); border: 1px solid var(--blue-90); border-radius: var(--r-8); padding: 9px 13px; font-size: 13px; }
-    .dh__bulk.show { display: flex; } .dh__bulk b { color: var(--accent); }
 
     /* 테이블 셀 콘텐츠 — 구조/페이지네이션은 mcds.css의 .mcds-table / .pagination 사용 */
     .idtxt { color: var(--fg-muted); }
@@ -287,9 +285,6 @@
             <select class="tsel"><option>1000개</option><option>100개</option><option>50개</option></select>
           </div>
 
-          <div class="dh__bulk" id="bulkbar"><b id="selCnt">0</b>개 선택됨
-            <button class="abtn">일괄 ON</button><button class="abtn">일괄 OFF</button><button class="abtn">일괄 복제</button>
-          </div>
 
           <div class="mcds-table-wrap"><table class="mcds-table"><thead id="thead"></thead><tbody id="tbody"></tbody></table></div>
 
@@ -512,9 +507,6 @@
     const rows=[...document.querySelectorAll('#tbody .rowchk')];
     // 선택된 행 하이라이트 (MCDS Table .is-selected)
     rows.forEach(c=>c.closest('tr').classList.toggle('is-selected', cbOn(c)));
-    const n=SEL[curTab].size;
-    document.getElementById('selCnt').textContent=n;
-    document.getElementById('bulkbar').classList.toggle('show',n>0);
     // 전체선택 헤더 상태(현재 보이는 행 기준): none / indeterminate(일부) / all
     const vis=rows.filter(cbOn).length;
     const head=document.getElementById('chkall');
