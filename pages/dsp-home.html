@@ -62,8 +62,8 @@
     .dh__legend i { display: inline-block; width: 16px; height: 0; border-top: 2px solid var(--fg-muted); margin-right: 5px; vertical-align: middle; }
     .dh__legend i.dash { border-top-style: dashed; }
     .chartwrap { position: relative; }
-    /* 해상도(폭)가 커질수록 차트 높이도 커짐: 최소 300 ~ 최대 440px */
-    svg.chart { width: 100%; height: clamp(300px, 26vw, 440px); display: block; }
+    /* 해상도(폭)가 커질수록 차트 높이도 커짐: 최소 700px */
+    svg.chart { width: 100%; height: clamp(700px, 34vw, 900px); display: block; }
     .yg { stroke: var(--border-light); stroke-width: 1; }
     .xlab, .ylab { font-size: 10px; fill: var(--fg-muted); }
     #guide { stroke: #c4c9d0; stroke-width: 1; stroke-dasharray: 3 3; opacity: 0; }
@@ -561,13 +561,12 @@
     if(!panel.hidden) renderChart();   // 다시 보일 때 폭 재측정 후 재렌더
     fitTable();
   }
-  // 간략보기 모드: 브라우저 높이에 맞춰 테이블 높이 가변(하단 80px 유지).
+  // 차트보기·간략보기 공통: 브라우저 높이에 맞춰 테이블 높이 가변(하단 80px 유지).
   // min-height로 적용 → 남는 공간이 있을 때만 채워 늘리고, 내용이 더 크면 자연 높이 유지.
   function fitTable(){
     const wrap=document.querySelector('.mcds-table-wrap');
     if(!wrap) return;
     wrap.style.minHeight='';                       // 자연 상태로 초기화 후 측정
-    if(!briefMode) return;
     const anchor=document.querySelector('.pagination')||wrap;   // 표 하단 기준(페이지네이션 포함)
     const grow=Math.round(window.innerHeight - 80 - anchor.getBoundingClientRect().bottom); // 하단 80px 남기려면 늘릴 양
     if(grow>0) wrap.style.minHeight = Math.round(wrap.getBoundingClientRect().height + grow) + 'px';
@@ -592,7 +591,7 @@
   });
   // URL ?tab=camp|grp|ad 로 초기 탭 지정(생성 완료 후 홈 진입 시 해당 탭 선택)
   var _initTab = new URLSearchParams(location.search).get('tab');
-  renderChart(); initHover(); setTab(['camp','grp','ad'].includes(_initTab) ? _initTab : 'camp');
+  renderChart(); initHover(); setTab(['camp','grp','ad'].includes(_initTab) ? _initTab : 'camp'); fitTable();
   // 컨테이너 폭 변경 시 차트 재렌더(폭 기준 좌표 갱신)
   let _rz; window.addEventListener('resize',()=>{ clearTimeout(_rz); _rz=setTimeout(()=>{ renderChart(); fitTable(); },120); });
   </script>
