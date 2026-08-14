@@ -281,7 +281,7 @@
           </div>
 
           <div class="dh__toolbar" style="padding:16px 0 12px;">
-            <button class="tbtn">삭제</button>
+            <button class="tbtn" id="deleteBtn" disabled>삭제</button>
             <button class="tbtn primary" id="createBtn">캠페인 만들기</button>
             <div class="spacer"></div>
             <div class="tsearch">
@@ -621,6 +621,9 @@
     // 2건 이상 선택 시 하위 생성(광고그룹/광고) 버튼 비활성 — 상위 1건만 선택해야 생성 가능
     const cbtn=document.getElementById('createBtn');
     if(cbtn) cbtn.disabled = (curTab==='grp'||curTab==='ad') && vis>=2;
+    // 선택된 행이 없으면 삭제 버튼 비활성
+    const delBtn=document.getElementById('deleteBtn');
+    if(delBtn) delBtn.disabled = vis===0;
     updateChips();
   }
   // 스텝 라벨 옆 "N건 선택 ✕" 칩 갱신. 활성 스텝=accent, 그 외=low.
@@ -826,20 +829,33 @@
       {id:'CMP-752619', name:'트렌드 세터를 위한 액세서리', date:'2026-08-16'}
     ];
     var csSelected=1;   // 기본 선택
+    var csRestrict=null;   // 상위 캠페인 선택 상태로 진입 시: 허용 CAMPS 인덱스 배열(그 외 미노출)
     function renderCampSelect(){
       var fid=(document.getElementById('csFilterId').value||'').trim();
       var fname=(document.getElementById('csFilterName').value||'').trim();
+      var shown=0;
       document.getElementById('csBody').innerHTML=CAMPS.map(function(c,i){
+        if(csRestrict && csRestrict.indexOf(i)<0) return '';   // 상위 캠페인만 노출
         if((fid && !c.id.includes(fid)) || (fname && !c.name.includes(fname))) return '';
+        shown++;
         var on=i===csSelected;
         return '<tr class="'+(on?'is-selected':'')+'" onclick="selectCamp('+i+')" style="cursor:pointer">'+
           '<td class="mcds-table__sel"><span class="cs-radio" aria-checked="'+(on?'true':'false')+'"></span></td>'+
           '<td>'+c.id+'</td><td>'+c.name+'</td><td>'+c.date+'</td></tr>';
       }).join('');
+      var cc=document.getElementById('csCount'); if(cc) cc.textContent = csRestrict ? shown : 354;
     }
     function selectCamp(i){ csSelected=i; renderCampSelect(); }
     function resetCampSelect(){ document.getElementById('csFilterId').value=''; document.getElementById('csFilterName').value=''; renderCampSelect(); }
-    function openCampSelect(){ document.getElementById('campSelectOverlay').hidden=false; renderCampSelect(); }
+    function openCampSelect(){
+      document.getElementById('campSelectOverlay').hidden=false;
+      // 상위 캠페인이 선택된 채로 하위(광고그룹) 탭에 진입했으면 그 캠페인만 노출
+      csRestrict = (typeof SEL!=='undefined' && SEL.camp && SEL.camp.size) ? Array.from(SEL.camp) : null;
+      if(csRestrict && csRestrict.length){ csSelected = csRestrict[0]; }
+      // 제한 시 검색 필터는 의미 없으므로 숨김
+      var f=document.querySelector('#campSelectOverlay .cs-filter'); if(f) f.style.display = csRestrict ? 'none' : '';
+      renderCampSelect();
+    }
     function closeCampSelect(){ document.getElementById('campSelectOverlay').hidden=true; }
     (function(){
       var ov=document.getElementById('campSelectOverlay');
