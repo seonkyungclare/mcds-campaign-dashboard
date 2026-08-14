@@ -503,20 +503,29 @@
        URL(String(ti+60)), '이미지', thumb, g.c.ctype, g.c.buy, g.pkg, g.c.country, SLOT, TGT, PERIOD],
       TAIL[ti % TAIL.length]);
   }
-  let drillCi=null;      // 선택된 상위 캠페인 인덱스(null=전체)
-  let drillG=null;       // 선택된 상위 광고그룹 메타(null=전체)
-  let curGrpMeta=[];     // grp 탭 현재 표시 광고그룹 메타(행 순서 일치)
-  function resetSubSel(){ SEL.grp.clear(); SEL.ad.clear(); }
-  // 현재 탭에 표시할 행 + 부제 계산
+  let curGrpMeta=[];     // grp 탭 현재 표시 광고그룹 메타(행 순서 일치 — 광고 필터의 기준)
+  // 현재 탭에 표시할 행 + 부제 계산.
+  // grp = 선택된 캠페인(SEL.camp) 하위 필터 / ad = 선택된 광고그룹(SEL.grp) 하위 필터. 선택 없으면 전체.
   function rowsFor(t){
     if(t==='camp') return { rows:TABLES.camp.rows, title:'전체 캠페인' };
     if(t==='grp'){
-      if(drillCi==null){ curGrpMeta=grpLead.map((_,i)=>grpMetaDefault(i)); return { rows:TABLES.grp.rows, title:'전체 광고그룹' }; }
-      curGrpMeta=groupsOf(drillCi);
-      return { rows:curGrpMeta.map((g,j)=>grpRow(g,j,j)), title:'광고그룹 · '+campMeta(drillCi).cname };
+      const sel=[...SEL.camp];
+      if(sel.length){
+        curGrpMeta = sel.flatMap(ci=>groupsOf(ci));
+        const title = sel.length===1 ? '광고그룹 · '+campMeta(sel[0]).cname : '광고그룹 · 선택 캠페인 '+sel.length+'개';
+        return { rows:curGrpMeta.map((g,j)=>grpRow(g,j,j)), title };
+      }
+      curGrpMeta = grpLead.map((_,i)=>grpMetaDefault(i));
+      return { rows:TABLES.grp.rows, title:'전체 광고그룹' };
     }
-    if(drillG==null) return { rows:TABLES.ad.rows, title:'전체 광고' };
-    return { rows:adsOf(drillG).map((a,k)=>adRow(a,k)), title:'광고 · '+drillG.gname };
+    // ad
+    const selg=[...SEL.grp].map(i=>curGrpMeta[i]).filter(Boolean);
+    if(selg.length){
+      const ads=selg.flatMap(g=>adsOf(g));
+      const title = selg.length===1 ? '광고 · '+selg[0].gname : '광고 · 선택 광고그룹 '+selg.length+'개';
+      return { rows:ads.map((a,k)=>adRow(a,k)), title };
+    }
+    return { rows:TABLES.ad.rows, title:'전체 광고' };
   }
 
   let curTab='camp';
@@ -588,12 +597,8 @@
   // 칩 ✕: 해당 스텝 초기화 + 종속 하위 스텝(이후 단계)도 함께 초기화.
   function clearSel(t){
     const from=STEP_ORDER.indexOf(t);
-    const affected=STEP_ORDER.slice(from);
-    affected.forEach(k=>SEL[k].clear());
-    if(affected.includes(curTab)){
-      document.querySelectorAll('#tbody .rowchk').forEach(el=>cbSet(el,false));
-    }
-    onCheck();
+    STEP_ORDER.slice(from).forEach(k=>SEL[k].clear());
+    setTab(curTab);   // 상위 필터 해제를 현재 뷰에 재렌더로 반영
   }
 
   /* ================= init / events ================= */
@@ -634,18 +639,22 @@
     noCompare = b.dataset.cmp==='none';
     applyCompareMode();
   }));
-  // 탭 직접 클릭 = 전체 보기(드릴 해제)
-  document.querySelectorAll('.stepnav__item').forEach(b=>b.addEventListener('click',()=>{ drillCi=null; drillG=null; resetSubSel(); setTab(b.dataset.tab); }));
-  // 이름 클릭 드릴다운: 캠페인명→해당 캠페인 광고그룹 / 광고그룹명→해당 그룹 광고
+  // 탭 직접 클릭: grp = 선택 캠페인 필터 유지(그룹/광고 선택 초기화) / ad = 선택 광고그룹 필터 유지(광고 선택 초기화)
+  document.querySelectorAll('.stepnav__item').forEach(b=>b.addEventListener('click',()=>{
+    const t=b.dataset.tab;
+    if(t==='grp'){ SEL.grp.clear(); SEL.ad.clear(); }   // 새 광고그룹 뷰(상위 캠페인 선택은 유지)
+    else if(t==='ad'){ SEL.ad.clear(); }                // 상위 광고그룹 선택 유지 → 광고 필터
+    setTab(t);
+  }));
+  // 이름 클릭(단일 필터 바로가기): 캠페인명→그 캠페인만 필터로 광고그룹 / 광고그룹명→그 그룹만 필터로 광고
   document.getElementById('tbody').addEventListener('click',e=>{
     const a=e.target.closest('.mcds-table__name .mcds-table__link');
     if(!a) return;
     const td=a.closest('td'), col=td&&td.dataset.col;
     const tr=a.closest('tr'), rc=tr.querySelector('.rowchk'); if(!rc) return;
     const idx=+rc.dataset.idx;
-    // 캠페인명(캠페인 탭)→하위 광고그룹 / 광고그룹명(광고그룹 탭)→하위 광고. 그 외 이름은 드릴 없음
-    if(curTab==='camp' && col==='캠페인명'){ drillCi=idx; drillG=null; resetSubSel(); setTab('grp'); }
-    else if(curTab==='grp' && col==='광고그룹명'){ drillG=curGrpMeta[idx]||null; SEL.ad.clear(); if(drillG) setTab('ad'); }
+    if(curTab==='camp' && col==='캠페인명'){ SEL.camp.clear(); SEL.camp.add(idx); SEL.grp.clear(); SEL.ad.clear(); setTab('grp'); }
+    else if(curTab==='grp' && col==='광고그룹명'){ SEL.grp.clear(); SEL.grp.add(idx); SEL.ad.clear(); setTab('ad'); }
   });
   // '캠페인 만들기' → 현재 탭 생성 페이지 (캠페인 → campaign-create.html)
   document.getElementById('createBtn').addEventListener('click',()=>{
