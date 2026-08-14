@@ -130,9 +130,13 @@
     .mcds-table th.mcds-table__act, .mcds-table td.mcds-table__act { width: 1%; min-width: 0; white-space: nowrap; }
     /* 헤더 정렬 아이콘(버튼 컬럼 제외 전 컬럼) */
     .th-cell { display: inline-flex; align-items: center; gap: 4px; }
-    .th-sort { flex: none; width: 14px; height: 14px; color: var(--fg-disabled); cursor: pointer; border-radius: 2px; }
-    .th-sort:hover { color: var(--fg-muted); background: var(--fill-light-hovered); }
-    .th-sort.is-asc, .th-sort.is-desc { color: var(--accent); }
+    /* MCDS 정렬 아이콘(⇅ 삼각형 2개). enabled #999999 / hover·active 배경 / radius 2 */
+    .th-sort { flex: none; width: 16px; height: 16px; cursor: pointer; border-radius: 2px; color: #999999; }
+    .th-sort .s-up, .th-sort .s-dn { fill: currentColor; }
+    .th-sort:hover { background: var(--fill-light-hovered); }
+    .th-sort.is-asc, .th-sort.is-desc { background: var(--fill-light-pressed, #e6e6e6); }
+    .th-sort.is-asc .s-up { fill: var(--accent); }   .th-sort.is-asc .s-dn { fill: #c4c4c4; }
+    .th-sort.is-desc .s-dn { fill: var(--accent); }  .th-sort.is-desc .s-up { fill: #c4c4c4; }
     .mcds-table__num .th-cell { justify-content: flex-end; }
     /* 캠페인 선택 모달 */
     .cs-desc { font-size: 14px; line-height: 20px; color: var(--fg-subtle); margin-bottom: 16px; }
@@ -574,7 +578,9 @@
   }
 
   // 헤더 정렬 아이콘(⇅) + 상태
-  const TH_SORT='<svg class="th-sort" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M8 9l4-4 4 4M8 15l4 4 4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  const TH_SORT='<svg class="th-sort" width="16" height="16" viewBox="-4 -2 16 16" fill="none" aria-hidden="true">'+
+    '<path class="s-up" d="M3.94106 0.0277341C3.97252 -0.00915232 4.02886 -0.00933699 4.0602 0.0277341L7.9811 4.66641C8.02506 4.71861 7.98879 4.79998 7.92153 4.8002H0.0787526C0.0115672 4.7999 -0.0246972 4.71859 0.0191823 4.66641L3.94106 0.0277341Z"/>'+
+    '<path class="s-dn" d="M7.92153 7.19961C7.98875 7.19983 8.02494 7.28119 7.9811 7.3334L4.0602 11.9721C4.02884 12.0092 3.9725 12.009 3.94106 11.9721L0.0191823 7.3334C-0.0245803 7.28121 0.0116054 7.1999 0.0787526 7.19961H7.92153Z"/></svg>';
   let sortState={col:-1, dir:0};   // col=th 인덱스(sel 포함), dir: 0 없음/1 오름/-1 내림
   let curTab='camp';
   function setTab(t){
