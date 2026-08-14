@@ -770,10 +770,16 @@
     if(curTab==='camp' && col==='캠페인명'){ SEL.camp.clear(); SEL.camp.add(idx); SEL.grp.clear(); SEL.ad.clear(); setTab('grp'); }
     else if(curTab==='grp' && col==='광고그룹명'){ SEL.grp.clear(); SEL.grp.add(idx); SEL.ad.clear(); setTab('ad'); }
   });
-  // '캠페인 만들기' → 현재 탭 생성 페이지 (캠페인 → campaign-create.html)
+  // '캠페인 만들기' → 현재 탭 생성 페이지. 상위 1건이면 모달 없이 바로 생성 화면(상위명 전달)
   document.getElementById('createBtn').addEventListener('click',()=>{
-    if(curTab==='grp'){ openCampSelect(); return; }    // 광고그룹: 상위 캠페인 선택 모달
-    if(curTab==='ad'){ openGroupSelect(); return; }    // 광고: 상위 광고그룹 선택 모달
+    if(curTab==='grp'){
+      if(SEL.camp.size===1){ const ci=[...SEL.camp][0]; location.href='ad-group-create.html?camp='+encodeURIComponent(campMeta(ci).cname); return; }
+      openCampSelect(); return;    // 0건=전체 / 2건+=선택 캠페인만 모달
+    }
+    if(curTab==='ad'){
+      if(SEL.grp.size===1){ const g=curGrpMeta[[...SEL.grp][0]]; if(g){ location.href='ad-create.html?grp='+encodeURIComponent(g.gname); return; } }
+      openGroupSelect(); return;   // 0건=전체 / 2건+=선택 광고그룹만 모달
+    }
     location.href=CREATE_LINK[curTab];
   });
   // URL ?tab=camp|grp|ad 로 초기 탭 지정(생성 완료 후 홈 진입 시 해당 탭 선택)
