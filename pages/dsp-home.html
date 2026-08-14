@@ -97,6 +97,14 @@
     .tsearch { display: inline-flex; align-items: center; gap: 7px; height: 36px; border: 1px solid var(--border); border-radius: var(--r-4); padding: 0 10px; min-width: 300px; background: #fff; }
     .tsearch input { border: 0; outline: 0; font-size: 13px; width: 100%; background: transparent; font-family: inherit; }
     .tsearch svg { color: var(--fg-muted); flex: none; }
+    /* MCDS 커스텀 셀렉트(네이티브 select 대체) — 트리거=.mcds-select, 목록=.mcds-select-menu(mcds.css) */
+    .mcds-selectbox { position: relative; display: inline-block; }
+    .mcds-selectbox__trigger { display: inline-flex; align-items: center; }
+    .mcds-selectbox__label { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .mcds-selectbox__menu { position: absolute; top: calc(100% + 4px); left: 0; min-width: 100%; z-index: 50; }
+    .mcds-selectbox__menu[hidden] { display: none; }
+    .mcds-selectbox__menu .mcds-select-menu__item span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
     /* 검색 결과 안내(0건/최소 글자) */
     .filter-note { padding: 4px 0 12px; font-size: 13px; color: var(--fg-subtle); }
     .filter-note b { color: var(--fg-default); }
@@ -239,10 +247,10 @@
             </span>
             <div class="dh__metricsel">
               <span class="msel"><span class="dot o"></span>지표 1
-                <select id="g1sel" class="mcds-select mcds-select--32"></select>
+                <div class="mcds-selectbox" id="g1box"></div>
               </span>
               <span class="msel"><span class="dot b"></span>지표 2
-                <select id="g2sel" class="mcds-select mcds-select--32"></select>
+                <div class="mcds-selectbox" id="g2box"></div>
               </span>
             </div>
           </div>
@@ -281,7 +289,7 @@
               <input id="searchInput" placeholder="캠페인명·캠페인ID·랜딩URL·이름 검색">
             </div>
             <button class="tbtn" id="aSearchBtn">검색</button>
-            <select class="mcds-select mcds-select--32"><option>1000개</option><option>100개</option><option>50개</option></select>
+            <div class="mcds-selectbox" id="cntbox"></div>
           </div>
 
           <div id="filterNote" class="filter-note" hidden></div>
@@ -336,6 +344,30 @@
   let g1='ctr', g2='reach';
   let noCompare=false;   // '비교 없음' 선택 시 true → 비교(prev) 데이터 미노출
   function fillSel(id,val){ document.getElementById(id).innerHTML = MORDER.map(k=>`<option value="${k}" ${k===val?'selected':''}>${METRICS[k].label}</option>`).join(''); }
+
+  /* ===== MCDS 커스텀 셀렉트(네이티브 select 대체) ===== */
+  const SEL_CHECK='<svg class="mcds-select-menu__check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12l5 5L20 7"/></svg>';
+  function closeAllSelectboxes(){ document.querySelectorAll('.mcds-selectbox').forEach(b=>{ if(b._close) b._close(); }); }
+  document.addEventListener('click',()=>closeAllSelectboxes());
+  document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeAllSelectboxes(); });
+  // box: 래퍼 엘리먼트, opts: [{value,label}], value: 초기값, onChange(value)
+  function buildMcdsSelect(box, opts, value, onChange){
+    let val = (opts.find(o=>o.value===value)||opts[0]).value;
+    box.innerHTML =
+      '<button type="button" class="mcds-select mcds-select--32 mcds-selectbox__trigger" aria-haspopup="listbox" aria-expanded="false"><span class="mcds-selectbox__label"></span></button>'+
+      '<ul class="mcds-select-menu mcds-selectbox__menu" role="listbox" hidden></ul>';
+    const trigger=box.querySelector('.mcds-selectbox__trigger'), label=box.querySelector('.mcds-selectbox__label'), menu=box.querySelector('.mcds-selectbox__menu');
+    const setLabel=()=>{ const o=opts.find(x=>x.value===val); label.textContent=o?o.label:''; };
+    const renderMenu=()=>{ menu.innerHTML=opts.map(o=>
+      '<li role="option" aria-selected="'+(o.value===val)+'"><button type="button" class="mcds-select-menu__item'+(o.value===val?' mcds-select-menu__item--selected':'')+'" data-v="'+o.value+'"><span>'+o.label+'</span>'+(o.value===val?SEL_CHECK:'')+'</button></li>').join(''); };
+    const open=()=>{ renderMenu(); menu.hidden=false; trigger.setAttribute('aria-expanded','true'); };
+    const close=()=>{ menu.hidden=true; trigger.setAttribute('aria-expanded','false'); };
+    box._close=close;
+    setLabel();
+    trigger.addEventListener('click',e=>{ e.stopPropagation(); if(menu.hidden){ closeAllSelectboxes(); open(); } else close(); });
+    menu.addEventListener('click',e=>{ const b=e.target.closest('.mcds-select-menu__item'); if(!b) return; e.stopPropagation(); val=b.dataset.v; setLabel(); close(); if(onChange) onChange(val); });
+    return { get value(){ return val; }, set value(v){ val=v; setLabel(); } };
+  }
 
   let CW=1000, CH=300; const PADL=54, PADR=54, PADT=24, PADB=28, N=7;
   function scaleY(v, mx){ return CH-PADB-(CH-PADT-PADB)*(v/mx); }
@@ -663,9 +695,10 @@
 
   /* ================= init / events ================= */
   renderCards();
-  fillSel('g1sel',g1); fillSel('g2sel',g2);
-  document.getElementById('g1sel').addEventListener('change',e=>{ g1=e.target.value; renderChart(); });
-  document.getElementById('g2sel').addEventListener('change',e=>{ g2=e.target.value; renderChart(); });
+  const METRIC_OPTS=MORDER.map(k=>({value:k, label:METRICS[k].label}));
+  buildMcdsSelect(document.getElementById('g1box'), METRIC_OPTS, g1, v=>{ g1=v; renderChart(); });
+  buildMcdsSelect(document.getElementById('g2box'), METRIC_OPTS, g2, v=>{ g2=v; renderChart(); });
+  buildMcdsSelect(document.getElementById('cntbox'), [{value:'1000',label:'1000개'},{value:'100',label:'100개'},{value:'50',label:'50개'}], '1000');
   // 간략보기 ↔ 차트보기: 일별 지표 비교 패널 숨김/표시
   var briefMode=false;
   function toggleBrief(){
