@@ -136,15 +136,28 @@
     /* 시안 전환 표시 */
     .variant[hidden] { display: none; }
 
-    /* ===== 시안 B: 확장 검색 필터 패널 ===== */
-    .filterpanel { border: 1px solid var(--border); border-radius: var(--r-8); background: #fff; padding: 24px; margin: 16px 0 0; }
-    .fp-grid { display: grid; grid-template-columns: repeat(2, 1fr); column-gap: 40px; row-gap: 16px; }
-    .fp-field { display: flex; align-items: center; gap: 16px; }
-    .fp-field > label { flex: 0 0 72px; font-size: 14px; color: var(--fg-default); }
-    .fp-inputwrap { flex: 1; display: flex; align-items: center; gap: 8px; height: 40px; border: 1px solid var(--border); border-radius: var(--r-4); background: #fff; padding: 0 12px; }
-    .fp-inputwrap input { flex: 1; min-width: 0; border: 0; outline: 0; background: transparent; font-family: inherit; font-size: 14px; color: var(--fg-default); }
-    .fp-inputwrap svg { color: var(--fg-muted); flex: none; }
-    .fp-actions { display: flex; gap: 8px; margin-top: 20px; }
+    /* ===== 시안 A: 통합 검색(단일 입력 + 우측 아이콘) ===== */
+    .tsearch--uni { min-width: 360px; }
+    .tsearch--uni input { flex: 1; width: auto; }
+    .tsearch--uni svg { flex: none; }   /* 좌측 장식 아이콘(검색 힌트) */
+
+    /* ===== 검색 공통: 결과 안내 · 매칭 하이라이트 ===== */
+    .filter-note { padding: 4px 0 12px; font-size: 13px; color: var(--fg-subtle); }
+    .filter-note b { color: var(--fg-default); }
+    .filter-note--empty b { color: var(--critical, #EB0517); }
+
+    /* ===== 시안 B: 셀렉트 + 검색어 입력 결합(붙은) 필드 + 자동완성 ===== */
+    .a-search { display: inline-flex; align-items: center; position: relative; }
+    .ac-menu { position: absolute; top: calc(100% + 4px); left: 131px; right: 0; z-index: 30; margin: 0; padding: 4px; list-style: none; background: #fff; border: 1px solid var(--border); border-radius: var(--r-8); box-shadow: 0 8px 24px rgba(0,0,0,.12); max-height: 264px; overflow: auto; }
+    .ac-menu[hidden] { display: none; }
+    .ac-item { padding: 8px 10px; border-radius: var(--r-4); font-size: 14px; color: var(--fg-default); cursor: pointer; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .ac-item:hover, .ac-item.active { background: var(--accent-light-low); }
+    .ac-item mark { background: transparent; color: var(--accent); font-weight: 600; }
+    .ac-empty { padding: 10px; font-size: 13px; color: var(--fg-muted); }
+    .a-search__sel.mcds-select { min-width: 132px; border-radius: var(--r-4) 0 0 var(--r-4); background-color: #FAFAFA; }
+    .a-search__input { height: 36px; width: 320px; box-sizing: border-box; margin-left: -1px; padding: 0 12px; border: 1px solid var(--border); border-radius: 0 var(--r-4) var(--r-4) 0; background: var(--fill-light); font-family: inherit; font-size: 14px; line-height: 20px; color: var(--fg-default); outline: 0; }
+    .a-search__input::placeholder { color: var(--fg-muted); }
+    .a-search__sel.mcds-select:focus, .a-search__input:focus { position: relative; z-index: 1; border-color: var(--accent); }
   </style>
 </head>
 <body>
@@ -295,58 +308,41 @@
             </div>
           </div>
 
-          <!-- ===== 시안 A: 인라인 검색 (셀렉트 + 검색어 + 검색) ===== -->
+          <!-- ===== 시안 A: 통합 검색 (단일 입력 + 우측 아이콘) ===== -->
           <div class="variant" data-variant="A">
             <div class="dh__toolbar" style="padding:16px 0 12px;">
               <button class="tbtn">삭제</button>
               <button class="tbtn primary js-createBtn">캠페인 만들기</button>
               <div class="spacer"></div>
-              <select class="mcds-select" style="min-width:132px">
-                <option>캠페인명</option><option>캠페인 ID</option><option>URL</option><option>작성자</option>
-              </select>
-              <div class="tsearch">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg>
-                <input placeholder="캠페인명 검색">
+              <div class="tsearch tsearch--uni">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg>
+                <input placeholder="캠페인명 · 캠페인ID · 작성자 검색">
               </div>
-              <button class="tbtn">검색</button>
+              <button class="tbtn" id="aSearchBtn">검색</button>
               <select class="mcds-select"><option>1000개</option><option>100개</option><option>50개</option></select>
             </div>
           </div>
 
-          <!-- ===== 시안 B: 확장 검색 필터 패널 ===== -->
+          <!-- ===== 시안 B: 셀렉트 + 검색어 결합 필드 ===== -->
           <div class="variant" data-variant="B" hidden>
-            <div class="filterpanel">
-              <div class="fp-grid">
-                <div class="fp-field"><label>캠페인명</label>
-                  <div class="fp-inputwrap"><input placeholder="캠페인명 입력"></div>
-                </div>
-                <div class="fp-field"><label>캠페인 ID</label>
-                  <div class="fp-inputwrap"><input placeholder="캠페인 ID 입력"></div>
-                </div>
-                <div class="fp-field"><label>URL</label>
-                  <div class="fp-inputwrap"><input placeholder="URL 입력"></div>
-                </div>
-                <div class="fp-field"><label>작성자</label>
-                  <div class="fp-inputwrap">
-                    <input placeholder="작성자명">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg>
-                  </div>
-                </div>
-              </div>
-              <div class="fp-actions">
-                <button class="btn btn--primary btn--36">검색</button>
-                <button class="btn btn--secondary btn--36">초기화</button>
-              </div>
-            </div>
             <div class="dh__toolbar" style="padding:16px 0 12px;">
               <button class="tbtn">삭제</button>
               <button class="tbtn primary js-createBtn">캠페인 만들기</button>
               <div class="spacer"></div>
+              <div class="a-search">
+                <select class="mcds-select a-search__sel">
+                  <option>캠페인명</option><option>캠페인 ID</option><option>URL</option><option>작성자</option>
+                </select>
+                <input class="a-search__input" placeholder="캠페인명 검색" autocomplete="off" role="combobox" aria-expanded="false" aria-autocomplete="list">
+                <ul class="ac-menu" id="acMenu" role="listbox" hidden></ul>
+              </div>
+              <button class="tbtn" id="bSearchBtn">검색</button>
               <select class="mcds-select"><option>1000개</option><option>100개</option><option>50개</option></select>
             </div>
           </div>
 
 
+          <div id="filterNote" class="filter-note" hidden></div>
           <div class="mcds-table-wrap"><table class="mcds-table"><thead id="thead"></thead><tbody id="tbody"></tbody></table></div>
 
           <nav class="pagination" aria-label="페이지네이션">
@@ -550,7 +546,13 @@
     ).join('');
     // 선택 상태 복원(탭 이동과 무관하게 유지)
     document.querySelectorAll('#tbody .rowchk').forEach(el=>{ if(SEL[curTab].has(+el.dataset.idx)) cbSet(el,true); });
+    // 검색 대상 컬럼(td 인덱스) 계산 — 이름/ID/URL/작성자 (+1: 선행 선택 체크박스 td)
+    SEARCH_COLS = d.head.map((h,i)=>({h,i})).filter(({h})=>/명$/.test(h)||/ID$/.test(h)||/URL/.test(h)||h==='작성자').map(({i})=>i+1);
+    HEAD_COL = {}; d.head.forEach((h,i)=>{ HEAD_COL[h]=i+1; });
+    // 시안 A 통합검색 안내문: 탭이 실제 가진 컬럼에 맞춰 노출(랜딩URL은 광고 탭에서만)
+    const ai=aInput(); if(ai) ai.placeholder = A_PLACEHOLDER[t] || ai.placeholder;
     onCheck();
+    reapplySearch();   // 탭 전환 후에도 현재 시안의 검색 상태 재적용
   }
   // MCDS 체크박스(박스 + 체크 SVG). 표시 여부는 aria-checked / .checkbox--checked 로 CSS가 제어.
   const CB_BOX='<span class="checkbox__box"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.2 4.7 8.9 10 3.2" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>';
@@ -621,15 +623,10 @@
     if(on) renderChart();               // 다시 보일 때 폭 재측정 후 재렌더
     fitTable();
   }
-  // 차트보기·간략보기 공통: 브라우저 높이에 맞춰 테이블 높이 가변(하단 80px 유지).
-  // min-height로 적용 → 남는 공간이 있을 때만 채워 늘리고, 내용이 더 크면 자연 높이 유지.
+  // 테이블 최소 높이 500px 고정(내용이 더 크면 자연 높이 유지).
   function fitTable(){
     const wrap=document.querySelector('.mcds-table-wrap');
-    if(!wrap) return;
-    wrap.style.minHeight='';                       // 자연 상태로 초기화 후 측정
-    const anchor=document.querySelector('.pagination')||wrap;   // 표 하단 기준(페이지네이션 포함)
-    const grow=Math.round(window.innerHeight - 80 - anchor.getBoundingClientRect().bottom); // 하단 80px 남기려면 늘릴 양
-    if(grow>0) wrap.style.minHeight = Math.round(wrap.getBoundingClientRect().height + grow) + 'px';
+    if(wrap) wrap.style.minHeight='500px';
   }
   function applyCompareMode(){
     // 좌측 비교 데이터(vs.~) 및 차트 범례 '비교 기간' 노출 토글
@@ -651,19 +648,139 @@
   }));
 
   /* ================= 시안 A/B 전환 ================= */
+  var SEARCH_COLS=[], HEAD_COL={};   // setTab에서 갱신: 검색 대상 td 인덱스 / 헤더명→td 인덱스
+  // 시안 A 통합검색 안내문(탭별) — 각 탭이 실제 보유한 컬럼만 안내. 랜딩URL은 광고 탭 전용.
+  const A_PLACEHOLDER={ camp:'캠페인명 · 캠페인ID · 작성자 검색', grp:'광고그룹명 · 광고그룹ID · 작성자 검색', ad:'광고명 · 광고ID · 랜딩URL · 작성자 검색' };
+  function getVariant(){ const b=document.querySelector('.ab-toggle__btn.on'); return b?b.dataset.variant:'A'; }
   function setVariant(v){
     document.querySelectorAll('.variant').forEach(el=>{ el.hidden = el.dataset.variant!==v; });
     document.querySelectorAll('.ab-toggle__btn').forEach(b=>{
       const on=b.dataset.variant===v; b.classList.toggle('on',on); b.setAttribute('aria-pressed',on?'true':'false');
     });
     location.hash=v;               // 공유/새로고침 시 시안 유지
-    fitTable();                    // 시안 B는 필터 패널만큼 높이가 달라져 테이블 높이 재계산
+    clearSearchUI();               // 시안 전환 시 검색어/하이라이트/자동완성 초기화
+    reapplySearch();               // 새 시안 기준 재적용(대개 전체 표시)
+    fitTable();                    // 시안별 높이 차이만큼 테이블 높이 재계산
   }
   document.querySelectorAll('.ab-toggle__btn').forEach(b=>b.addEventListener('click',()=>setVariant(b.dataset.variant)));
   document.addEventListener('keydown',e=>{ // A / B 키로도 전환
     if(e.target.matches('input,select,textarea')) return;
     const k=e.key.toUpperCase(); if(k==='A'||k==='B') setVariant(k);
   });
+
+  /* ================= 검색 공통 코어 ================= */
+  function esc(s){ return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+  function showNote(rawQuery, visible){
+    const note=document.getElementById('filterNote'); if(!note) return;
+    if(visible===null){ note.hidden=true; note.className='filter-note'; note.innerHTML=''; return; }
+    note.hidden=false;
+    if(visible===0){ note.className='filter-note filter-note--empty'; note.innerHTML=`‘<b>${esc(rawQuery)}</b>’ 검색 결과가 없습니다.`; }
+    else { note.className='filter-note'; note.innerHTML=`‘<b>${esc(rawQuery)}</b>’ 검색 결과 <b>${visible}</b>건`; }
+  }
+  // rawQuery로 테이블 필터 + 하이라이트. cols=검색할 td 인덱스 배열. 빈 쿼리면 전체 복원.
+  function runFilter(rawQuery, cols){
+    const raw=(rawQuery||'').trim(), q=raw.replace(/\s+/g,'').toLowerCase();
+    let visible=0;
+    document.querySelectorAll('#tbody tr').forEach(tr=>{
+      let match=true;
+      if(q){
+        const cells=cols.map(ci=>tr.children[ci]).filter(Boolean);
+        const hay=cells.map(td=>td.textContent).join('').replace(/\s+/g,'').toLowerCase();
+        match=hay.includes(q);
+      }
+      tr.style.display=match?'':'none';
+      if(match) visible++;
+    });
+    showNote(raw, (q && visible===0) ? 0 : null);   // 0건만 안내, 그 외 숨김(건수 표시 제거)
+    return visible;
+  }
+  function clearSearchUI(){
+    const a=aInput(); if(a) a.value='';
+    const b=bInput(); if(b) b.value='';
+    acClose(); showNote('', null);
+    document.querySelectorAll('#tbody tr').forEach(tr=>{ tr.style.display=''; });
+  }
+  // 활성 시안 기준 검색 재적용(탭/시안 전환 후 호출)
+  function reapplySearch(){ if(getVariant()==='A') aFilter(); else runFilter('', []); }
+
+  /* ================= 시안 A: 통합 검색(검색 버튼=돋보기 / Enter로 실행) ================= */
+  const A_MIN=2;                 // 검색 실행 최소 글자 수
+  var aComposing=false;
+  function aInput(){ return document.querySelector('.tsearch--uni input'); }
+  function aNote(msg){ const note=document.getElementById('filterNote'); if(!note) return; note.hidden=false; note.className='filter-note'; note.textContent=msg; }
+  // 명시적 검색 실행: 2자 이상만 조회 / 1자는 안내 / 빈값은 전체 복원
+  function aSubmit(){
+    const inp=aInput(); if(!inp) return;
+    const raw=inp.value.trim();
+    if(raw.length>=A_MIN){ runFilter(raw, SEARCH_COLS); }
+    else { runFilter('', SEARCH_COLS); if(raw.length>0) aNote(`검색어를 ${A_MIN}자 이상 입력해주세요.`); }
+  }
+  // 탭/시안 전환 후 조용히 재적용(사용자 트리거 없음): 현재 입력이 2자 이상이면 유지, 아니면 전체
+  function aFilter(){ const inp=aInput(); if(!inp) return; const raw=inp.value.trim(); runFilter(raw.length>=A_MIN?raw:'', SEARCH_COLS); }
+  (function(){
+    const inp=aInput(); if(!inp) return;
+    // 실시간 자동 필터는 하지 않음. 단, 입력을 비우면 전체 목록 복원.
+    inp.addEventListener('compositionstart',()=>{ aComposing=true; });
+    inp.addEventListener('compositionend',()=>{ aComposing=false; if(inp.value.trim()==='') runFilter('', SEARCH_COLS); });
+    inp.addEventListener('input',()=>{ if(aComposing) return; if(inp.value.trim()==='') runFilter('', SEARCH_COLS); });
+    inp.addEventListener('keydown',e=>{ if(e.key==='Enter'){ e.preventDefault(); aSubmit(); } });
+    // 검색 실행 트리거: 별도 '검색' 버튼 + Enter (돋보기 아이콘은 장식)
+    const btn=document.getElementById('aSearchBtn'); if(btn) btn.addEventListener('click', aSubmit);
+  })();
+
+  /* ================= 시안 B: placeholder + 자동완성(캠페인명/작성자) + 검색 ================= */
+  const B_FIELD_HEAD={ '캠페인명':'캠페인명', '캠페인 ID':'캠페인ID', 'URL':'랜딩 URL', '작성자':'작성자' };
+  const B_AUTOCOMPLETE=new Set(['캠페인명','작성자']);   // 자동완성 대상 필드
+  var acItems=[], acActive=-1, bComposing=false;
+  function bSel(){ return document.querySelector('.a-search__sel'); }
+  function bInput(){ return document.querySelector('.a-search__input'); }
+  function acMenu(){ return document.getElementById('acMenu'); }
+  function bColIdx(){ return HEAD_COL[B_FIELD_HEAD[bSel().value]]; }   // 현재 필드의 td 인덱스
+  // 현재 필드 컬럼에서 q를 포함하는 고유 값(최대 8개)
+  function bSuggest(q){
+    const ci=bColIdx(); const low=q.trim().toLowerCase(); if(ci==null||!low) return [];
+    const seen=new Set(), out=[];
+    document.querySelectorAll('#tbody tr').forEach(tr=>{ const td=tr.children[ci]; if(!td) return;
+      const t=td.textContent.trim();
+      if(t && t.toLowerCase().includes(low) && !seen.has(t)){ seen.add(t); out.push(t); } });
+    return out.slice(0,8);
+  }
+  function acRender(q){
+    const menu=acMenu(); acActive=-1;
+    if(!q.trim() || !B_AUTOCOMPLETE.has(bSel().value)){ acClose(); return; }
+    acItems=bSuggest(q);
+    const low=q.trim().toLowerCase();
+    menu.innerHTML = acItems.length===0
+      ? '<li class="ac-empty">일치하는 항목이 없습니다</li>'
+      : acItems.map((t,i)=>{ const idx=t.toLowerCase().indexOf(low);
+          const html= idx<0 ? esc(t) : esc(t.slice(0,idx))+'<mark>'+esc(t.slice(idx,idx+low.length))+'</mark>'+esc(t.slice(idx+low.length));
+          return `<li class="ac-item" role="option" data-i="${i}">${html}</li>`; }).join('');
+    menu.hidden=false; bInput().setAttribute('aria-expanded','true');
+  }
+  function acClose(){ const menu=acMenu(); if(menu){ menu.hidden=true; menu.innerHTML=''; } acActive=-1; const bi=bInput(); if(bi) bi.setAttribute('aria-expanded','false'); }
+  function acPick(i){ const t=acItems[i]; if(t==null) return; bInput().value=t; acClose(); bRun(); }
+  function acMove(d){ const menu=acMenu(); if(menu.hidden||!acItems.length) return;
+    acActive=(acActive+d+acItems.length)%acItems.length;
+    [...menu.querySelectorAll('.ac-item')].forEach((li,i)=>li.classList.toggle('active',i===acActive)); }
+  function bRun(){ const ci=bColIdx(); runFilter(bInput().value, ci!=null?[ci]:[]); }   // 선택 필드만 대상으로 필터
+  (function(){
+    const sel=bSel(), inp=bInput(), menu=acMenu(); if(!sel||!inp) return;
+    const sync=()=>{ inp.placeholder = sel.value + ' 검색'; };
+    sel.addEventListener('change',()=>{ sync(); acClose(); });
+    sync();
+    inp.addEventListener('compositionstart',()=>{ bComposing=true; });
+    inp.addEventListener('compositionend',()=>{ bComposing=false; acRender(inp.value); });
+    inp.addEventListener('input',()=>{ if(bComposing) return; acRender(inp.value); });
+    inp.addEventListener('keydown',e=>{
+      if(e.key==='ArrowDown'){ e.preventDefault(); acMove(1); }
+      else if(e.key==='ArrowUp'){ e.preventDefault(); acMove(-1); }
+      else if(e.key==='Enter'){ if(!menu.hidden && acActive>=0){ e.preventDefault(); acPick(acActive); } else { acClose(); bRun(); } }
+      else if(e.key==='Escape'){ acClose(); }
+    });
+    menu.addEventListener('mousedown',e=>{ const li=e.target.closest('.ac-item'); if(li){ e.preventDefault(); acPick(+li.dataset.i); } });
+    document.addEventListener('click',e=>{ if(!e.target.closest('.a-search')) acClose(); });
+    const btn=document.getElementById('bSearchBtn'); if(btn) btn.addEventListener('click',()=>{ acClose(); bRun(); });
+  })();
   // URL ?tab=camp|grp|ad 로 초기 탭 지정(생성 완료 후 홈 진입 시 해당 탭 선택)
   var _initTab = new URLSearchParams(location.search).get('tab');
   renderChart(); initHover(); setTab(['camp','grp','ad'].includes(_initTab) ? _initTab : 'camp'); fitTable();
