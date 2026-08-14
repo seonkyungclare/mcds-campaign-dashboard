@@ -92,6 +92,8 @@
     .tbtn { display: inline-flex; align-items: center; gap: 4px; height: 36px; padding: 0 14px; border: 1px solid var(--border); border-radius: var(--r-4); background: #fff; font-size: 14px; font-weight: 600; color: var(--fg-default); cursor: pointer; font-family: inherit; }
     .tbtn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
     .tbtn.primary:hover { background: var(--accent-hovered); }
+    .tbtn:disabled { cursor: not-allowed; background: var(--fill-disabled); border-color: #e6e6e6; color: var(--fg-disabled); }
+    .tbtn.primary:disabled { background: var(--fill-disabled); border-color: #e6e6e6; color: var(--fg-disabled); }
     .tsearch { display: inline-flex; align-items: center; gap: 7px; height: 36px; border: 1px solid var(--border); border-radius: var(--r-4); padding: 0 10px; min-width: 300px; background: #fff; }
     .tsearch input { border: 0; outline: 0; font-size: 13px; width: 100%; background: transparent; font-family: inherit; }
     .tsearch svg { color: var(--fg-muted); flex: none; }
@@ -511,6 +513,9 @@
       head.classList.toggle('checkbox--indeterminate', some);
       head.setAttribute('aria-checked', all?'true':(some?'mixed':'false'));
     }
+    // 2건 이상 선택 시 하위 생성(광고그룹/광고) 버튼 비활성 — 상위 1건만 선택해야 생성 가능
+    const cbtn=document.getElementById('createBtn');
+    if(cbtn) cbtn.disabled = (curTab==='grp'||curTab==='ad') && vis>=2;
     updateChips();
   }
   // 스텝 라벨 옆 "N건 선택 ✕" 칩 갱신. 활성 스텝=accent, 그 외=low.
