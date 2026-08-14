@@ -742,6 +742,20 @@
     else if(t==='ad'){ SEL.ad.clear(); }                // 상위 광고그룹 선택 유지 → 광고 필터
     setTab(t);
   }));
+  // 행 액션 버튼: '광고그룹 추가'→광고그룹 생성(캠페인명 전달) / '광고 추가'→광고 생성(광고그룹명 전달)
+  document.getElementById('tbody').addEventListener('click',e=>{
+    const act=e.target.closest('.abtn');
+    if(!act) return;
+    const tr=act.closest('tr'), label=act.textContent.trim();
+    if(curTab==='camp' && label==='광고그룹 추가'){
+      const nm=(tr.querySelector('td[data-col="캠페인명"]')?.textContent||'').trim();
+      location.href='ad-group-create.html?camp='+encodeURIComponent(nm); return;
+    }
+    if(curTab==='grp' && label==='광고 추가'){
+      const nm=(tr.querySelector('td[data-col="광고그룹명"]')?.textContent||'').trim();
+      location.href='ad-create.html?grp='+encodeURIComponent(nm); return;
+    }
+  });
   // 이름 클릭(단일 필터 바로가기): 캠페인명→그 캠페인만 필터로 광고그룹 / 광고그룹명→그 그룹만 필터로 광고
   document.getElementById('tbody').addEventListener('click',e=>{
     const a=e.target.closest('.mcds-table__name .mcds-table__link');

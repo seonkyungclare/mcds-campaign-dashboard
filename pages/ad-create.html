@@ -361,5 +361,9 @@
       document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !ov.hidden) closeCancelAlert(); });
     })();
   </script>
+  <!-- 홈 테이블 '광고 추가'에서 전달된 상위 광고그룹명 반영 -->
+  <script>
+    (function(){ var g=new URLSearchParams(location.search).get('grp'); if(g){ var el=document.querySelector('.camp-info__name'); if(el) el.textContent=g; } })();
+  </script>
 </body>
 </html>
