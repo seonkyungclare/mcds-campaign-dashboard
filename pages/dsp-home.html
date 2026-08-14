@@ -97,6 +97,10 @@
     .tsearch { display: inline-flex; align-items: center; gap: 7px; height: 36px; border: 1px solid var(--border); border-radius: var(--r-4); padding: 0 10px; min-width: 300px; background: #fff; }
     .tsearch input { border: 0; outline: 0; font-size: 13px; width: 100%; background: transparent; font-family: inherit; }
     .tsearch svg { color: var(--fg-muted); flex: none; }
+    /* 검색 결과 안내(0건/최소 글자) */
+    .filter-note { padding: 4px 0 12px; font-size: 13px; color: var(--fg-subtle); }
+    .filter-note b { color: var(--fg-default); }
+    .filter-note--empty b { color: var(--critical, #EB0517); }
     /* 개수 셀렉트는 MCDS .mcds-select(mcds.css) 사용 */
 
     /* 테이블 셀 콘텐츠 — 구조/페이지네이션은 mcds.css의 .mcds-table / .pagination 사용 */
@@ -276,10 +280,11 @@
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg>
               <input id="searchInput" placeholder="캠페인명·캠페인ID·랜딩URL·이름 검색">
             </div>
-            <button class="tbtn">검색</button>
+            <button class="tbtn" id="aSearchBtn">검색</button>
             <select class="mcds-select mcds-select--32"><option>1000개</option><option>100개</option><option>50개</option></select>
           </div>
 
+          <div id="filterNote" class="filter-note" hidden></div>
 
           <div class="mcds-table-wrap"><table class="mcds-table"><thead id="thead"></thead><tbody id="tbody"></tbody></table></div>
 
@@ -548,7 +553,11 @@
     ).join('');
     // 선택 상태 복원(탭 이동과 무관하게 유지)
     document.querySelectorAll('#tbody .rowchk').forEach(el=>{ if(SEL[curTab].has(+el.dataset.idx)) cbSet(el,true); });
+    // 통합 검색 대상 컬럼(td 인덱스) 계산 — 이름/ID/URL/작성자 (+1: 선행 선택 체크박스 td)
+    SEARCH_COLS = d.head.map((h,i)=>({h,i})).filter(({h})=>/명$/.test(h)||/ID$/.test(h)||/URL/.test(h)||h==='작성자').map(({i})=>i+1);
+    const ai=aInput(); if(ai) ai.placeholder = A_PLACEHOLDER[t] || ai.placeholder;
     onCheck();
+    reapplySearch();   // 탭 전환 후 현재 검색어 기준 재적용
   }
   // MCDS 체크박스(박스 + 체크 SVG). 표시 여부는 aria-checked / .checkbox--checked 로 CSS가 제어.
   const CB_BOX='<span class="checkbox__box"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.2 4.7 8.9 10 3.2" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>';
@@ -600,6 +609,57 @@
     STEP_ORDER.slice(from).forEach(k=>SEL[k].clear());
     setTab(curTab);   // 상위 필터 해제를 현재 뷰에 재렌더로 반영
   }
+
+  /* ================= 통합 검색 (A안: 검색 버튼/Enter로 실행, 2자 이상, 빈값=전체) ================= */
+  var SEARCH_COLS=[];   // setTab에서 갱신: 검색 대상 td 인덱스(이름/ID/URL/작성자)
+  const A_PLACEHOLDER={ camp:'캠페인명 · 캠페인ID · 작성자 검색', grp:'광고그룹명 · 광고그룹ID · 작성자 검색', ad:'광고명 · 광고ID · 랜딩URL · 작성자 검색' };
+  const A_MIN=2;        // 검색 실행 최소 글자 수
+  var aComposing=false;
+  function esc(s){ return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+  function aInput(){ return document.getElementById('searchInput'); }
+  function showNote(rawQuery, visible){
+    const note=document.getElementById('filterNote'); if(!note) return;
+    if(visible===null){ note.hidden=true; note.className='filter-note'; note.innerHTML=''; return; }
+    note.hidden=false;
+    if(visible===0){ note.className='filter-note filter-note--empty'; note.innerHTML='‘<b>'+esc(rawQuery)+'</b>’ 검색 결과가 없습니다.'; }
+    else { note.className='filter-note'; note.innerHTML='‘<b>'+esc(rawQuery)+'</b>’ 검색 결과 <b>'+visible+'</b>건'; }
+  }
+  function aNote(msg){ const note=document.getElementById('filterNote'); if(!note) return; note.hidden=false; note.className='filter-note'; note.textContent=msg; }
+  // rawQuery로 현재 표시 행 필터. cols=검색 td 인덱스. 빈 쿼리면 전체 복원. 0건일 때만 안내 노출.
+  function runFilter(rawQuery, cols){
+    const raw=(rawQuery||'').trim(), q=raw.replace(/\s+/g,'').toLowerCase();
+    let visible=0;
+    document.querySelectorAll('#tbody tr').forEach(tr=>{
+      let match=true;
+      if(q){
+        const cells=cols.map(ci=>tr.children[ci]).filter(Boolean);
+        const hay=cells.map(td=>td.textContent).join('').replace(/\s+/g,'').toLowerCase();
+        match=hay.includes(q);
+      }
+      tr.style.display=match?'':'none';
+      if(match) visible++;
+    });
+    showNote(raw, (q && visible===0) ? 0 : null);
+    fitTable();
+    return visible;
+  }
+  // 명시적 검색 실행: 2자 이상만 조회 / 1자는 안내 / 빈값은 전체 복원
+  function aSubmit(){
+    const inp=aInput(); if(!inp) return;
+    const raw=inp.value.trim();
+    if(raw.length>=A_MIN){ runFilter(raw, SEARCH_COLS); }
+    else { runFilter('', SEARCH_COLS); if(raw.length>0) aNote('검색어를 '+A_MIN+'자 이상 입력해주세요.'); }
+  }
+  // 탭 전환 후 조용히 재적용: 입력이 2자 이상이면 유지, 아니면 전체
+  function reapplySearch(){ const inp=aInput(); if(!inp) return; const raw=inp.value.trim(); runFilter(raw.length>=A_MIN?raw:'', SEARCH_COLS); }
+  (function(){
+    const inp=aInput(); if(!inp) return;
+    inp.addEventListener('compositionstart',()=>{ aComposing=true; });
+    inp.addEventListener('compositionend',()=>{ aComposing=false; if(inp.value.trim()==='') runFilter('', SEARCH_COLS); });
+    inp.addEventListener('input',()=>{ if(aComposing) return; if(inp.value.trim()==='') runFilter('', SEARCH_COLS); });   // 비우면 전체 복원(실시간 필터는 안 함)
+    inp.addEventListener('keydown',e=>{ if(e.key==='Enter'){ e.preventDefault(); aSubmit(); } });
+    const btn=document.getElementById('aSearchBtn'); if(btn) btn.addEventListener('click', aSubmit);
+  })();
 
   /* ================= init / events ================= */
   renderCards();
