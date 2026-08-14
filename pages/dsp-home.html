@@ -189,7 +189,7 @@
         </div>
 
         <div class="dh__sec-head">
-          <span class="dh__sec-title">전체 캠페인 <span style="color:var(--fg-muted);font-weight:500;">(4건)</span></span>
+          <span class="dh__sec-title" id="secTitle">전체 캠페인 <span style="color:var(--fg-muted);font-weight:500;">(8건)</span></span>
           <span class="dh__hint">성과 계산 기준안내
             <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="6" stroke="#808080"/><path d="M7 6.2v3.6" stroke="#808080" stroke-width="1.2" stroke-linecap="round"/><circle cx="7" cy="4.4" r="0.7" fill="#808080"/></svg>
           </span>
@@ -467,20 +467,75 @@
       rows: adLead.map((r,i)=>ACT_AD.concat(r.slice(1), TAIL[i])) },
   };
   const CREATE_LINK={ camp:'campaign-create.html', grp:'ad-group-create.html', ad:'ad-create.html' };
+
+  /* ========== 드릴다운: 캠페인 → 하위 광고그룹(≤4) → 하위 광고(≤3) ========== */
+  function txt(h){ return String(h).replace(/<[^>]+>/g,''); }
+  const GRP_N=[4,3,4,2,4,3,2,3], AD_N=[3,2,3,1,2,3];   // 캠페인별 광고그룹 수(≤4) / 광고그룹별 광고 수(≤3)
+  const PKGS=['일반형','맞춤형','오픈형','패키지형'], CPMS=['1,000','800','1,200','950'],
+        CONTRACTS=['5,000,000','3,000,000','1,980,000','8,320,000'], ROASES=['3.72%','3.95%','3.50%','4.10%'],
+        TARGETS=['1,240,000','890,000','450,000','1,100,000'], ADKIND=['빅배너','스플래시','퀵메뉴'];
+  function campMeta(ci){ const r=campLead[ci]; return { cid:r[3], cnameH:r[4], cname:txt(r[4]), ctype:r[5], buy:r[6], country:r[9] }; }
+  // 특정 캠페인의 하위 광고그룹 메타(최대 4)
+  function groupsOf(ci){
+    const c=campMeta(ci), n=Math.min(4, GRP_N[ci]||1), out=[];
+    for(let j=0;j<n;j++) out.push({ gi:j, gid:'GRP-'+c.cid.replace('CMP-','')+'-'+(j+1), gname:'260830_광고그룹_'+c.cname+' #'+(j+1), pkg:PKGS[j%4], c });
+    return out;
+  }
+  // 기본(전체) 광고그룹 뷰의 각 행 → 메타로 매핑(그 행에서 광고 드릴 가능)
+  function grpMetaDefault(i){ const r=grpLead[i]; return { gi:i, gid:r[3], gname:txt(r[4]), pkg:r[9], c:{ cid:r[5], cnameH:r[6], cname:txt(r[6]), ctype:r[7], buy:r[8], country:r[10] } }; }
+  // 광고그룹의 하위 광고 메타(최대 3)
+  function adsOf(g){
+    const n=Math.min(3, AD_N[g.gi % AD_N.length]||1), out=[];
+    for(let k=0;k<n;k++) out.push({ aid:'AD-'+g.gid.replace('GRP-','')+'-'+(k+1), aname:'260830_광고_'+ADKIND[k%3]+'_'+g.c.cname, k, g });
+    return out;
+  }
+  // 메타 → 표 행(컬럼 레이아웃은 grpLead/adLead와 동일)
+  function grpRow(g, j, ti){
+    return ACT_GRP.concat(
+      [on, stat('live','노출중'), g.gid, link(g.gname), g.c.cid, g.c.cnameH, g.c.ctype, g.c.buy, g.pkg, g.c.country,
+       SLOT, TGT, PERIOD, CPMS[j%4], CONTRACTS[j%4], ROASES[j%4], TARGETS[j%4], ROASES[j%4]],
+      TAIL[ti % TAIL.length]);
+  }
+  function adRow(a, ti){
+    const g=a.g;
+    return ACT_AD.concat(
+      [on, stat('live','노출중'), rev(a.k===1?'검수중':'승인'), a.aid, link(a.aname), g.gid, link(g.gname), g.c.cid, g.c.cnameH,
+       URL(String(ti+60)), '이미지', thumb, g.c.ctype, g.c.buy, g.pkg, g.c.country, SLOT, TGT, PERIOD],
+      TAIL[ti % TAIL.length]);
+  }
+  let drillCi=null;      // 선택된 상위 캠페인 인덱스(null=전체)
+  let drillG=null;       // 선택된 상위 광고그룹 메타(null=전체)
+  let curGrpMeta=[];     // grp 탭 현재 표시 광고그룹 메타(행 순서 일치)
+  function resetSubSel(){ SEL.grp.clear(); SEL.ad.clear(); }
+  // 현재 탭에 표시할 행 + 부제 계산
+  function rowsFor(t){
+    if(t==='camp') return { rows:TABLES.camp.rows, title:'전체 캠페인' };
+    if(t==='grp'){
+      if(drillCi==null){ curGrpMeta=grpLead.map((_,i)=>grpMetaDefault(i)); return { rows:TABLES.grp.rows, title:'전체 광고그룹' }; }
+      curGrpMeta=groupsOf(drillCi);
+      return { rows:curGrpMeta.map((g,j)=>grpRow(g,j,j)), title:'광고그룹 · '+campMeta(drillCi).cname };
+    }
+    if(drillG==null) return { rows:TABLES.ad.rows, title:'전체 광고' };
+    return { rows:adsOf(drillG).map((a,k)=>adRow(a,k)), title:'광고 · '+drillG.gname };
+  }
+
   let curTab='camp';
   function setTab(t){
     curTab=t;
     document.querySelectorAll('.stepnav__group').forEach(el=>el.classList.toggle('on',el.dataset.tab===t));
     const d=TABLES[t];
+    const view=rowsFor(t), rows=view.rows;
     document.getElementById('createBtn').textContent=d.create;
+    const secT=document.getElementById('secTitle');
+    if(secT) secT.innerHTML = view.title+' <span style="color:var(--fg-muted);font-weight:500;">('+rows.length+'건)</span>';
     const chk='<button type="button" class="checkbox" role="checkbox" aria-checked="false" id="chkall" onclick="toggleAll()">'+CB_BOX+'</button>';
     const NAMECOLS=['캠페인명','광고그룹명','광고명'];
     const ACTCOLS=['수정','복제','광고그룹 추가','광고 추가'];
     const colCls=(i)=>`${d.numcols.includes(i)?'mcds-table__num':''}${NAMECOLS.includes(d.head[i])?' mcds-table__name':''}${ACTCOLS.includes(d.head[i])?' mcds-table__act':''}`;
     document.getElementById('thead').innerHTML='<tr><th class="mcds-table__sel">'+chk+'</th>'+d.head.map((h,i)=>`<th class="${colCls(i)}">${h}</th>`).join('')+'</tr>';
-    document.getElementById('tbody').innerHTML = d.rows.map((r,ri)=>
+    document.getElementById('tbody').innerHTML = rows.map((r,ri)=>
       '<tr><td class="mcds-table__sel"><button type="button" class="checkbox rowchk" role="checkbox" aria-checked="false" data-idx="'+ri+'" onclick="toggleRow(this)">'+CB_BOX+'</button></td>'+
-      r.map((c,i)=>`<td class="${colCls(i)}">${c}</td>`).join('')+'</tr>'
+      r.map((c,i)=>`<td class="${colCls(i)}"${NAMECOLS.includes(d.head[i])?' data-col="'+d.head[i]+'"':''}>${c}</td>`).join('')+'</tr>'
     ).join('');
     // 선택 상태 복원(탭 이동과 무관하게 유지)
     document.querySelectorAll('#tbody .rowchk').forEach(el=>{ if(SEL[curTab].has(+el.dataset.idx)) cbSet(el,true); });
@@ -579,7 +634,19 @@
     noCompare = b.dataset.cmp==='none';
     applyCompareMode();
   }));
-  document.querySelectorAll('.stepnav__item').forEach(b=>b.addEventListener('click',()=>setTab(b.dataset.tab)));
+  // 탭 직접 클릭 = 전체 보기(드릴 해제)
+  document.querySelectorAll('.stepnav__item').forEach(b=>b.addEventListener('click',()=>{ drillCi=null; drillG=null; resetSubSel(); setTab(b.dataset.tab); }));
+  // 이름 클릭 드릴다운: 캠페인명→해당 캠페인 광고그룹 / 광고그룹명→해당 그룹 광고
+  document.getElementById('tbody').addEventListener('click',e=>{
+    const a=e.target.closest('.mcds-table__name .mcds-table__link');
+    if(!a) return;
+    const td=a.closest('td'), col=td&&td.dataset.col;
+    const tr=a.closest('tr'), rc=tr.querySelector('.rowchk'); if(!rc) return;
+    const idx=+rc.dataset.idx;
+    // 캠페인명(캠페인 탭)→하위 광고그룹 / 광고그룹명(광고그룹 탭)→하위 광고. 그 외 이름은 드릴 없음
+    if(curTab==='camp' && col==='캠페인명'){ drillCi=idx; drillG=null; resetSubSel(); setTab('grp'); }
+    else if(curTab==='grp' && col==='광고그룹명'){ drillG=curGrpMeta[idx]||null; SEL.ad.clear(); if(drillG) setTab('ad'); }
+  });
   // '캠페인 만들기' → 현재 탭 생성 페이지 (캠페인 → campaign-create.html)
   document.getElementById('createBtn').addEventListener('click',()=>{
     if(curTab==='grp'){ openCampSelect(); return; }    // 광고그룹: 상위 캠페인 선택 모달
