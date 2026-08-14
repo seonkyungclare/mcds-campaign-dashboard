@@ -680,13 +680,16 @@
   }
   // 차트보기·간략보기 공통: 브라우저 높이에 맞춰 테이블 높이 가변(하단 80px 유지).
   // min-height로 적용 → 남는 공간이 있을 때만 채워 늘리고, 내용이 더 크면 자연 높이 유지.
+  const TABLE_MIN=500;   // 테이블 최소 높이(모든 모드 공통 바닥)
   function fitTable(){
     const wrap=document.querySelector('.mcds-table-wrap');
     if(!wrap) return;
     wrap.style.minHeight='';                       // 자연 상태로 초기화 후 측정
     const anchor=document.querySelector('.pagination')||wrap;   // 표 하단 기준(페이지네이션 포함)
+    const natural=wrap.getBoundingClientRect().height;
     const grow=Math.round(window.innerHeight - 80 - anchor.getBoundingClientRect().bottom); // 하단 80px 남기려면 늘릴 양
-    if(grow>0) wrap.style.minHeight = Math.round(wrap.getBoundingClientRect().height + grow) + 'px';
+    const target=Math.max(TABLE_MIN, Math.round(natural + (grow>0?grow:0)));                 // 뷰포트 채움 + 최소 500 바닥
+    wrap.style.minHeight = target + 'px';
   }
   function applyCompareMode(){
     // 좌측 비교 데이터(vs.~) 및 차트 범례 '비교 기간' 노출 토글
