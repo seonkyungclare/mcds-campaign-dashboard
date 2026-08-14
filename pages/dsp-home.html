@@ -464,6 +464,8 @@
     ['620,000','41,600','2.67%','41,600','41,600','2.67%','2,100','4.25%','2,100','1,520','123,450,000','한예린','2026.4.15','도세온','2026.4.15',link('보기')],
     ['970,000','36,900','3.00%','36,900','36,900','3.00%','1,950','3.90%','1,950','1,480','67,890,000','오승빈','2026.4.19','류지혼','2026.4.19',link('보기')],
   ];
+  const TAIL_H=TAIL_HEAD.slice(0,-1);   // 이력 제외 지표 꼬리 헤더(이력은 맨 우측으로 분리)
+  const HIST_CELL=link('보기');           // 이력 셀(공통)
   const SLOT='빅배너, 스플래시', TGT='인구통계학 타겟팅', PERIOD='2026-10-01 ~ 2026-10-30';
   const GNAME=link('260830_광고그룹_킨치 x 오스트리야'), CNAME=link('캠페인_킨치 x 오스트리야'), CID='CAM-126548';
 
@@ -502,18 +504,18 @@
     [acts(AC_AD),on,stat('wait','검수중'),rev('검수중'),'AD-4580',link('260830_광고_브리지_위캔더스'),'GRP-126537',AGNAME,CID,CNAME,URL('75'),'이미지',thumb,'광고','보장형','일반형','한국',SLOT,TGT,PERIOD],
   ];
 
-  const CAMP_HEAD=['수정','복제','ON/OFF','상태','캠페인ID','캠페인명','캠페인유형','구매유형','패키지유형','브랜드','국가','구좌','계약금액','ROAS','목표 노출수','목표 달성률'].concat(TAIL_HEAD,['광고그룹 추가']);
-  const GRP_HEAD=['수정','복제','ON/OFF','상태','광고그룹ID','광고그룹명','캠페인ID','캠페인명','캠페인유형','구매유형','패키지유형','국가','구좌','타겟팅','기간','CPM 단가','계약 금액','ROAS','목표 노출수','목표 달성률'].concat(TAIL_HEAD,['광고 추가']);
-  const AD_HEAD=['수정','복제','ON/OFF','상태','검수','광고ID','광고명','광고그룹ID','광고그룹명','캠페인ID','캠페인명','랜딩 URL','광고 타입','미리보기','캠페인유형','구매유형','패키지유형','국가','구좌','타겟팅','기간'].concat(TAIL_HEAD);
+  const CAMP_HEAD=['수정','복제','ON/OFF','상태','캠페인ID','캠페인명','캠페인유형','구매유형','패키지유형','브랜드','국가','구좌','계약금액','ROAS','목표 노출수','목표 달성률'].concat(TAIL_H,['광고그룹 추가','이력']);
+  const GRP_HEAD=['수정','복제','ON/OFF','상태','광고그룹ID','광고그룹명','캠페인ID','캠페인명','캠페인유형','구매유형','패키지유형','국가','구좌','타겟팅','기간','CPM 단가','계약 금액','ROAS','목표 노출수','목표 달성률'].concat(TAIL_H,['광고 추가','이력']);
+  const AD_HEAD=['수정','복제','ON/OFF','상태','검수','광고ID','광고명','광고그룹ID','광고그룹명','캠페인ID','캠페인명','랜딩 URL','광고 타입','미리보기','캠페인유형','구매유형','패키지유형','국가','구좌','타겟팅','기간'].concat(TAIL_H,['이력']);
   // 우측 정렬(숫자) 컬럼: 헤더명 기준(컬럼 순서 변경에도 안전)
   const NUMHEADS=new Set(['계약금액','계약 금액','ROAS','CPM 단가','목표 노출수','목표 달성률','노출수','클릭수','CTR','유니크 노출수','유니크 클릭수','유니크 CTR','상품 탐색 전환수','상품 탐색 전환율','구매전환수','CVR','구매전환액']);
   const TABLES = {
     camp:{ create:'캠페인 만들기', count:'8', head:CAMP_HEAD,
-      rows: campLead.map((r,i)=>ACT_CAMP.concat(r.slice(1), TAIL[i], TRAIL_CAMP)) },
+      rows: campLead.map((r,i)=>ACT_CAMP.concat(r.slice(1), TAIL[i].slice(0,-1), TRAIL_CAMP, [HIST_CELL])) },
     grp:{ create:'광고그룹 만들기', count:'8', head:GRP_HEAD,
-      rows: grpLead.map((r,i)=>ACT_GRP.concat(r.slice(1), TAIL[i], TRAIL_GRP)) },
+      rows: grpLead.map((r,i)=>ACT_GRP.concat(r.slice(1), TAIL[i].slice(0,-1), TRAIL_GRP, [HIST_CELL])) },
     ad:{ create:'광고 만들기', count:'8', head:AD_HEAD,
-      rows: adLead.map((r,i)=>ACT_AD.concat(r.slice(1), TAIL[i])) },
+      rows: adLead.map((r,i)=>ACT_AD.concat(r.slice(1), TAIL[i].slice(0,-1), [HIST_CELL])) },
   };
   const CREATE_LINK={ camp:'campaign-create.html', grp:'ad-group-create.html', ad:'ad-create.html' };
 
@@ -543,14 +545,14 @@
     return ACT_GRP.concat(
       [on, stat('live','노출중'), g.gid, link(g.gname), g.c.cid, g.c.cnameH, g.c.ctype, g.c.buy, g.pkg, g.c.country,
        SLOT, TGT, PERIOD, CPMS[j%4], CONTRACTS[j%4], ROASES[j%4], TARGETS[j%4], ROASES[j%4]],
-      TAIL[ti % TAIL.length], TRAIL_GRP);
+      TAIL[ti % TAIL.length].slice(0,-1), TRAIL_GRP, [HIST_CELL]);
   }
   function adRow(a, ti){
     const g=a.g;
     return ACT_AD.concat(
       [on, stat('live','노출중'), rev(a.k===1?'검수중':'승인'), a.aid, link(a.aname), g.gid, link(g.gname), g.c.cid, g.c.cnameH,
        URL(String(ti+60)), '이미지', thumb, g.c.ctype, g.c.buy, g.pkg, g.c.country, SLOT, TGT, PERIOD],
-      TAIL[ti % TAIL.length]);
+      TAIL[ti % TAIL.length].slice(0,-1), [HIST_CELL]);
   }
   let curGrpMeta=[];     // grp 탭 현재 표시 광고그룹 메타(행 순서 일치 — 광고 필터의 기준)
   // 현재 탭에 표시할 행 + 부제 계산.
@@ -593,7 +595,7 @@
     if(secT) secT.innerHTML = view.title+' <span style="color:var(--fg-muted);font-weight:500;">('+rows.length+'건)</span>';
     const chk='<button type="button" class="checkbox" role="checkbox" aria-checked="false" id="chkall" onclick="toggleAll()">'+CB_BOX+'</button>';
     const NAMECOLS=['캠페인명','광고그룹명','광고명'];
-    const ACTCOLS=['수정','복제','광고그룹 추가','광고 추가'];
+    const ACTCOLS=['수정','복제','광고그룹 추가','광고 추가','이력'];   // hug + 정렬아이콘 제외(버튼형/이력)
     const colCls=(i)=>`${NUMHEADS.has(d.head[i])?'mcds-table__num':''}${NAMECOLS.includes(d.head[i])?' mcds-table__name':''}${ACTCOLS.includes(d.head[i])?' mcds-table__act':''}`;
     document.getElementById('thead').innerHTML='<tr><th class="mcds-table__sel">'+chk+'</th>'+d.head.map((h,i)=>`<th class="${colCls(i)}"><span class="th-cell">${h}${ACTCOLS.includes(d.head[i])?'':TH_SORT}</span></th>`).join('')+'</tr>';
     document.getElementById('tbody').innerHTML = rows.map((r,ri)=>
