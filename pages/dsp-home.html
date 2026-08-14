@@ -128,6 +128,15 @@
     .mcds-table th.mcds-table__name, .mcds-table td.mcds-table__name { width: 220px; min-width: 220px; }
     /* 액션 버튼 컬럼: 내용에 맞춤(hug) */
     .mcds-table th.mcds-table__act, .mcds-table td.mcds-table__act { width: 1%; min-width: 0; white-space: nowrap; }
+    /* 좌측 고정열(sticky) — 이름 컬럼까지. 배경은 tr에 있으므로 고정 셀에 불투명 배경 부여 */
+    .mcds-table .col-sticky { position: sticky; z-index: 2; }
+    #thead .col-sticky { z-index: 3; }
+    #tbody .col-sticky { background: var(--fill-light); }
+    #tbody tr:hover .col-sticky { background: var(--fill-light-low); }
+    #tbody tr.is-selected .col-sticky { background: var(--accent-light-low); }
+    #tbody tr.is-selected:hover .col-sticky { background: var(--accent-light-hovered); }
+    .mcds-table .col-sticky--last { box-shadow: 4px 0 6px -4px rgba(0,0,0,.14); }
+
     /* 헤더 정렬 아이콘(버튼 컬럼 제외 전 컬럼) */
     .th-cell { display: inline-flex; align-items: center; gap: 4px; }
     /* MCDS 정렬 아이콘(⇅ 삼각형 2개). enabled #999999 / hover·active 배경 / radius 2 */
@@ -610,6 +619,23 @@
     const ai=aInput(); if(ai) ai.placeholder = A_PLACEHOLDER[t] || ai.placeholder;
     onCheck();
     reapplySearch();   // 탭 전환 후 현재 검색어 기준 재적용
+    applySticky();     // 좌측 고정열(이름 컬럼까지) 적용
+  }
+  // 좌측 고정열: 선택 체크박스~이름 컬럼(캠페인명/광고그룹명/광고명)까지 sticky
+  const STICKY_NAME={ camp:'캠페인명', grp:'광고그룹명', ad:'광고명' };
+  function applySticky(){
+    const nameIdx=TABLES[curTab].head.indexOf(STICKY_NAME[curTab]);
+    if(nameIdx<0) return;
+    const stickyCount=nameIdx+2;   // 선택 컬럼(0) + head[0..nameIdx]
+    const headThs=[...document.querySelectorAll('#thead th')];
+    const lefts=[]; let acc=0;
+    for(let i=0;i<stickyCount;i++){ lefts.push(acc); acc+=headThs[i].getBoundingClientRect().width; }
+    const apply=(cells)=>cells.forEach((c,i)=>{
+      if(i<stickyCount){ c.classList.add('col-sticky'); c.classList.toggle('col-sticky--last', i===stickyCount-1); c.style.left=lefts[i]+'px'; }
+      else { c.classList.remove('col-sticky','col-sticky--last'); c.style.left=''; }
+    });
+    apply(headThs);
+    document.querySelectorAll('#tbody tr').forEach(tr=>apply([...tr.children]));
   }
   // MCDS 체크박스(박스 + 체크 SVG). 표시 여부는 aria-checked / .checkbox--checked 로 CSS가 제어.
   const CB_BOX='<span class="checkbox__box"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.2 4.7 8.9 10 3.2" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>';
@@ -828,7 +854,7 @@
   var _initTab = new URLSearchParams(location.search).get('tab');
   renderChart(); initHover(); setTab(['camp','grp','ad'].includes(_initTab) ? _initTab : 'camp'); fitTable();
   // 컨테이너 폭 변경 시 차트 재렌더(폭 기준 좌표 갱신)
-  let _rz; window.addEventListener('resize',()=>{ clearTimeout(_rz); _rz=setTimeout(()=>{ renderChart(); fitTable(); },120); });
+  let _rz; window.addEventListener('resize',()=>{ clearTimeout(_rz); _rz=setTimeout(()=>{ renderChart(); fitTable(); applySticky(); },120); });
   </script>
 
   <!-- 캠페인 선택 모달 (광고그룹 탭에서 '광고그룹 만들기' 클릭 시) -->
