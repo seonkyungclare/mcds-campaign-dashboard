@@ -147,6 +147,21 @@
     .th-sort.is-asc .s-up { fill: var(--accent); }   .th-sort.is-asc .s-dn { fill: #c4c4c4; }
     .th-sort.is-desc .s-dn { fill: var(--accent); }  .th-sort.is-desc .s-up { fill: #c4c4c4; }
     .mcds-table__num .th-cell { justify-content: flex-end; }
+    /* MCDS 필터 아이콘(funnel) */
+    .th-filter { flex: none; width: 16px; height: 16px; cursor: pointer; border-radius: 2px; color: #999999; }
+    .th-filter:hover { background: var(--fill-light-hovered); }
+    .th-filter.is-active { color: var(--accent); background: var(--fill-light-pressed, #e6e6e6); }
+    /* 컬럼 필터 팝오버: 검색 + 셀렉트 체크박스 리스트 */
+    .col-filter { position: fixed; z-index: 200; width: 260px; background: var(--fill-light); border: 1px solid var(--border-disabled, #e6e6e6); border-radius: var(--r-8); box-shadow: 0 0 1px 1px rgba(0,0,0,.06), 0 12px 16px -4px rgba(0,0,0,.08), 0 4px 10px -1px rgba(0,0,0,.06); padding: 12px; }
+    .col-filter[hidden] { display: none; }
+    .col-filter__search input { width: 100%; height: 36px; box-sizing: border-box; border: 1px solid var(--border); border-radius: var(--r-4); padding: 0 12px; font-family: inherit; font-size: 14px; line-height: 20px; color: var(--fg-default); background: #fff; outline: 0; }
+    .col-filter__search input:focus { border-color: var(--accent); }
+    .col-filter__search input::placeholder { color: var(--fg-muted); }
+    .col-filter__list { list-style: none; margin: 8px 0 0; padding: 0; max-height: 224px; overflow-y: auto; }
+    .col-filter__item { display: flex; align-items: center; gap: 8px; min-height: 36px; padding: 4px; cursor: pointer; border-radius: var(--r-4); }
+    .col-filter__item:hover { background: var(--fill-light-hovered); }
+    .col-filter__item > span { font-size: 14px; line-height: 20px; color: var(--fg-default); }
+    .col-filter__hint { padding: 10px 4px; font-size: 13px; color: var(--fg-muted); text-align: center; }
     /* 캠페인 선택 모달 */
     .cs-desc { font-size: 14px; line-height: 20px; color: var(--fg-subtle); margin-bottom: 16px; }
     .cs-filter { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; background: var(--fill-light-low); border: 1px solid var(--border); border-radius: var(--r-8); padding: 16px; margin-bottom: 16px; }
@@ -480,14 +495,14 @@
 
   // 캠페인 선행 컬럼(15): 관리,ON/OFF,상태,캠페인ID,캠페인명,캠페인유형,구매유형,패키지유형,브랜드,국가,구좌,계약금액,ROAS,목표노출수,목표달성률
   const campLead=[
-    [acts(AC_CAMP),on,stat('live','노출중'),'CMP-426548',link('롤링스톤즈 | 아크메드라비 컬렉션'),'광고','보장형','일반형','브랜드명','한국',SLOT,'5,000,000','3.72%','1,240,000','3.72%'],
-    [acts(AC_CAMP),on,stat('live','노출중'),'CMP-245135',link('식스핏 패션플래닛 pick'),'광고','보장형','일반형','브랜드명','한국',SLOT,'3,000,000','3.95%','890,000','3.95%'],
-    [acts(AC_CAMP),on,stat('wait','노출 대기'),'CMP-369742',link('캠페인_킨치 x 오스트리야'),'광고','보장형','일반형','브랜드명','한국',SLOT,'1,980,000','3.5%','450,000','3%'],
-    [acts(AC_CAMP),on,stat('del','삭제'),'CMP-582930',link('클래식 트렌치코트 & 재킷'),'광고','보장형','패키지형','브랜드명','한국',SLOT,'8,320,000','4.10%','1,100,000','4.10%'],
-    [acts(AC_CAMP),on,stat('pause','일시정지'),'CMP-174856',link('해변을 닮은 서머 드레스'),'비광고','프로모티드','패키지형','브랜드명','한국',SLOT,'–','3.85%','780,000','3.85%'],
-    [acts(AC_CAMP),on,stat('end','종료'),'CMP-903482',link('럭셔리 스니커즈 셀렉션'),'비광고','프로모티드','패키지형','브랜드명','한국',SLOT,'–','3.67%','1,350,000','3.67%'],
-    [acts(AC_CAMP),on,stat('pause','일시정지'),'CMP-618274',link('친환경 패브릭 브랜드 소개'),'비광고','프로모티드','패키지형','브랜드명','한국',SLOT,'–','4.25%','620,000','4.25%'],
-    [acts(AC_CAMP),on,stat('wait','노출 대기'),'CMP-752619',link('트렌드 세터를 위한 액세서리'),'비광고','프로모티드','패키지형','브랜드명','한국',SLOT,'–','3.90%','970,000','3.90%'],
+    [acts(AC_CAMP),on,stat('live','노출중'),'CMP-426548',link('롤링스톤즈 | 아크메드라비 컬렉션'),'광고','보장형','일반형','아크메드라비','한국',SLOT,'5,000,000','3.72%','1,240,000','3.72%'],
+    [acts(AC_CAMP),on,stat('live','노출중'),'CMP-245135',link('식스핏 패션플래닛 pick'),'광고','보장형','일반형','식스핏','한국',SLOT,'3,000,000','3.95%','890,000','3.95%'],
+    [acts(AC_CAMP),on,stat('wait','노출 대기'),'CMP-369742',link('캠페인_킨치 x 오스트리야'),'광고','보장형','일반형','킨치','한국',SLOT,'1,980,000','3.5%','450,000','3%'],
+    [acts(AC_CAMP),on,stat('del','삭제'),'CMP-582930',link('클래식 트렌치코트 & 재킷'),'광고','보장형','패키지형','버킷스튜디오','한국',SLOT,'8,320,000','4.10%','1,100,000','4.10%'],
+    [acts(AC_CAMP),on,stat('pause','일시정지'),'CMP-174856',link('해변을 닮은 서머 드레스'),'비광고','프로모티드','패키지형','마르디메크르디','한국',SLOT,'–','3.85%','780,000','3.85%'],
+    [acts(AC_CAMP),on,stat('end','종료'),'CMP-903482',link('럭셔리 스니커즈 셀렉션'),'비광고','프로모티드','패키지형','나이키','한국',SLOT,'–','3.67%','1,350,000','3.67%'],
+    [acts(AC_CAMP),on,stat('pause','일시정지'),'CMP-618274',link('친환경 패브릭 브랜드 소개'),'비광고','프로모티드','패키지형','파타고니아','한국',SLOT,'–','4.25%','620,000','4.25%'],
+    [acts(AC_CAMP),on,stat('wait','노출 대기'),'CMP-752619',link('트렌드 세터를 위한 액세서리'),'비광고','프로모티드','패키지형','아모멘토','한국',SLOT,'–','3.90%','970,000','3.90%'],
   ];
   // 광고그룹 선행(19): 관리,ON/OFF,상태,광고그룹ID,광고그룹명,캠페인ID,캠페인명,캠페인유형,구매유형,패키지유형,국가,구좌,타겟팅,기간,CPM단가,계약금액,ROAS,목표노출수,목표달성률
   const grpLead=[
@@ -593,6 +608,11 @@
     '<path class="s-up" d="M3.94106 0.0277341C3.97252 -0.00915232 4.02886 -0.00933699 4.0602 0.0277341L7.9811 4.66641C8.02506 4.71861 7.98879 4.79998 7.92153 4.8002H0.0787526C0.0115672 4.7999 -0.0246972 4.71859 0.0191823 4.66641L3.94106 0.0277341Z"/>'+
     '<path class="s-dn" d="M7.92153 7.19961C7.98875 7.19983 8.02494 7.28119 7.9811 7.3334L4.0602 11.9721C4.02884 12.0092 3.9725 12.009 3.94106 11.9721L0.0191823 7.3334C-0.0245803 7.28121 0.0116054 7.1999 0.0787526 7.19961H7.92153Z"/></svg>';
   let sortState={col:-1, dir:0};   // col=th 인덱스(sel 포함), dir: 0 없음/1 오름/-1 내림
+  // MCDS 필터 아이콘(funnel) — 브랜드 컬럼 등에 노출
+  const TH_FILTER='<svg class="th-filter" width="16" height="16" viewBox="-2.5 -3.2 16 16" fill="none" aria-hidden="true"><path d="M7.40005 6.39941C7.45523 6.39947 7.49966 6.44481 7.49966 6.5V9.5C7.49955 9.5551 7.45516 9.59955 7.40005 9.59961H3.60024C3.54508 9.59961 3.49976 9.55514 3.49966 9.5V6.5C3.49966 6.44477 3.54502 6.39941 3.60024 6.39941H7.40005ZM10.9 0C10.9824 8.07345e-05 11.0295 0.0942609 10.9801 0.160156L7.52993 4.75977C7.51105 4.78495 7.48133 4.7998 7.44985 4.7998H3.54946C3.51824 4.79966 3.48916 4.78471 3.47036 4.75977L0.0201665 0.160156C-0.0292762 0.0942326 0.0178401 0 0.100245 0H10.9Z" fill="currentColor"/></svg>';
+  const FILTERCOLS=['브랜드'];       // 필터 아이콘 노출 컬럼
+  let brandFilter=new Set();         // 선택된 브랜드(비어있으면 전체)
+  let BRAND_TD=-1;                    // 현재 탭의 브랜드 td 인덱스(-1=없음)
   let curTab='camp';
   function setTab(t){
     curTab=t;
@@ -606,7 +626,7 @@
     const NAMECOLS=['캠페인명','광고그룹명','광고명'];
     const ACTCOLS=['수정','복제','광고그룹 추가','광고 추가','이력'];   // hug + 정렬아이콘 제외(버튼형/이력)
     const colCls=(i)=>`${NUMHEADS.has(d.head[i])?'mcds-table__num':''}${NAMECOLS.includes(d.head[i])?' mcds-table__name':''}${ACTCOLS.includes(d.head[i])?' mcds-table__act':''}`;
-    document.getElementById('thead').innerHTML='<tr><th class="mcds-table__sel">'+chk+'</th>'+d.head.map((h,i)=>`<th class="${colCls(i)}"><span class="th-cell">${h}${ACTCOLS.includes(d.head[i])?'':TH_SORT}</span></th>`).join('')+'</tr>';
+    document.getElementById('thead').innerHTML='<tr><th class="mcds-table__sel">'+chk+'</th>'+d.head.map((h,i)=>`<th class="${colCls(i)}"><span class="th-cell">${h}${ACTCOLS.includes(d.head[i])?'':TH_SORT}${FILTERCOLS.includes(d.head[i])?TH_FILTER:''}</span></th>`).join('')+'</tr>';
     document.getElementById('tbody').innerHTML = rows.map((r,ri)=>
       '<tr data-ord="'+ri+'"><td class="mcds-table__sel"><button type="button" class="checkbox rowchk" role="checkbox" aria-checked="false" data-idx="'+ri+'" onclick="toggleRow(this)">'+CB_BOX+'</button></td>'+
       r.map((c,i)=>`<td class="${colCls(i)}"${NAMECOLS.includes(d.head[i])?' data-col="'+d.head[i]+'"':''}>${c}</td>`).join('')+'</tr>'
@@ -616,6 +636,8 @@
     document.querySelectorAll('#tbody .rowchk').forEach(el=>{ if(SEL[curTab].has(+el.dataset.idx)) cbSet(el,true); });
     // 통합 검색 대상 컬럼(td 인덱스) 계산 — 이름/ID/URL/작성자 (+1: 선행 선택 체크박스 td)
     SEARCH_COLS = d.head.map((h,i)=>({h,i})).filter(({h})=>/명$/.test(h)||/ID$/.test(h)||/URL/.test(h)||h==='작성자').map(({i})=>i+1);
+    const _bi=d.head.indexOf('브랜드'); BRAND_TD = _bi>=0 ? _bi+1 : -1;   // 브랜드 컬럼 td 인덱스
+    brandFilter.clear(); closeColFilter();   // 탭 전환 시 브랜드 필터 초기화
     const ai=aInput(); if(ai) ai.placeholder = A_PLACEHOLDER[t] || ai.placeholder;
     onCheck();
     reapplySearch();   // 탭 전환 후 현재 검색어 기준 재적용
@@ -716,6 +738,9 @@
         const cells=cols.map(ci=>tr.children[ci]).filter(Boolean);
         const hay=cells.map(td=>td.textContent).join('').replace(/\s+/g,'').toLowerCase();
         match=hay.includes(q);
+      }
+      if(match && brandFilter.size && BRAND_TD>=0){   // 브랜드 필터(선택된 브랜드만)
+        const b=tr.children[BRAND_TD]; match = !!b && brandFilter.has(b.textContent.trim());
       }
       tr.style.display=match?'':'none';
       if(match) visible++;
@@ -827,8 +852,10 @@
     }
     location.href=CREATE_LINK[curTab];
   });
-  // 헤더 정렬 아이콘 클릭 → 오름 → 내림 → 원복(현재 표시 행 대상, 검색/드릴 상태 유지)
+  // 헤더 정렬/필터 아이콘 클릭
   document.getElementById('thead').addEventListener('click',e=>{
+    const fic=e.target.closest('.th-filter');
+    if(fic){ e.stopPropagation(); toggleColFilter(fic); return; }   // 필터 아이콘 → 팝오버
     const ic=e.target.closest('.th-sort'); if(!ic) return;
     const th=ic.closest('th'); const ci=[...th.parentNode.children].indexOf(th);
     if(sortState.col!==ci){ sortState={col:ci, dir:1}; }
@@ -849,6 +876,62 @@
     rows.forEach(r=>tb.appendChild(r));
     reapplySearch();   // 정렬 후 검색 필터 재적용
   }
+
+  /* ===== 컬럼 필터(브랜드): 검색 + 셀렉트 체크박스 리스트 ===== */
+  const BRAND_MIN=2;   // 2글자 이상 입력 시 리스트 노출
+  function colFilterEl(){ return document.getElementById('colFilter'); }
+  function closeColFilter(){ const p=colFilterEl(); if(p) p.hidden=true; }
+  function toggleColFilter(iconEl){
+    const p=colFilterEl(); if(!p) return;
+    if(!p.hidden){ closeColFilter(); return; }
+    const r=iconEl.getBoundingClientRect();
+    let left=r.left, top=r.bottom+6;
+    left=Math.min(left, window.innerWidth-260-8);   // 화면 우측 넘침 방지
+    p.style.left=Math.max(8,left)+'px'; p.style.top=top+'px';
+    p.hidden=false;
+    const inp=document.getElementById('colFilterInput'); inp.value=''; renderColFilterList(''); inp.focus();
+  }
+  // 브랜드 컬럼의 고유 값 중 q 포함(대소문자 무시)
+  function uniqueBrands(q){
+    if(BRAND_TD<0) return [];
+    const low=q.trim().toLowerCase(), seen=new Set(), out=[];
+    document.querySelectorAll('#tbody tr').forEach(tr=>{ const td=tr.children[BRAND_TD]; if(!td) return;
+      const b=td.textContent.trim();
+      if(b && b.toLowerCase().includes(low) && !seen.has(b)){ seen.add(b); out.push(b); } });
+    return out.sort((a,b)=>a.localeCompare(b,'ko'));
+  }
+  function renderColFilterList(q){
+    const list=document.getElementById('colFilterList');
+    if(q.trim().length<BRAND_MIN){ list.innerHTML='<li class="col-filter__hint">'+BRAND_MIN+'글자 이상 입력해주세요.</li>'; return; }
+    const items=uniqueBrands(q);
+    if(!items.length){ list.innerHTML='<li class="col-filter__hint">일치하는 브랜드가 없습니다.</li>'; return; }
+    list.innerHTML=items.map(b=>{
+      const on=brandFilter.has(b);
+      return '<li class="col-filter__item" data-brand="'+b.replace(/"/g,'&quot;')+'">'+
+        '<button type="button" class="checkbox'+(on?' checkbox--checked':'')+'" role="checkbox" aria-checked="'+(on?'true':'false')+'">'+CB_BOX+'</button>'+
+        '<span>'+b+'</span></li>';
+    }).join('');
+  }
+  function applyBrandFilter(){
+    reapplySearch();   // 현재 검색어 + 브랜드 필터 함께 적용
+    const fic=document.querySelector('#thead .th-filter'); if(fic) fic.classList.toggle('is-active', brandFilter.size>0);
+  }
+  // 팝오버 상호작용(문서 위임 — #colFilter가 스크립트 뒤에 있어도 안전)
+  document.addEventListener('input',e=>{ if(e.target && e.target.id==='colFilterInput') renderColFilterList(e.target.value); });
+  document.addEventListener('click',e=>{
+    const li=e.target.closest('.col-filter__item');
+    if(li){
+      const b=li.getAttribute('data-brand');
+      if(brandFilter.has(b)) brandFilter.delete(b); else brandFilter.add(b);
+      const inp=document.getElementById('colFilterInput'); renderColFilterList(inp?inp.value:'');
+      applyBrandFilter();
+      return;
+    }
+    const p=colFilterEl();
+    if(p && !p.hidden && !e.target.closest('#colFilter') && !e.target.closest('.th-filter')) closeColFilter();
+  });
+  document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeColFilter(); });
+  window.addEventListener('scroll',()=>closeColFilter(), true);
 
   // URL ?tab=camp|grp|ad 로 초기 탭 지정(생성 완료 후 홈 진입 시 해당 탭 선택)
   var _initTab = new URLSearchParams(location.search).get('tab');
@@ -1007,5 +1090,11 @@
       document.addEventListener('keydown', function(e){ if(e.key==='Escape' && !ov.hidden) closeGroupSelect(); });
     })();
   </script>
+
+  <!-- 컬럼 필터 팝오버(브랜드): 검색 + 셀렉트 체크박스 리스트 -->
+  <div class="col-filter" id="colFilter" hidden>
+    <div class="col-filter__search"><input type="text" id="colFilterInput" placeholder="텍스트를 입력해 주세요." autocomplete="off"></div>
+    <ul class="col-filter__list" id="colFilterList"></ul>
+  </div>
 </body>
 </html>
