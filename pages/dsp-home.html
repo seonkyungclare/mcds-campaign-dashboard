@@ -83,6 +83,10 @@
     /* 차트 */
     .dh__panel { border: 1px solid var(--border); border-radius: var(--r-8); background: #fff; padding: 20px; }
     .dh__chart-head { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; margin-bottom: 8px; }
+    /* 차트 제목 '일별 지표 비교' — 14 semibold #808080 */
+    .dh__chart-head .dh__sec-title { font-size: 14px; line-height: 20px; font-weight: 600; color: #808080; }
+    /* 성과 카드 ↔ 차트 카드 사이 12px (.dh gap 24 → -12 보정) */
+    #dailyPanel { margin-top: -12px; }
     .dh__metricsel { display: flex; align-items: center; gap: 12px; }
     .msel { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; color: var(--fg-default); }
     .msel .dot { width: 8px; height: 8px; border-radius: 50%; }
