@@ -535,11 +535,9 @@
   function acts(list){ return '<span style="display:inline-flex;gap:6px">'+list.map(a=>`<span class="abtn">${a}</span>`).join('')+'</span>'; }
   // 관리 액션을 컬럼별로 분리(버튼 1개 = 셀 1개)
   function ab(l){ return `<span class="abtn">${l}</span>`; }
-  const ACT_CAMP=[ab('수정'),ab('복제')];   // 선행 액션(수정/복제)
-  const ACT_GRP=[ab('수정'),ab('복제')];
+  const ACT_CAMP=[ab('수정'),ab('복제'),ab('광고그룹 추가')];   // 선행 액션(수정·복제·추가)
+  const ACT_GRP=[ab('수정'),ab('복제'),ab('광고 추가')];
   const ACT_AD=[ab('수정'),ab('복제')];
-  const TRAIL_CAMP=[ab('광고그룹 추가')];   // 후행(맨 우측) 액션
-  const TRAIL_GRP=[ab('광고 추가')];
 
   // 검수(광고) 배지 + 미리보기 썸네일
   function rev(s){ return s==='승인'?'<span class="tag tag--blue">승인</span>':s==='반려'?'<span class="tag tag--red">반려</span>':s==='검수중'?'<span class="tag tag--gray">검수중</span>':'<span class="idtxt">–</span>'; }
@@ -598,16 +596,16 @@
     [acts(AC_AD),on,stat('live','노출중'),rev('승인'),'AD-4580',link('260830_광고_브리지_위캔더스'),'GRP-126537',AGNAME,CID,CNAME,URL('75'),'이미지',thumb,'광고','보장형','일반형','한국',SLOT,TGT,PERIOD],
   ];
 
-  const CAMP_HEAD=['수정','복제','ON/OFF','상태','캠페인ID','캠페인명','캠페인유형','구매유형','패키지유형','브랜드','국가','구좌','계약금액','ROAS','목표 노출수','목표 달성률'].concat(TAIL_H,['광고그룹 추가','이력']);
-  const GRP_HEAD=['수정','복제','ON/OFF','상태','광고그룹ID','광고그룹명','캠페인ID','캠페인명','캠페인유형','구매유형','패키지유형','국가','구좌','타겟팅','기간','CPM 단가','계약 금액','ROAS','목표 노출수','목표 달성률'].concat(TAIL_H,['광고 추가','이력']);
+  const CAMP_HEAD=['수정','복제','광고그룹 추가','ON/OFF','상태','캠페인ID','캠페인명','캠페인유형','구매유형','패키지유형','브랜드','국가','구좌','계약금액','ROAS','목표 노출수','목표 달성률'].concat(TAIL_H,['이력']);
+  const GRP_HEAD=['수정','복제','광고 추가','ON/OFF','상태','광고그룹ID','광고그룹명','캠페인ID','캠페인명','캠페인유형','구매유형','패키지유형','국가','구좌','타겟팅','기간','CPM 단가','계약 금액','ROAS','목표 노출수','목표 달성률'].concat(TAIL_H,['이력']);
   const AD_HEAD=['수정','복제','ON/OFF','상태','검수','광고ID','광고명','광고그룹ID','광고그룹명','캠페인ID','캠페인명','랜딩 URL','광고 타입','미리보기','캠페인유형','구매유형','패키지유형','국가','구좌','타겟팅','기간'].concat(TAIL_H,['이력']);
   // 우측 정렬(숫자) 컬럼: 헤더명 기준(컬럼 순서 변경에도 안전)
   const NUMHEADS=new Set(['계약금액','계약 금액','ROAS','CPM 단가','목표 노출수','목표 달성률','노출수','클릭수','CTR','유니크 노출수','유니크 클릭수','유니크 CTR','상품 탐색 전환수','상품 탐색 전환율','구매전환수','CVR','구매전환액']);
   const TABLES = {
     camp:{ create:'캠페인 만들기', count:'8', head:CAMP_HEAD,
-      rows: campLead.map((r,i)=>ACT_CAMP.concat(r.slice(1), TAIL[i].slice(0,-1), TRAIL_CAMP, [HIST_CELL])) },
+      rows: campLead.map((r,i)=>ACT_CAMP.concat(r.slice(1), TAIL[i].slice(0,-1), [HIST_CELL])) },
     grp:{ create:'광고그룹 만들기', count:'8', head:GRP_HEAD,
-      rows: grpLead.map((r,i)=>ACT_GRP.concat(r.slice(1), TAIL[i].slice(0,-1), TRAIL_GRP, [HIST_CELL])) },
+      rows: grpLead.map((r,i)=>ACT_GRP.concat(r.slice(1), TAIL[i].slice(0,-1), [HIST_CELL])) },
     ad:{ create:'광고 만들기', count:'8', head:AD_HEAD,
       rows: adLead.map((r,i)=>ACT_AD.concat(r.slice(1), TAIL[i].slice(0,-1), [HIST_CELL])) },
   };
@@ -639,7 +637,7 @@
     return ACT_GRP.concat(
       [on, stat('live','노출중'), g.gid, link(g.gname), g.c.cid, g.c.cnameH, g.c.ctype, g.c.buy, g.pkg, g.c.country,
        SLOT, TGT, PERIOD, CPMS[j%4], CONTRACTS[j%4], ROASES[j%4], TARGETS[j%4], ROASES[j%4]],
-      TAIL[ti % TAIL.length].slice(0,-1), TRAIL_GRP, [HIST_CELL]);
+      TAIL[ti % TAIL.length].slice(0,-1), [HIST_CELL]);
   }
   function adRow(a, ti){
     const g=a.g;
