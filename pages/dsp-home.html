@@ -30,6 +30,34 @@
     .dh__date { display: inline-flex; align-items: center; gap: 8px; height: 36px; padding: 0 10px; border: 1px solid var(--border); border-radius: var(--r-4); background: #fff; font-size: 14px; color: var(--fg-default); }
     .dh__date svg { color: var(--fg-muted); }
     .dh__vs { font-size: 13px; color: var(--fg-muted); }
+    /* 지표 영역 date picker */
+    .dp-wrap { position: relative; }
+    .dp-trigger { justify-content: space-between; min-width: 220px; cursor: pointer; font-family: inherit; }
+    .dp-pop { position: absolute; top: calc(100% + 6px); left: 0; z-index: 200; display: flex; background: #fff; border: 1px solid var(--border-disabled, #e6e6e6); border-radius: var(--r-8); box-shadow: 0 12px 24px -6px rgba(0,0,0,.16), 0 0 1px rgba(0,0,0,.1); overflow: hidden; }
+    .dp-pop[hidden] { display: none; }
+    .dp-presets { display: flex; flex-direction: column; gap: 2px; padding: 12px 8px; border-right: 1px solid var(--border); min-width: 96px; }
+    .dp-presets button { text-align: left; border: 0; background: transparent; padding: 9px 12px; font-size: 13px; color: var(--fg-default); cursor: pointer; border-radius: var(--r-4); font-family: inherit; white-space: nowrap; }
+    .dp-presets button:hover { background: var(--fill-light-hovered); }
+    .dp-presets button.on { background: var(--accent-light-low); color: var(--accent); font-weight: 600; }
+    .dp-cals { display: flex; gap: 24px; padding: 16px 20px; }
+    .dp-cal { width: 238px; }
+    .dp-cal__head { display: flex; align-items: center; justify-content: space-between; height: 28px; margin-bottom: 10px; }
+    .dp-cal__title { font-size: 14px; font-weight: 600; color: var(--fg-default); }
+    .dp-nav { border: 0; background: transparent; cursor: pointer; color: var(--fg-muted); width: 28px; height: 28px; display: inline-flex; align-items: center; justify-content: center; border-radius: var(--r-4); }
+    .dp-nav:hover { background: var(--fill-light-hovered); }
+    .dp-nav[disabled] { visibility: hidden; }
+    .dp-grid { display: grid; grid-template-columns: repeat(7, 1fr); }
+    .dp-dow { text-align: center; font-size: 12px; color: var(--fg-muted); height: 30px; line-height: 30px; }
+    .dp-dow.sun { color: #eb0517; }
+    .dp-day { position: relative; height: 34px; display: flex; align-items: center; justify-content: center; font-size: 13px; color: var(--fg-default); cursor: pointer; }
+    .dp-day.other { color: var(--fg-disabled); cursor: default; }
+    .dp-day.in-range { background: var(--accent-light-low); }
+    .dp-day.range-start { border-radius: var(--r-8) 0 0 var(--r-8); }
+    .dp-day.range-end { border-radius: 0 var(--r-8) var(--r-8) 0; }
+    .dp-day.range-start.range-end { border-radius: var(--r-8); }
+    .dp-day.endpoint > span { background: var(--accent); color: #fff; width: 30px; height: 30px; border-radius: var(--r-8); display: inline-flex; align-items: center; justify-content: center; }
+    .dp-day:not(.other):not(.endpoint):hover > span { background: var(--fill-light-hovered); width: 30px; height: 30px; border-radius: var(--r-8); display: inline-flex; align-items: center; justify-content: center; }
+    .dp-day.today:not(.endpoint)::after { content:''; position:absolute; bottom:3px; left:50%; transform:translateX(-50%); width:4px; height:4px; border-radius:50%; background:var(--accent); }
     .dh__baractions { display: flex; align-items: center; gap: 8px; }
     .seg { display: inline-flex; border: 1px solid var(--border); border-radius: var(--r-4); overflow: hidden; }
     .seg button { border: 0; background: #fff; height: 34px; padding: 0 12px; font-size: 13px; font-weight: 500; color: var(--fg-subtle); cursor: pointer; font-family: inherit; border-left: 1px solid var(--border); }
@@ -288,13 +316,20 @@
         <!-- 기간 / 비교 -->
         <div class="dh__bar">
           <div class="dh__daterow">
-            <span class="dh__date">2026.05.01
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/></svg>
-            </span>
-            <span style="color:var(--fg-muted);">–</span>
-            <span class="dh__date">2026.05.07
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/></svg>
-            </span>
+            <div class="dp-wrap">
+              <button type="button" class="dh__date dp-trigger" id="dpTrigger" onclick="toggleDatePicker(event)">
+                <span id="dpLabel">2026.05.01 – 2026.05.07</span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/></svg>
+              </button>
+              <div class="dp-pop" id="dpPop" hidden>
+                <div class="dp-presets">
+                  <button type="button" data-preset="yday">어제</button>
+                  <button type="button" data-preset="7">지난 7일</button>
+                  <button type="button" data-preset="30">최근 30일</button>
+                </div>
+                <div class="dp-cals" id="dpCals"></div>
+              </div>
+            </div>
             <span class="dh__vs">vs. 2026.04.23 ~ 2026.04.30</span>
           </div>
           <div class="dh__baractions">
@@ -1084,6 +1119,71 @@
   document.addEventListener('dragend',()=>{ fmDragOi=null; document.querySelectorAll('#fmSelected .dragging,#fmSelected .drop-target').forEach(x=>x.classList.remove('dragging','drop-target')); });
   document.addEventListener('mousedown',e=>{ if(e.target.id==='fieldModalOverlay') closeFieldModal(); });
   document.addEventListener('keydown',e=>{ if(e.key==='Escape'){ const ov=document.getElementById('fieldModalOverlay'); if(ov && !ov.hidden) closeFieldModal(); } });
+
+  /* ===== 지표 영역 date picker (범위 선택 + 프리셋 + 듀얼 먼스) ===== */
+  const DP_TODAY=new Date(2026,4,7);            // 기준 '오늘'(데모 맥락: 2026.05.07)
+  let dpStart=new Date(2026,4,1), dpEnd=new Date(2026,4,7);   // 기본 2026.05.01~05.07
+  let dpView=new Date(2026,4,1);                // 좌측 표시 월
+  let dpSelecting=false;                        // 범위 선택 중(첫 클릭 후 두번째 대기)
+  const dpStrip=d=>new Date(d.getFullYear(),d.getMonth(),d.getDate());
+  const dpSame=(a,b)=>a&&b&&a.getFullYear()===b.getFullYear()&&a.getMonth()===b.getMonth()&&a.getDate()===b.getDate();
+  const dpFmt=d=>d.getFullYear()+'.'+String(d.getMonth()+1).padStart(2,'0')+'.'+String(d.getDate()).padStart(2,'0');
+  function dpApply(){ document.getElementById('dpLabel').textContent=dpFmt(dpStart)+' – '+dpFmt(dpEnd); }
+  function toggleDatePicker(e){ if(e) e.stopPropagation();
+    const pop=document.getElementById('dpPop'); if(!pop) return;
+    if(!pop.hidden){ pop.hidden=true; return; }
+    dpView=new Date(dpStart.getFullYear(), dpStart.getMonth(), 1); dpSelecting=false;
+    renderDatePicker(); pop.hidden=false;
+  }
+  function closeDatePicker(){ const p=document.getElementById('dpPop'); if(p) p.hidden=true; }
+  function dpMove(delta){ dpView=new Date(dpView.getFullYear(), dpView.getMonth()+delta, 1); renderDatePicker(); }
+  function renderCal(y,m,isLeft){
+    const DOW=['일','월','화','수','목','금','토'];
+    const startDow=new Date(y,m,1).getDay(), dim=new Date(y,m+1,0).getDate();
+    const s=dpStrip(dpStart), e=dpStrip(dpEnd);
+    let cells='';
+    for(let i=0;i<startDow;i++) cells+='<div class="dp-day other"></div>';
+    for(let d=1;d<=dim;d++){ const date=new Date(y,m,d); let cls='dp-day';
+      if(date>=s&&date<=e) cls+=' in-range';
+      const isS=dpSame(date,s), isE=dpSame(date,e);
+      if(isS) cls+=' range-start'; if(isE) cls+=' range-end'; if(isS||isE) cls+=' endpoint';
+      if(dpSame(date,DP_TODAY)) cls+=' today';
+      cells+=`<div class="${cls}" data-d="${y}_${m}_${d}"><span>${d}</span></div>`;
+    }
+    const trail=(7-((startDow+dim)%7))%7; for(let i=0;i<trail;i++) cells+='<div class="dp-day other"></div>';
+    const dow=DOW.map((w,i)=>`<div class="dp-dow${i===0?' sun':''}">${w}</div>`).join('');
+    const prev=isLeft?'<button type="button" class="dp-nav" onclick="dpMove(-1)">‹</button>':'<button type="button" class="dp-nav" disabled></button>';
+    const next=!isLeft?'<button type="button" class="dp-nav" onclick="dpMove(1)">›</button>':'<button type="button" class="dp-nav" disabled></button>';
+    return `<div class="dp-cal"><div class="dp-cal__head">${prev}<span class="dp-cal__title">${y}년 ${m+1}월</span>${next}</div><div class="dp-grid">${dow}${cells}</div></div>`;
+  }
+  function renderDatePicker(){
+    const cals=document.getElementById('dpCals'); if(!cals) return;
+    const y=dpView.getFullYear(), m=dpView.getMonth(), ny=m===11?y+1:y, nm=(m+1)%12;
+    cals.innerHTML=renderCal(y,m,true)+renderCal(ny,nm,false);
+  }
+  function dpSetPreset(kind){
+    let s=new Date(DP_TODAY), e=new Date(DP_TODAY);
+    if(kind==='yday'){ s.setDate(s.getDate()-1); e=new Date(s); }
+    else if(kind==='7'){ s.setDate(s.getDate()-6); }
+    else { s.setDate(s.getDate()-29); }
+    dpStart=s; dpEnd=e; dpSelecting=false;
+    dpView=new Date(s.getFullYear(), s.getMonth(), 1);
+    dpApply(); renderDatePicker();
+  }
+  // 위임: 프리셋/날짜 클릭, 바깥 클릭/Esc 닫기
+  document.addEventListener('click',e=>{
+    const pr=e.target.closest('.dp-presets button');
+    if(pr){ dpSetPreset(pr.dataset.preset); document.querySelectorAll('.dp-presets button').forEach(b=>b.classList.toggle('on', b===pr)); return; }
+    const day=e.target.closest('.dp-day[data-d]');
+    if(day){ const [y,m,d]=day.dataset.d.split('_').map(Number), date=new Date(y,m,d);
+      if(dpSelecting){ if(date>=dpStart){ dpEnd=date; } else { dpEnd=dpStart; dpStart=date; } dpSelecting=false; dpApply(); renderDatePicker(); closeDatePicker(); }
+      else { dpStart=date; dpEnd=date; dpSelecting=true; document.querySelectorAll('.dp-presets button').forEach(b=>b.classList.remove('on')); renderDatePicker(); }
+      return;
+    }
+    const pop=document.getElementById('dpPop');
+    if(pop && !pop.hidden && !e.target.closest('#dpPop') && !e.target.closest('#dpTrigger')) closeDatePicker();
+  });
+  document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeDatePicker(); });
 
   // URL ?tab=camp|grp|ad 로 초기 탭 지정(생성 완료 후 홈 진입 시 해당 탭 선택)
   var _initTab = new URLSearchParams(location.search).get('tab');
