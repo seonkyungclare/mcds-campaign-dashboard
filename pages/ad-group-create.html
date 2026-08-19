@@ -24,18 +24,20 @@
     .tgt-est-toggle button:first-child { border-left: 0; }
     .tgt-est-toggle button.on { background: var(--accent-light-low); color: var(--accent); }
     .tgt-est-toggle__hint { font-size: 11px; color: var(--fg-muted); margin-left: 8px; }
-    /* 예상 타겟 유저수 공통: [라벨] | [값 / 힌트] — 힌트는 값 아래 정렬 */
-    .tgt-est-a, .tgt-est-b { display: flex; align-items: baseline; gap: 20px; }
+    /* 예상 타겟 유저수 공통 */
     .tgt-est-a__body, .tgt-est-b__body { display: flex; flex-direction: column; gap: 6px; }
     .tgt-est-a__label, .tgt-est-b__label { font-size: 14px; white-space: nowrap; }
     .tgt-est-a__value, .tgt-est-b__value { font-size: 14px; }
     .tgt-est-a__hint, .tgt-est-b__hint { font-size: 12px; color: var(--fg-muted); margin: 0; }
-    /* a안: 박스 없는 인라인 — 라벨 회색, 값 accent 볼드 */
+    /* a안: divider(20px 간격) + [라벨 | 값/힌트] */
+    .tgt-est-a { display: flex; flex-direction: column; gap: 20px; }
+    .tgt-est-a__inner { display: flex; align-items: baseline; gap: 20px; }
+    .tgt-divider { border: 0; border-top: 1px solid var(--border); margin: 0; width: 100%; }
     .tgt-est-a__label { font-weight: 500; color: var(--fg-subtle); }
     .tgt-est-a__value { font-weight: 600; color: var(--accent); }
     .tgt-est-a__hint { display: flex; align-items: center; gap: 4px; }
-    /* b안: accent 배너 박스 — 라벨 accent 볼드, 값 다크 */
-    .tgt-est-b { width: fit-content; background: var(--accent-bg-low); border: 1px solid var(--blue-90); border-radius: var(--r-8); padding: 16px 20px; }
+    /* b안: accent 박스 — 카드 폭(360×2+8=728)에 맞춰 확장 */
+    .tgt-est-b { display: flex; align-items: baseline; gap: 20px; width: 728px; max-width: 100%; box-sizing: border-box; background: var(--accent-bg-low); border: 1px solid var(--blue-90); border-radius: var(--r-8); padding: 16px 20px; }
     .tgt-est-b__label { font-weight: 600; color: var(--accent); }
     .tgt-est-b__value { font-weight: 500; color: var(--fg-default); }
   </style>
@@ -400,15 +402,18 @@
                       </div>
                     </div>
 
-                    <!-- a안: 박스 없는 인라인 ([라벨] | [값/힌트]) -->
+                    <!-- a안: divider + [라벨 | 값/힌트] -->
                     <div class="tgt-est-a" id="estA">
-                      <span class="tgt-est-a__label">예상 타겟 유저수</span>
-                      <div class="tgt-est-a__body">
-                        <span class="tgt-est-a__value">1,200,000~1,800,000 명</span>
-                        <p class="tgt-est-a__hint">
-                          <svg width="13" height="13" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="6" stroke="#808080"/><path d="M7 6.2v3.6" stroke="#808080" stroke-width="1.2" stroke-linecap="round"/><circle cx="7" cy="4.4" r="0.7" fill="#808080"/></svg>
-                          설정하신 타겟 기준 예상 도달 규모입니다.
-                        </p>
+                      <hr class="tgt-divider">
+                      <div class="tgt-est-a__inner">
+                        <span class="tgt-est-a__label">예상 타겟 유저수</span>
+                        <div class="tgt-est-a__body">
+                          <span class="tgt-est-a__value">1,200,000~1,800,000 명</span>
+                          <p class="tgt-est-a__hint">
+                            <svg width="13" height="13" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="6" stroke="#808080"/><path d="M7 6.2v3.6" stroke="#808080" stroke-width="1.2" stroke-linecap="round"/><circle cx="7" cy="4.4" r="0.7" fill="#808080"/></svg>
+                            설정하신 타겟 기준 예상 도달 규모입니다.
+                          </p>
+                        </div>
                       </div>
                     </div>
 
