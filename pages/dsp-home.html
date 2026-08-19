@@ -593,7 +593,7 @@
     [acts(AC_AD),on,stat('live','노출중'),rev('승인'),'AD-4583',link('260830_광고_빅배너1_위캔더스'),'GRP-126540',AGNAME,CID,CNAME,URL('72'),'이미지',thumb,'광고','보장형','일반형','한국',SLOT,TGT,PERIOD],
     [acts(AC_AD),on,stat('live','노출중'),rev('승인'),'AD-4582',link('260830_광고_오밀라니_위캔더스'),'GRP-126539',AGNAME,CID,CNAME,URL('73'),'이미지',thumb,'광고','보장형','일반형','한국',SLOT,'커스텀 타겟팅',PERIOD],
     [acts(AC_AD),on,stat('live','노출중'),rev('승인'),'AD-4581',link('260830_광고_무신뷰티_위캔더스'),'GRP-126538',AGNAME,CID,CNAME,URL('74'),'이미지',thumb,'광고','보장형','일반형','한국',SLOT,TGT,PERIOD],
-    [acts(AC_AD),on,stat('wait','검수중'),rev('검수중'),'AD-4580',link('260830_광고_브리지_위캔더스'),'GRP-126537',AGNAME,CID,CNAME,URL('75'),'이미지',thumb,'광고','보장형','일반형','한국',SLOT,TGT,PERIOD],
+    [acts(AC_AD),on,stat('live','노출중'),rev('승인'),'AD-4580',link('260830_광고_브리지_위캔더스'),'GRP-126537',AGNAME,CID,CNAME,URL('75'),'이미지',thumb,'광고','보장형','일반형','한국',SLOT,TGT,PERIOD],
   ];
 
   const CAMP_HEAD=['수정','복제','ON/OFF','상태','캠페인ID','캠페인명','캠페인유형','구매유형','패키지유형','브랜드','국가','구좌','계약금액','ROAS','목표 노출수','목표 달성률'].concat(TAIL_H,['광고그룹 추가','이력']);
@@ -642,7 +642,7 @@
   function adRow(a, ti){
     const g=a.g;
     return ACT_AD.concat(
-      [on, stat('live','노출중'), rev(a.k===1?'검수중':'승인'), a.aid, link(a.aname), g.gid, link(g.gname), g.c.cid, g.c.cnameH,
+      [on, stat('live','노출중'), rev('승인'), a.aid, link(a.aname), g.gid, link(g.gname), g.c.cid, g.c.cnameH,
        URL(String(ti+60)), '이미지', thumb, g.c.ctype, g.c.buy, g.pkg, g.c.country, SLOT, TGT, PERIOD],
       TAIL[ti % TAIL.length].slice(0,-1), [HIST_CELL]);
   }
@@ -718,7 +718,7 @@
     const chk='<button type="button" class="checkbox" role="checkbox" aria-checked="false" id="chkall" onclick="toggleAll()">'+CB_BOX+'</button>';
     const NAMECOLS=['캠페인명','광고그룹명','광고명'];
     const ACTCOLS=['수정','복제','광고그룹 추가','광고 추가','이력'];   // hug + 정렬아이콘 제외(버튼형/이력)
-    const colCls=(i)=>`${NUMHEADS.has(head[i])?'mcds-table__num':''}${NAMECOLS.includes(head[i])?' mcds-table__name':''}${ACTCOLS.includes(head[i])?' mcds-table__act':''}${head[i]==='상태'?' mcds-table__ctr':''}`;
+    const colCls=(i)=>`${NUMHEADS.has(head[i])?'mcds-table__num':''}${NAMECOLS.includes(head[i])?' mcds-table__name':''}${ACTCOLS.includes(head[i])?' mcds-table__act':''}${(head[i]==='상태'||head[i]==='검수')?' mcds-table__ctr':''}`;
     document.getElementById('thead').innerHTML='<tr><th class="mcds-table__sel">'+chk+'</th>'+head.map((h,i)=>`<th class="${colCls(i)}"><span class="th-cell">${h}${ACTCOLS.includes(head[i])?'':TH_SORT}${FILTERCOLS.includes(head[i])?TH_FILTER:''}</span></th>`).join('')+'</tr>';
     document.getElementById('tbody').innerHTML = erows.map((r,ri)=>
       '<tr data-ord="'+ri+'"><td class="mcds-table__sel"><button type="button" class="checkbox rowchk" role="checkbox" aria-checked="false" data-idx="'+ri+'" onclick="toggleRow(this)">'+CB_BOX+'</button></td>'+
