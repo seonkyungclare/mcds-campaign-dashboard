@@ -128,8 +128,9 @@
 
     /* 테이블 셀 콘텐츠 — 구조/페이지네이션은 mcds.css의 .mcds-table / .pagination 사용 */
     .idtxt { color: var(--fg-muted); }
-    .abtn { display: inline-flex; align-items: center; justify-content: center; height: 32px; box-sizing: border-box; border: 1px solid var(--border); background: #fff; border-radius: var(--r-4); padding: 0 12px; font-size: 12px; font-weight: 500; color: var(--fg-subtle); cursor: pointer; white-space: nowrap; }
-    .abtn:hover { border-color: var(--border-light-lower-hovered); }
+    /* 테이블 액션 버튼 (Figma 3793-557167): 흰 배경·1px #d9d9d9·radius4·padding0 8·14/20 regular·#1a1a1a */
+    .abtn { display: inline-flex; align-items: center; justify-content: center; gap: 4px; height: 32px; box-sizing: border-box; border: 1px solid var(--border); background: #fff; border-radius: var(--r-4); padding: 0 8px; font-size: 14px; line-height: 20px; font-weight: 400; color: var(--fg-default); cursor: pointer; white-space: nowrap; font-family: inherit; }
+    .abtn:hover { background: var(--fill-light-low); }
     /* 토글 (cellType=switch) */
     .tg { width: 34px; height: 20px; border-radius: 20px; background: #d1d6db; position: relative; display: inline-block; cursor: pointer; vertical-align: middle; }
     .tg.on { background: var(--accent); }
