@@ -38,6 +38,7 @@
 
     /* 지표 카드 */
     .dh__cards { display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; }
+    .dh__cards[hidden] { display: none; }   /* grid가 [hidden] 기본 display:none을 덮어쓰는 문제 방지 */
     @media (max-width: 1400px) { .dh__cards { grid-template-columns: repeat(3, 1fr); } }
     .mcard { border: 1px solid var(--border); border-radius: var(--r-8); background: #fff; padding: 16px 18px; display: flex; flex-direction: column; gap: 10px; }
     .mcard__top { display: flex; align-items: center; justify-content: space-between; }
@@ -243,9 +244,15 @@
 
         <div class="dh__sec-head">
           <span class="dh__sec-title" id="secTitle">전체 캠페인 <span style="color:var(--fg-muted);font-weight:500;">(8건)</span></span>
-          <span class="dh__hint">성과 계산 기준안내
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="6" stroke="#808080"/><path d="M7 6.2v3.6" stroke="#808080" stroke-width="1.2" stroke-linecap="round"/><circle cx="7" cy="4.4" r="0.7" fill="#808080"/></svg>
-          </span>
+          <div style="display:flex;align-items:center;gap:16px;">
+            <span class="dh__hint">성과 계산 기준안내
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="6" stroke="#808080"/><path d="M7 6.2v3.6" stroke="#808080" stroke-width="1.2" stroke-linecap="round"/><circle cx="7" cy="4.4" r="0.7" fill="#808080"/></svg>
+            </span>
+            <button type="button" class="mcds-switch" id="summarySwitch" role="switch" aria-checked="true" onclick="toggleSummary()">
+              <span class="mcds-switch__track"></span>
+              <span class="mcds-switch__label">성과 요약 접기</span>
+            </button>
+          </div>
         </div>
 
         <!-- 기간 / 비교 -->
@@ -363,11 +370,11 @@
   ];
   function renderCards(){
     document.getElementById('cards').innerHTML = CARDS.map(c=>{
-      const arrow = c.d==='up'?'▲':c.d==='down'?'▼':'–';
+      const arrow = c.d==='up'?'▲ ':c.d==='down'?'▼ ':'';   // flat(0%)은 화살표 없음
       return `<div class="mcard"><div class="mcard__top"><span class="mcard__k">${c.k}</span>`+
         `<span class="mcard__more" title="더보기">⋮</span></div>`+
         `<div class="mcard__v">${c.v}<small>${c.u}</small></div>`+
-        `<div class="mcard__d d-${c.d}">${arrow} ${c.dt}</div></div>`;
+        `<div class="mcard__d d-${c.d}">${arrow}${c.dt}</div></div>`;
     }).join('');
   }
 
@@ -789,6 +796,14 @@
     panel.hidden = !on;                 // on → 표시 / off → hidden
     briefMode = panel.hidden;
     if(on) renderChart();               // 다시 보일 때 폭 재측정 후 재렌더
+    fitTable();
+  }
+  // 성과 요약(지표 카드) 접기/펼치기 — on=펼침(표시) / off=접힘
+  function toggleSummary(){
+    const sw=document.getElementById('summarySwitch');
+    const on = sw.getAttribute('aria-checked')!=='true';
+    sw.setAttribute('aria-checked', on?'true':'false');
+    document.getElementById('cards').hidden = !on;
     fitTable();
   }
   // 차트보기·간략보기 공통: 브라우저 높이에 맞춰 테이블 높이 가변(하단 80px 유지).
