@@ -25,7 +25,7 @@
 
     /* 기간 / 비교 바 */
     .dh__bar { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
-    .dh__bar[hidden] { display: none; }   /* flex가 [hidden] 기본 display:none을 덮어쓰는 문제 방지 */
+    .seg[hidden] { display: none; }   /* inline-flex가 [hidden] 기본 display:none을 덮어쓰는 문제 방지 */
     .dh__daterow { display: flex; align-items: center; gap: 10px; }
     .dh__date { display: inline-flex; align-items: center; gap: 8px; height: 36px; padding: 0 10px; border: 1px solid var(--border); border-radius: var(--r-4); background: #fff; font-size: 14px; color: var(--fg-default); }
     .dh__date svg { color: var(--fg-muted); }
@@ -790,7 +790,7 @@
     sw.setAttribute('aria-checked', on?'true':'false');
     sw.querySelector('.mcds-switch__label').textContent = on ? '성과 요약 접기' : '성과 요약 펼치기';
     document.getElementById('cards').hidden = !on;
-    document.querySelector('.dh__bar').hidden = !on;   // 기간/비교(비교없음·전일·전주·전월)·다운로드 바
+    document.getElementById('cmpSeg').hidden = !on;       // 비교(비교없음·전일·전주·전월)만 접기 — date picker/다운로드는 유지
     document.getElementById('dailyPanel').hidden = !on;   // 차트 카드
     if(on) renderChart();
     fitTable();
