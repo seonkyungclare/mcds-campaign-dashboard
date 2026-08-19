@@ -10,9 +10,12 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
   <link rel="stylesheet" href="mcds.css?v=20260813i" />
   <style>
-    /* 타겟팅 카드 너비 360 */
-    .tgt-cards { flex-wrap: wrap; }
+    /* 타겟팅 카드 너비 360 — 좌우 배치(줄바꿈 금지 + 컨테이너 폭 확장) */
+    .tgt-purchase { width: fit-content; max-width: 100%; }
+    .tgt-cards { flex-wrap: nowrap; }
     .tgt-cards .radio-card { flex: 0 0 360px; width: 360px; max-width: 360px; }
+    /* a/b 시안 토글: display 지정 요소가 [hidden]을 덮어쓰는 문제 방지 */
+    #estA[hidden], #estB[hidden] { display: none !important; }
     /* 예상 타겟 유저수 a/b 시안 임시 토글 */
     .tgt-est-toggle { display: inline-flex; border: 1px dashed var(--border-accent-light, #bacbff); border-radius: var(--r-4); overflow: hidden; width: fit-content; }
     .tgt-est-toggle button { border: 0; background: #fff; height: 28px; padding: 0 14px; font-size: 12px; font-weight: 600; color: var(--fg-muted); cursor: pointer; font-family: inherit; border-left: 1px solid var(--border); }
@@ -327,7 +330,7 @@
                 <div class="row__field">
                   <div style="display:flex;flex-direction:column;gap:20px;">
                     <!-- 타겟팅 설정 카드 -->
-                    <div class="purchase">
+                    <div class="purchase tgt-purchase">
                       <div class="purchase__cards tgt-cards" role="radiogroup" aria-label="타겟팅 설정">
                         <button type="button" class="radio-card radio-card--selected" role="radio" aria-checked="true" data-radio="targeting">
                           <div class="radio-card__head"><span class="radio__dot" data-on></span><span class="radio-card__title">인구통계학 타겟팅</span></div>
