@@ -92,6 +92,8 @@
     /* 툴바 */
     .dh__toolbar { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
     .dh__toolbar .spacer { flex: 1; }
+    .dh__toolbar .tdivider { width: 1px; height: 24px; background: var(--border); margin: 0 2px; }
+    #cntbox .mcds-selectbox__trigger { min-width: 88px; width: 88px; height: 36px; }
     .tbtn { display: inline-flex; align-items: center; gap: 4px; height: 36px; padding: 0 14px; border: 1px solid var(--border); border-radius: var(--r-4); background: #fff; font-size: 14px; font-weight: 600; color: var(--fg-default); cursor: pointer; font-family: inherit; }
     .tbtn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
     .tbtn.primary:hover { background: var(--accent-hovered); }
@@ -170,6 +172,22 @@
     .col-filter__reset { display: flex; align-items: center; justify-content: flex-start; gap: 6px; width: 100%; height: 40px; margin-top: 4px; padding: 0 4px; border: 0; border-top: 1px solid var(--border); background: transparent; font-family: inherit; font-size: 14px; line-height: 20px; color: var(--fg-default); cursor: pointer; border-radius: 0 0 var(--r-8) var(--r-8); }
     .col-filter__reset:hover { background: var(--fill-light-hovered); }
     .col-filter__reset svg { flex: none; color: var(--fg-muted); }
+
+    /* 표시할 필드 선택 모달 */
+    .fm-cols { display: flex; align-items: stretch; }
+    .fm-panel { flex: 1; min-width: 0; }
+    .fm-panel__title { font-size: 14px; font-weight: 600; color: var(--fg-default); margin-bottom: 12px; }
+    .fm-divider { width: 1px; background: var(--border); margin: 0 20px; align-self: stretch; }
+    .fm-avail, .fm-selected { list-style: none; margin: 0; padding: 0; height: 440px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; }
+    .fm-item { display: flex; align-items: center; gap: 10px; min-height: 44px; padding: 0 14px; border: 1px solid var(--border); border-radius: var(--r-8); background: var(--fill-light-low); font-size: 14px; color: var(--fg-default); }
+    .fm-avail__item { cursor: pointer; }
+    .fm-item__label { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .fm-item__handle { flex: none; color: var(--fg-muted); cursor: grab; display: inline-flex; }
+    .fm-item__remove { flex: none; width: 22px; height: 22px; display: inline-flex; align-items: center; justify-content: center; color: var(--fg-muted); background: transparent; border: 0; cursor: pointer; border-radius: var(--r-4); }
+    .fm-item__remove:hover { background: var(--fill-light-hovered); color: var(--fg-default); }
+    .fm-selected__item { cursor: default; }
+    .fm-selected__item.dragging { opacity: .45; }
+    .fm-selected__item.drop-target { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); }
     /* 캠페인 선택 모달 */
     .cs-desc { font-size: 14px; line-height: 20px; color: var(--fg-subtle); margin-bottom: 16px; }
     .cs-filter { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; background: var(--fill-light-low); border: 1px solid var(--border); border-radius: var(--r-8); padding: 16px; margin-bottom: 16px; }
@@ -334,6 +352,8 @@
               <input id="searchInput" placeholder="캠페인명·캠페인ID·랜딩URL·이름 검색">
             </div>
             <button class="tbtn" id="aSearchBtn">검색</button>
+            <span class="tdivider"></span>
+            <button class="tbtn" id="fieldSelectBtn" onclick="openFieldModal()">표시할 필드 선택</button>
             <div class="mcds-selectbox" id="cntbox"></div>
           </div>
 
@@ -623,30 +643,55 @@
   const FILTERCOLS=['브랜드'];       // 필터 아이콘 노출 컬럼
   let brandFilter=new Set();         // 선택된 브랜드(비어있으면 전체)
   let BRAND_TD=-1;                    // 현재 탭의 브랜드 td 인덱스(-1=없음)
+
+  // ===== 표시할 필드 선택(컬럼 표시/순서) =====
+  const FIELD_TRAIL=new Set(['광고그룹 추가','광고 추가','이력']);   // 후행 고정 컬럼(모달 대상 제외)
+  const FIELD_NAME={ camp:'캠페인명', grp:'광고그룹명', ad:'광고명' };
+  function optRange(t){   // 이름 컬럼 다음 ~ 후행 고정 컬럼 이전 = 옵션(토글/정렬 대상) 범위
+    const head=TABLES[t].head, left=head.indexOf(FIELD_NAME[t])+1;
+    let right=head.length; while(right>0 && FIELD_TRAIL.has(head[right-1])) right--;
+    return {left, right};
+  }
+  const fieldState={};   // t -> [{oi(원본 컬럼 인덱스), on}] (표시 순서)
+  function ensureFieldState(t){ if(fieldState[t]) return; const {left,right}=optRange(t), st=[]; for(let i=left;i<right;i++) st.push({oi:i, on:true}); fieldState[t]=st; }
+  function colOrder(t){   // 실제 렌더할 원본 컬럼 인덱스 순서(좌측 고정 + 옵션(순서/표시) + 후행 고정)
+    ensureFieldState(t);
+    const head=TABLES[t].head, {left,right}=optRange(t), order=[];
+    for(let i=0;i<left;i++) order.push(i);
+    fieldState[t].forEach(f=>{ if(f.on) order.push(f.oi); });
+    for(let i=right;i<head.length;i++) order.push(i);
+    return order;
+  }
+  let curHead=[];   // 현재 렌더된 effective head(고정열 계산 등에서 사용)
   let curTab='camp';
   function setTab(t){
     curTab=t;
     document.querySelectorAll('.stepnav__group').forEach(el=>el.classList.toggle('on',el.dataset.tab===t));
     const d=TABLES[t];
     const view=rowsFor(t), rows=view.rows;
+    // 표시할 필드 선택(순서/표시) 반영한 effective head/rows
+    const order=colOrder(t);
+    const head=order.map(i=>d.head[i]);
+    const erows=rows.map(r=>order.map(i=>r[i]));
+    curHead=head;
     document.getElementById('createBtn').textContent=d.create;
     const secT=document.getElementById('secTitle');
-    if(secT) secT.innerHTML = view.title+' <span style="color:var(--fg-muted);font-weight:500;">('+rows.length+'건)</span>';
+    if(secT) secT.innerHTML = view.title+' <span style="color:var(--fg-muted);font-weight:500;">('+erows.length+'건)</span>';
     const chk='<button type="button" class="checkbox" role="checkbox" aria-checked="false" id="chkall" onclick="toggleAll()">'+CB_BOX+'</button>';
     const NAMECOLS=['캠페인명','광고그룹명','광고명'];
     const ACTCOLS=['수정','복제','광고그룹 추가','광고 추가','이력'];   // hug + 정렬아이콘 제외(버튼형/이력)
-    const colCls=(i)=>`${NUMHEADS.has(d.head[i])?'mcds-table__num':''}${NAMECOLS.includes(d.head[i])?' mcds-table__name':''}${ACTCOLS.includes(d.head[i])?' mcds-table__act':''}`;
-    document.getElementById('thead').innerHTML='<tr><th class="mcds-table__sel">'+chk+'</th>'+d.head.map((h,i)=>`<th class="${colCls(i)}"><span class="th-cell">${h}${ACTCOLS.includes(d.head[i])?'':TH_SORT}${FILTERCOLS.includes(d.head[i])?TH_FILTER:''}</span></th>`).join('')+'</tr>';
-    document.getElementById('tbody').innerHTML = rows.map((r,ri)=>
+    const colCls=(i)=>`${NUMHEADS.has(head[i])?'mcds-table__num':''}${NAMECOLS.includes(head[i])?' mcds-table__name':''}${ACTCOLS.includes(head[i])?' mcds-table__act':''}`;
+    document.getElementById('thead').innerHTML='<tr><th class="mcds-table__sel">'+chk+'</th>'+head.map((h,i)=>`<th class="${colCls(i)}"><span class="th-cell">${h}${ACTCOLS.includes(head[i])?'':TH_SORT}${FILTERCOLS.includes(head[i])?TH_FILTER:''}</span></th>`).join('')+'</tr>';
+    document.getElementById('tbody').innerHTML = erows.map((r,ri)=>
       '<tr data-ord="'+ri+'"><td class="mcds-table__sel"><button type="button" class="checkbox rowchk" role="checkbox" aria-checked="false" data-idx="'+ri+'" onclick="toggleRow(this)">'+CB_BOX+'</button></td>'+
-      r.map((c,i)=>`<td class="${colCls(i)}"${NAMECOLS.includes(d.head[i])?' data-col="'+d.head[i]+'"':''}>${c}</td>`).join('')+'</tr>'
+      r.map((c,i)=>`<td class="${colCls(i)}"${NAMECOLS.includes(head[i])?' data-col="'+head[i]+'"':''}>${c}</td>`).join('')+'</tr>'
     ).join('');
     sortState={col:-1, dir:0};   // 탭/뷰 전환 시 정렬 초기화
     // 선택 상태 복원(탭 이동과 무관하게 유지)
     document.querySelectorAll('#tbody .rowchk').forEach(el=>{ if(SEL[curTab].has(+el.dataset.idx)) cbSet(el,true); });
     // 통합 검색 대상 컬럼(td 인덱스) 계산 — 이름/ID/URL/작성자 (+1: 선행 선택 체크박스 td)
-    SEARCH_COLS = d.head.map((h,i)=>({h,i})).filter(({h})=>/명$/.test(h)||/ID$/.test(h)||/URL/.test(h)||h==='작성자').map(({i})=>i+1);
-    const _bi=d.head.indexOf('브랜드'); BRAND_TD = _bi>=0 ? _bi+1 : -1;   // 브랜드 컬럼 td 인덱스
+    SEARCH_COLS = head.map((h,i)=>({h,i})).filter(({h})=>/명$/.test(h)||/ID$/.test(h)||/URL/.test(h)||h==='작성자').map(({i})=>i+1);
+    const _bi=head.indexOf('브랜드'); BRAND_TD = _bi>=0 ? _bi+1 : -1;   // 브랜드 컬럼 td 인덱스
     brandFilter.clear(); closeColFilter();   // 탭 전환 시 브랜드 필터 초기화
     const ai=aInput(); if(ai) ai.placeholder = A_PLACEHOLDER[t] || ai.placeholder;
     onCheck();
@@ -656,7 +701,7 @@
   // 좌측 고정열: 선택 체크박스~이름 컬럼(캠페인명/광고그룹명/광고명)까지 sticky
   const STICKY_NAME={ camp:'캠페인명', grp:'광고그룹명', ad:'광고명' };
   function applySticky(){
-    const nameIdx=TABLES[curTab].head.indexOf(STICKY_NAME[curTab]);
+    const nameIdx=curHead.indexOf(STICKY_NAME[curTab]);
     if(nameIdx<0) return;
     const stickyCount=nameIdx+2;   // 선택 컬럼(0) + head[0..nameIdx]
     const headThs=[...document.querySelectorAll('#thead th')];
@@ -951,6 +996,57 @@
   document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeColFilter(); });
   window.addEventListener('scroll',()=>closeColFilter(), true);
 
+  /* ===== 표시할 필드 선택 모달 ===== */
+  const FM_MINUS='<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>';
+  const FM_HANDLE='<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 4.5h12M2 8h12M2 11.5h12" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>';
+  let fmWork=[];        // 작업 복사본 [{oi, label, on}] (표시 순서)
+  let fmDragOi=null;
+  function openFieldModal(){
+    ensureFieldState(curTab);
+    const head=TABLES[curTab].head;
+    fmWork=fieldState[curTab].map(f=>({oi:f.oi, label:head[f.oi], on:f.on}));
+    renderFieldModal();
+    document.getElementById('fieldModalOverlay').hidden=false;
+  }
+  function closeFieldModal(){ document.getElementById('fieldModalOverlay').hidden=true; }
+  function saveFieldModal(){
+    fieldState[curTab]=fmWork.map(f=>({oi:f.oi, on:f.on}));
+    closeFieldModal();
+    setTab(curTab);   // 새 필드 구성으로 재렌더(검색/정렬/고정열 자동 재계산)
+  }
+  function renderFieldModal(){
+    // 사용 가능한 필드: 원본 순서, 체크 = on
+    const avail=document.getElementById('fmAvail'), sel=document.getElementById('fmSelected');
+    avail.innerHTML=fmWork.slice().sort((a,b)=>a.oi-b.oi).map(f=>
+      '<li class="fm-item fm-avail__item" data-oi="'+f.oi+'"><button type="button" class="checkbox'+(f.on?' checkbox--checked':'')+'" role="checkbox" aria-checked="'+(f.on?'true':'false')+'">'+CB_BOX+'</button><span class="fm-item__label">'+f.label+'</span></li>').join('');
+    document.getElementById('fmAvailCount').textContent=fmWork.length;
+    // 표시할 필드: fmWork 순서 중 on 만 (드래그 정렬 / 제거)
+    const onItems=fmWork.filter(f=>f.on);
+    sel.innerHTML=onItems.map(f=>
+      '<li class="fm-item fm-selected__item" draggable="true" data-oi="'+f.oi+'"><span class="fm-item__handle">'+FM_HANDLE+'</span><span class="fm-item__label">'+f.label+'</span><button type="button" class="fm-item__remove" title="제거">'+FM_MINUS+'</button></li>').join('');
+    document.getElementById('fmSelCount').textContent=onItems.length;
+  }
+  function fmReorder(dragOi, targetOi){
+    if(dragOi===targetOi) return;
+    const di=fmWork.findIndex(f=>f.oi===dragOi); if(di<0) return;
+    const item=fmWork.splice(di,1)[0];
+    const ti=fmWork.findIndex(f=>f.oi===targetOi);
+    fmWork.splice(ti<0?fmWork.length:ti, 0, item);   // 타겟 앞에 삽입
+  }
+  // 위임: 체크 토글 / 제거 / 드래그 정렬
+  document.addEventListener('click',e=>{
+    const av=e.target.closest('#fmAvail .fm-avail__item');
+    if(av){ const f=fmWork.find(x=>x.oi===+av.dataset.oi); if(f){ f.on=!f.on; renderFieldModal(); } return; }
+    const rm=e.target.closest('#fmSelected .fm-item__remove');
+    if(rm){ const f=fmWork.find(x=>x.oi===+rm.closest('.fm-selected__item').dataset.oi); if(f){ f.on=false; renderFieldModal(); } return; }
+  });
+  document.addEventListener('dragstart',e=>{ const it=e.target.closest('#fmSelected .fm-selected__item'); if(it){ fmDragOi=+it.dataset.oi; it.classList.add('dragging'); } });
+  document.addEventListener('dragover',e=>{ if(fmDragOi==null) return; const zone=e.target.closest('#fmSelected'); if(!zone) return; e.preventDefault(); const it=e.target.closest('.fm-selected__item'); document.querySelectorAll('#fmSelected .drop-target').forEach(x=>x.classList.remove('drop-target')); if(it && +it.dataset.oi!==fmDragOi) it.classList.add('drop-target'); });
+  document.addEventListener('drop',e=>{ const it=e.target.closest('#fmSelected .fm-selected__item'); if(it && fmDragOi!=null){ e.preventDefault(); fmReorder(fmDragOi, +it.dataset.oi); renderFieldModal(); } });
+  document.addEventListener('dragend',()=>{ fmDragOi=null; document.querySelectorAll('#fmSelected .dragging,#fmSelected .drop-target').forEach(x=>x.classList.remove('dragging','drop-target')); });
+  document.addEventListener('mousedown',e=>{ if(e.target.id==='fieldModalOverlay') closeFieldModal(); });
+  document.addEventListener('keydown',e=>{ if(e.key==='Escape'){ const ov=document.getElementById('fieldModalOverlay'); if(ov && !ov.hidden) closeFieldModal(); } });
+
   // URL ?tab=camp|grp|ad 로 초기 탭 지정(생성 완료 후 홈 진입 시 해당 탭 선택)
   var _initTab = new URLSearchParams(location.search).get('tab');
   renderChart(); initHover(); setTab(['camp','grp','ad'].includes(_initTab) ? _initTab : 'camp'); fitTable();
@@ -1108,6 +1204,35 @@
       document.addEventListener('keydown', function(e){ if(e.key==='Escape' && !ov.hidden) closeGroupSelect(); });
     })();
   </script>
+
+  <!-- 표시할 필드 선택 모달 -->
+  <div class="overlay" id="fieldModalOverlay" hidden>
+    <div class="modal modal--900" role="dialog" aria-modal="true" aria-labelledby="fmTitle">
+      <div class="modal__header">
+        <span class="modal__title" id="fmTitle">표시할 필드 선택</span>
+        <button type="button" class="modal__close" onclick="closeFieldModal()" aria-label="닫기">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M5 5l10 10M15 5L5 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+      <div class="modal__body">
+        <div class="fm-cols">
+          <div class="fm-panel">
+            <div class="fm-panel__title">사용 가능한 필드(총 <span id="fmAvailCount">0</span>개)</div>
+            <ul class="fm-avail" id="fmAvail"></ul>
+          </div>
+          <div class="fm-divider"></div>
+          <div class="fm-panel">
+            <div class="fm-panel__title">표시할 필드 (<span id="fmSelCount">0</span>개)</div>
+            <ul class="fm-selected" id="fmSelected"></ul>
+          </div>
+        </div>
+      </div>
+      <div class="modal__footer">
+        <button type="button" class="btn btn--secondary" onclick="closeFieldModal()">취소</button>
+        <button type="button" class="btn btn--primary" onclick="saveFieldModal()">저장</button>
+      </div>
+    </div>
+  </div>
 
   <!-- 컬럼 필터 팝오버(브랜드): 검색 + 셀렉트 체크박스 리스트 + 초기화 -->
   <div class="col-filter" id="colFilter" hidden>
