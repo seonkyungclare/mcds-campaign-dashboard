@@ -16,7 +16,9 @@
     .tgt-cards .radio-card { flex: 0 0 360px; width: 360px; max-width: 360px; }
     /* a/b 시안 토글: display 지정 요소가 [hidden]을 덮어쓰는 문제 방지 */
     #estA[hidden], #estB[hidden] { display: none !important; }
-    /* 예상 타겟 유저수 a/b 시안 임시 토글 */
+    /* 예상 타겟 유저수 a/b 시안 임시 토글 — 브라우저 우측 하단 고정 */
+    .tgt-est-float { position: fixed; right: 24px; bottom: 24px; z-index: 500; display: flex; align-items: center; gap: 8px; background: #fff; border: 1px solid var(--border); border-radius: var(--r-8); box-shadow: 0 8px 24px -6px rgba(0,0,0,.22); padding: 10px 12px; }
+    .tgt-est-float__hint { font-size: 12px; color: var(--fg-muted); }
     .tgt-est-toggle { display: inline-flex; border: 1px dashed var(--border-accent-light, #bacbff); border-radius: var(--r-4); overflow: hidden; width: fit-content; }
     .tgt-est-toggle button { border: 0; background: #fff; height: 28px; padding: 0 14px; font-size: 12px; font-weight: 600; color: var(--fg-muted); cursor: pointer; font-family: inherit; border-left: 1px solid var(--border); }
     .tgt-est-toggle button:first-child { border-left: 0; }
@@ -29,6 +31,13 @@
     .tgt-est-a__value { font-size: 16px; font-weight: 700; color: var(--accent); }
     .tgt-est-a__value small { font-size: 13px; font-weight: 500; color: var(--fg-default); margin-left: 2px; }
     .tgt-est-a__hint { display: flex; align-items: center; gap: 4px; font-size: 12px; color: var(--fg-muted); margin: 0; }
+    /* b안: accent 배너 박스 — 라벨+값 한 줄, 힌트 아래 */
+    .tgt-est-b { display: flex; flex-direction: column; gap: 6px; width: fit-content; background: var(--accent-bg-low); border: 1px solid var(--blue-90); border-radius: var(--r-8); padding: 16px 20px; }
+    .tgt-est-b__row { display: flex; align-items: baseline; gap: 16px; }
+    .tgt-est-b__label { font-size: 14px; font-weight: 600; color: var(--accent); white-space: nowrap; }
+    .tgt-est-b__value { font-size: 14px; font-weight: 500; color: var(--fg-default); }
+    .tgt-est-b__value small { font-size: 13px; font-weight: 400; color: var(--fg-muted); margin-left: 2px; }
+    .tgt-est-b__hint { font-size: 12px; color: var(--fg-muted); margin: 0; }
   </style>
 </head>
 <body>
@@ -382,13 +391,13 @@
                       </div>
                     </div>
 
-                    <!-- 예상 타겟 유저수 (a/b 시안 임시 토글) -->
-                    <div style="display:flex;align-items:center;">
+                    <!-- 예상 타겟 유저수 a/b 시안 임시 토글 (우측 하단 고정) -->
+                    <div class="tgt-est-float">
+                      <span class="tgt-est-float__hint">시안 비교</span>
                       <div class="tgt-est-toggle" role="tablist" aria-label="예상 타겟 유저수 시안">
                         <button type="button" class="on" data-est="a" onclick="setEst('a')">a안</button>
                         <button type="button" data-est="b" onclick="setEst('b')">b안</button>
                       </div>
-                      <span class="tgt-est-toggle__hint">※ 시안 비교용 임시 토글</span>
                     </div>
 
                     <!-- a안: 박스 없는 인라인 -->
@@ -403,11 +412,13 @@
                       </p>
                     </div>
 
-                    <!-- b안: accent 배너 박스 -->
-                    <div class="callout" id="estB" hidden>
-                      <span class="callout__title">예상 타겟 유저수</span>
-                      <span class="callout__value"><b>1,200,000~1,800,000</b> 명</span>
-                      <span class="callout__sub">설정하신 타겟 기준 예상 도달 규모입니다.</span>
+                    <!-- b안: accent 배너 박스 (라벨+값 한 줄, 힌트 아래) -->
+                    <div class="tgt-est-b" id="estB" hidden>
+                      <div class="tgt-est-b__row">
+                        <span class="tgt-est-b__label">예상 타겟 유저수</span>
+                        <span class="tgt-est-b__value">1,200,000~1,800,000<small>명</small></span>
+                      </div>
+                      <p class="tgt-est-b__hint">설정하신 타겟 기준 예상 도달 규모입니다.</p>
                     </div>
                   </div>
                 </div>
