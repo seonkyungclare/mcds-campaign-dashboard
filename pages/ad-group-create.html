@@ -9,6 +9,24 @@
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
   <link rel="stylesheet" href="mcds.css?v=20260813i" />
+  <style>
+    /* 타겟팅 카드 너비 360 */
+    .tgt-cards { flex-wrap: wrap; }
+    .tgt-cards .radio-card { flex: 0 0 360px; width: 360px; max-width: 360px; }
+    /* 예상 타겟 유저수 a/b 시안 임시 토글 */
+    .tgt-est-toggle { display: inline-flex; border: 1px dashed var(--border-accent-light, #bacbff); border-radius: var(--r-4); overflow: hidden; width: fit-content; }
+    .tgt-est-toggle button { border: 0; background: #fff; height: 28px; padding: 0 14px; font-size: 12px; font-weight: 600; color: var(--fg-muted); cursor: pointer; font-family: inherit; border-left: 1px solid var(--border); }
+    .tgt-est-toggle button:first-child { border-left: 0; }
+    .tgt-est-toggle button.on { background: var(--accent-light-low); color: var(--accent); }
+    .tgt-est-toggle__hint { font-size: 11px; color: var(--fg-muted); margin-left: 8px; }
+    /* a안: 박스 없는 인라인 */
+    .tgt-est-a { display: flex; flex-direction: column; gap: 6px; }
+    .tgt-est-a__row { display: flex; align-items: baseline; gap: 16px; }
+    .tgt-est-a__label { font-size: 14px; font-weight: 500; color: var(--fg-subtle); }
+    .tgt-est-a__value { font-size: 16px; font-weight: 700; color: var(--accent); }
+    .tgt-est-a__value small { font-size: 13px; font-weight: 500; color: var(--fg-default); margin-left: 2px; }
+    .tgt-est-a__hint { display: flex; align-items: center; gap: 4px; font-size: 12px; color: var(--fg-muted); margin: 0; }
+  </style>
 </head>
 <body>
   <!-- ===================== GNB ===================== -->
@@ -310,7 +328,7 @@
                   <div style="display:flex;flex-direction:column;gap:20px;">
                     <!-- 타겟팅 설정 카드 -->
                     <div class="purchase">
-                      <div class="purchase__cards" role="radiogroup" aria-label="타겟팅 설정">
+                      <div class="purchase__cards tgt-cards" role="radiogroup" aria-label="타겟팅 설정">
                         <button type="button" class="radio-card radio-card--selected" role="radio" aria-checked="true" data-radio="targeting">
                           <div class="radio-card__head"><span class="radio__dot" data-on></span><span class="radio-card__title">인구통계학 타겟팅</span></div>
                           <p class="radio-card__desc">성별·연령대·OS를 직접 골라 노출 대상을 정합니다.</p>
@@ -361,8 +379,29 @@
                       </div>
                     </div>
 
-                    <!-- 콜아웃 -->
-                    <div class="callout">
+                    <!-- 예상 타겟 유저수 (a/b 시안 임시 토글) -->
+                    <div style="display:flex;align-items:center;">
+                      <div class="tgt-est-toggle" role="tablist" aria-label="예상 타겟 유저수 시안">
+                        <button type="button" class="on" data-est="a" onclick="setEst('a')">a안</button>
+                        <button type="button" data-est="b" onclick="setEst('b')">b안</button>
+                      </div>
+                      <span class="tgt-est-toggle__hint">※ 시안 비교용 임시 토글</span>
+                    </div>
+
+                    <!-- a안: 박스 없는 인라인 -->
+                    <div class="tgt-est-a" id="estA">
+                      <div class="tgt-est-a__row">
+                        <span class="tgt-est-a__label">예상 타겟 유저수</span>
+                        <span class="tgt-est-a__value">1,200,000~1,800,000<small>명</small></span>
+                      </div>
+                      <p class="tgt-est-a__hint">
+                        <svg width="13" height="13" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="6" stroke="#808080"/><path d="M7 6.2v3.6" stroke="#808080" stroke-width="1.2" stroke-linecap="round"/><circle cx="7" cy="4.4" r="0.7" fill="#808080"/></svg>
+                        설정하신 타겟 기준 예상 도달 규모입니다.
+                      </p>
+                    </div>
+
+                    <!-- b안: accent 배너 박스 -->
+                    <div class="callout" id="estB" hidden>
                       <span class="callout__title">예상 타겟 유저수</span>
                       <span class="callout__value"><b>1,200,000~1,800,000</b> 명</span>
                       <span class="callout__sub">설정하신 타겟 기준 예상 도달 규모입니다.</span>
@@ -386,6 +425,12 @@
   </div>
 
   <script>
+    // 예상 타겟 유저수 a/b 시안 임시 토글
+    function setEst(v){
+      document.getElementById('estA').hidden = v!=='a';
+      document.getElementById('estB').hidden = v!=='b';
+      document.querySelectorAll('.tgt-est-toggle button').forEach(function(b){ b.classList.toggle('on', b.dataset.est===v); });
+    }
     // ---- Radio (MCDS: CSS 구동 dot — [data-on] 토글) ----
     function setDot(dot, on) { if (dot) { if (on) dot.setAttribute('data-on', ''); else dot.removeAttribute('data-on'); } }
     document.querySelectorAll('[data-radio]').forEach(function (el) {

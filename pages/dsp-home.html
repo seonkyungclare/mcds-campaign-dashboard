@@ -60,9 +60,16 @@
     .msel .dot { width: 8px; height: 8px; border-radius: 50%; }
     .msel .mcds-select { min-width: 132px; }
     .dot.o { background: #ec6f2d; } .dot.b { background: var(--accent); }
-    .dh__legend { display: flex; gap: 14px; font-size: 12px; color: var(--fg-muted); margin-bottom: 6px; }
+    /* 지표 선/막대 토글 */
+    .lbseg { display: inline-flex; border: 1px solid var(--border); border-radius: var(--r-4); overflow: hidden; margin-left: 6px; }
+    .lbseg button { border: 0; background: #fff; height: 34px; padding: 0 12px; font-size: 13px; font-weight: 500; color: var(--fg-subtle); cursor: pointer; font-family: inherit; border-left: 1px solid var(--border); }
+    .lbseg button:first-child { border-left: 0; }
+    .lbseg button.on { background: var(--accent-light-low); color: var(--accent); font-weight: 600; }
+    .dh__legend { display: flex; align-items: center; gap: 14px; font-size: 12px; color: var(--fg-muted); margin-bottom: 6px; }
+    .dh__legend span { display: inline-flex; align-items: center; }
     .dh__legend i { display: inline-block; width: 16px; height: 0; border-top: 2px solid var(--fg-muted); margin-right: 5px; vertical-align: middle; }
     .dh__legend i.dash { border-top-style: dashed; }
+    .dh__legend i.dot { width: 8px; height: 8px; border: 0; border-radius: 50%; }
     .chartwrap { position: relative; }
     /* 일별 지표 비교 차트 높이 — 세로 해상도(뷰포트 높이) 구간별 */
     svg.chart { width: 100%; height: clamp(380px, calc(10vh + 300px), 400px); display: block; }      /* H<1000: 380~400 (최소 380) */
@@ -309,15 +316,17 @@
               <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="6" stroke="#808080"/><path d="M7 6.2v3.6" stroke="#808080" stroke-width="1.2" stroke-linecap="round"/><circle cx="7" cy="4.4" r="0.7" fill="#808080"/></svg>
             </span>
             <div class="dh__metricsel">
-              <span class="msel"><span class="dot o"></span>지표 1
+              <span class="msel"><span class="dot b"></span>지표 1
                 <div class="mcds-selectbox" id="g1box"></div>
+                <span class="lbseg" id="g1seg"><button type="button" class="on" data-g="1" data-t="line" onclick="setChartType(1,'line')">선</button><button type="button" data-g="1" data-t="bar" onclick="setChartType(1,'bar')">막대</button></span>
               </span>
-              <span class="msel"><span class="dot b"></span>지표 2
+              <span class="msel"><span class="dot o"></span>지표 2
                 <div class="mcds-selectbox" id="g2box"></div>
+                <span class="lbseg" id="g2seg"><button type="button" class="on" data-g="2" data-t="line" onclick="setChartType(2,'line')">선</button><button type="button" data-g="2" data-t="bar" onclick="setChartType(2,'bar')">막대</button></span>
               </span>
             </div>
           </div>
-          <div class="dh__legend"><span><i></i>조회 기간</span><span id="legPrev"><i class="dash"></i>비교 기간</span></div>
+          <div class="dh__legend" id="legend"></div>
           <div class="chartwrap" id="chartwrap">
             <svg class="chart" viewBox="0 0 1000 300" id="chart"></svg>
             <div class="tip" id="tip"></div>
@@ -407,6 +416,8 @@
   };
   const MORDER = ['ctr','reach','click','imp','cost','conv'];
   let g1='ctr', g2='reach';
+  const G1_COLOR='#2b52f0', G2_COLOR='#ec6f2d';   // 지표1 파랑 / 지표2 주황
+  let g1type='line', g2type='line';   // 지표별 선/막대
   let noCompare=false;   // '비교 없음' 선택 시 true → 비교(prev) 데이터 미노출
   function fillSel(id,val){ document.getElementById(id).innerHTML = MORDER.map(k=>`<option value="${k}" ${k===val?'selected':''}>${METRICS[k].label}</option>`).join(''); }
 
@@ -442,6 +453,20 @@
     return `<polyline fill="none" stroke="${color}" stroke-width="2.5" ${dash?'stroke-dasharray="5 4" opacity="0.55"':''} points="${pts}"/>`;
   }
   function dots(arr, mx, color){ return arr.map((v,i)=>`<circle cx="${px(i).toFixed(1)}" cy="${scaleY(v,mx).toFixed(1)}" r="3.5" fill="#fff" stroke="${color}" stroke-width="2"/>`).join(''); }
+  function bars(arr, mx, color, off, bw, op){ return arr.map((v,i)=>{ const x=px(i)+off, y=scaleY(v,mx), h=Math.max(0,(CH-PADB)-y); return `<rect x="${(x-bw/2).toFixed(1)}" y="${y.toFixed(1)}" width="${bw}" height="${h.toFixed(1)}" rx="2" fill="${color}" opacity="${op}"/>`; }).join(''); }
+  // 한 지표를 선(line) 또는 막대(bar)로 렌더
+  function drawSeries(m, mx, color, type, off, bw){
+    if(type==='bar') return (noCompare?'':bars(m.prev,mx,color,off,bw,0.28))+bars(m.cur,mx,color,off,bw,0.9);
+    return (noCompare?'':polyline(m.prev,mx,color,true))+polyline(m.cur,mx,color,false)+dots(m.cur,mx,color);
+  }
+  // 범례(지표명 + 비교 기간)
+  function updateLegend(){
+    const leg=document.getElementById('legend'); if(!leg) return;
+    leg.innerHTML =
+      '<span><i class="dot" style="background:'+G1_COLOR+'"></i>'+METRICS[g1].label+'</span>'+
+      '<span><i class="dot" style="background:'+G2_COLOR+'"></i>'+METRICS[g2].label+'</span>'+
+      (noCompare?'':'<span id="legPrev"><i class="dash"></i>비교 기간</span>');
+  }
   function renderChart(){
     const svg=document.getElementById('chart');
     // 실제 컨테이너 픽셀 폭에 맞춰 viewBox를 잡아, 좌우 늘어남(왜곡) 없이 렌더
@@ -456,13 +481,22 @@
     for(let i=0;i<=4;i++){ const y=PADT+(CH-PADT-PADB)*i/4; out+=`<line class="yg" x1="${PADL}" y1="${y}" x2="${CW-PADR}" y2="${y}"/>`; }
     // 좌축(지표1) 라벨
     for(let i=0;i<=4;i++){ const y=PADT+(CH-PADT-PADB)*i/4; out+=`<text class="ylab" x="${PADL-8}" y="${y+3}" text-anchor="end">${(mx1*(4-i)/4).toFixed(2)}</text>`; }
-    // 지표2 (파랑) — 비교 뒤, 조회 앞 (비교 없음 시 비교선 생략)
-    out+=(noCompare?'':polyline(m2.prev,mx2,'#2b52f0',true))+polyline(m2.cur,mx2,'#2b52f0',false)+dots(m2.cur,mx2,'#2b52f0');
-    // 지표1 (주황)
-    out+=(noCompare?'':polyline(m1.prev,mx1,'#ec6f2d',true))+polyline(m1.cur,mx1,'#ec6f2d',false)+dots(m1.cur,mx1,'#ec6f2d');
+    // 선/막대 렌더 (둘 다 막대면 좌우로 그룹, 하나만 막대면 중앙)
+    const bothBar = g1type==='bar' && g2type==='bar';
+    const bw = bothBar ? 10 : 16;
+    const off1 = bothBar ? -(bw/2+1.5) : 0, off2 = bothBar ? (bw/2+1.5) : 0;
+    out+=drawSeries(m2, mx2, G2_COLOR, g2type, off2, bw);   // 지표2(주황) 뒤
+    out+=drawSeries(m1, mx1, G1_COLOR, g1type, off1, bw);   // 지표1(파랑) 앞
     XS.forEach((d,i)=>{ out+=`<text class="xlab" x="${px(i).toFixed(1)}" y="${CH-8}" text-anchor="middle">${d}</text>`; });
     out+=`<line id="guide" x1="0" y1="${PADT}" x2="0" y2="${CH-PADB}"/>`;
     svg.innerHTML=out;
+    updateLegend();
+  }
+  // 지표 선/막대 전환
+  function setChartType(g, t){
+    if(g===1) g1type=t; else g2type=t;
+    document.querySelectorAll('#g'+g+'seg button').forEach(b=>b.classList.toggle('on', b.dataset.t===t));
+    renderChart();
   }
   function initHover(){
     const svg=document.getElementById('chart'), tip=document.getElementById('tip');
@@ -473,7 +507,7 @@
       const vbX=px(i), g=document.getElementById('guide');
       if(g){ g.setAttribute('x1',vbX); g.setAttribute('x2',vbX); g.style.opacity=1; }
       let html=`<div class="td">${XS[i]} · 기준일</div>`;
-      [[g1,'o'],[g2,'b']].forEach(([k,dc])=>{
+      [[g1,'b'],[g2,'o']].forEach(([k,dc])=>{
         const m=METRICS[k];
         html+=`<div class="trow"><div class="tm"><span class="dot ${dc}"></span>${m.label}</div>`+
           `<div class="tl">조회 <b>${m.cur[i]}</b></div>`+(noCompare?'':`<div class="tl">비교 <b>${m.prev[i]}</b></div>`)+`</div>`;
@@ -854,9 +888,8 @@
     wrap.style.minHeight = target + 'px';
   }
   function applyCompareMode(){
-    // 좌측 비교 데이터(vs.~) 및 차트 범례 '비교 기간' 노출 토글
+    // 좌측 비교 데이터(vs.~) 노출 토글 (범례 '비교 기간'은 renderChart→updateLegend가 처리)
     const vs=document.querySelector('.dh__vs'); if(vs) vs.style.display=noCompare?'none':'';
-    const legPrev=document.getElementById('legPrev'); if(legPrev) legPrev.style.display=noCompare?'none':'';
     renderChart();
   }
   document.querySelectorAll('#cmpSeg button').forEach(b=>b.addEventListener('click',()=>{
