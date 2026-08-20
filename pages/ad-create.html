@@ -5,10 +5,45 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="MCDS 기반 디스플레이 광고(소재) 생성 화면" />
   <meta name="theme-color" content="#2b52f0" />
-  <title>광고 생성 - 디스플레이 광고</title>
+  <title>광고 만들기 - 디스플레이 광고</title>
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
   <link rel="stylesheet" href="mcds.css?v=20260813i" />
+  <style>
+    /* 노출 정보: 선택한 지면 박스 */
+    .exp-box { border: 1px solid var(--border); border-radius: var(--r-8); width: 728px; max-width: 100%; }
+    .exp-slot { padding: 16px 20px; display: flex; flex-direction: column; gap: 10px; }
+    .exp-slot + .exp-slot { border-top: 1px solid var(--border); }
+    .exp-slot__name { font-size: 14px; font-weight: 600; color: var(--fg-default); }
+    .exp-slot__chips { display: flex; flex-wrap: wrap; gap: 6px; }
+    /* 광고 템플릿 체크 */
+    .tmpl-checks { display: flex; gap: 20px; flex-wrap: wrap; }
+    /* 전체 접기 툴바 */
+    .acc-tools { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 4px 0 12px; }
+    .acc-tools__hint { display: inline-flex; align-items: center; gap: 4px; font-size: 13px; color: var(--fg-muted); }
+    /* 아코디언 */
+    .acc { border: 1px solid var(--border); border-radius: var(--r-8); background: #fff; margin-bottom: 12px; }
+    .acc__head { display: flex; align-items: center; justify-content: space-between; width: 100%; padding: 16px 20px; background: transparent; border: 0; cursor: pointer; font-family: inherit; }
+    .acc__title { font-size: 16px; font-weight: 600; color: var(--fg-default); }
+    .acc__right { display: inline-flex; align-items: center; gap: 12px; }
+    .acc__chev { color: var(--fg-muted); transition: transform .2s ease; }
+    .acc.collapsed .acc__chev { transform: rotate(-90deg); }
+    .acc.collapsed .acc__body { display: none; }
+    .acc__body { padding: 4px 20px 20px; border-top: 1px solid var(--border); }
+    .badge-set { display: inline-flex; height: 22px; align-items: center; padding: 0 8px; border-radius: var(--r-4); font-size: 12px; font-weight: 500; line-height: 1; }
+    .badge-set--on { background: #f7fff0; color: #3da600; border: 1px solid #b2e58a; }
+    .badge-set--off { background: #fafafa; color: #808080; border: 1px solid var(--border); }
+    /* 문구 + '사용 안 함' 체크(우측) */
+    .usefield { display: flex; align-items: flex-start; gap: 16px; }
+    .usefield__field { flex: 1; min-width: 0; }
+    .usefield__off { flex: none; }
+    /* 미리보기 sticky + 캐러셀 */
+    .col-preview { position: sticky; top: calc(var(--gnb-h) + 24px); align-self: flex-start; }
+    .pvcarousel { display: flex; align-items: center; gap: 8px; }
+    .pvcarousel .preview-card { flex: 1; min-width: 0; }
+    .pvnav { flex: none; width: 32px; height: 32px; border: 1px solid var(--border); border-radius: 50%; background: #fff; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; color: var(--fg-muted); }
+    .pvnav:hover { background: var(--fill-light-low); }
+  </style>
 </head>
 <body>
   <!-- ===================== GNB ===================== -->
@@ -62,13 +97,13 @@
     <main class="main">
       <div class="content">
         <div class="content__inner">
-          <h1 class="page-title">광고 생성</h1>
+          <h1 class="page-title">광고 만들기</h1>
 
-          <!-- 광고 그룹 정보 -->
+          <!-- 광고그룹 정보 -->
           <div class="camp-info">
-            <span class="camp-info__label">광고 그룹 정보</span>
+            <span class="camp-info__label">광고그룹 정보</span>
             <div class="camp-info__name-row">
-              <span class="camp-info__name">260830_광고 그룹_킨치 x 오스트리야</span>
+              <span class="camp-info__name">260830_광고그룹_킨치 x 오스트리야</span>
               <button type="button" class="camp-info__select" aria-label="광고 그룹 선택">
                 <svg width="10" height="6" viewBox="0 0 9.10711 5.01213" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M0.353553 0.353553L4.48284 4.48284C4.52189 4.52189 4.58521 4.52189 4.62426 4.48284L8.75355 0.353553" stroke="#808080"/></svg>
               </button>
@@ -76,153 +111,213 @@
             <div class="camp-info__tags">
               <span>한국</span><span class="camp-info__tag-sep">|</span><span>인구통계학 타겟팅</span><span class="camp-info__tag-sep">|</span><span>2026-08-26 ~ 2026-10-30</span>
             </div>
+            <div class="camp-info__tags">
+              <span>빅배너·메인스토어·뷰티·키즈·스포츠</span><span class="camp-info__tag-sep">|</span><span>하이라이트 퀵메뉴·메인스토어·키즈</span>
+            </div>
           </div>
 
           <hr class="divider" />
 
-          <!-- 광고 정보: 좌 폼 + 우 미리보기 -->
-          <div class="cols">
-            <div class="col-main">
-              <!-- 구좌 선택 -->
-              <div class="form">
-                <div class="row">
-                  <div class="row__label" style="align-items:flex-start;padding-top:0;"><span style="color:#4d4d4d;">구좌 선택</span></div>
-                  <div class="row__field">
-                    <div style="display:flex;flex-direction:column;gap:8px;" role="radiogroup" aria-label="구좌 선택">
-                      <button type="button" class="radio-box radio-box--selected" role="radio" aria-checked="true" data-radio="slot" data-slot-type="bigbanner">
-                        <div class="radio-box__head"><span class="radio__dot" data-on></span><span class="radio-box__title">빅배너</span></div>
-                        <div class="radio-box__chips"><span class="chip">메인스토어</span><span class="chip">뷰티</span><span class="chip">키즈</span><span class="chip">스포츠</span></div>
-                      </button>
-                      <button type="button" class="radio-box" role="radio" aria-checked="false" data-radio="slot" data-slot-type="splash" style="flex-direction:row;align-items:center;">
-                        <div class="radio-box__head"><span class="radio__dot"></span><span class="radio-box__title">앱스플래시</span></div>
-                      </button>
-                      <button type="button" class="radio-box" role="radio" aria-checked="false" data-radio="slot" data-slot-type="quickmenu">
-                        <div class="radio-box__head"><span class="radio__dot"></span><span class="radio-box__title">하이라이트 퀵메뉴</span></div>
-                        <div class="radio-box__chips"><span class="chip">메인스토어</span><span class="chip">아울렛</span><span class="chip">스포츠</span><span class="chip">유즈드</span></div>
-                      </button>
+          <!-- 노출 정보 -->
+          <section class="section">
+            <h2 class="section__title">노출 정보</h2>
+            <div class="form">
+              <div class="row">
+                <div class="row__label" style="align-items:flex-start;"><span>선택한 지면</span></div>
+                <div class="row__field">
+                  <div class="exp-box">
+                    <div class="exp-slot">
+                      <span class="exp-slot__name">빅배너</span>
+                      <div class="exp-slot__chips"><span class="chip">메인스토어</span><span class="chip">뷰티</span><span class="chip">키즈</span><span class="chip">스포츠</span></div>
+                    </div>
+                    <div class="exp-slot">
+                      <span class="exp-slot__name">하이라이트 퀵메뉴</span>
+                      <div class="exp-slot__chips"><span class="chip">메인스토어</span><span class="chip">키즈</span></div>
                     </div>
                   </div>
                 </div>
               </div>
+            </div>
+          </section>
 
-              <hr class="divider" />
+          <hr class="divider" />
 
-              <!-- 소재 정보 -->
-              <form class="form form--creative" onsubmit="return false;">
-                <!-- 광고명 -->
-                <div class="row">
-                  <div class="row__label"><span>광고명<span class="req">*</span></span></div>
-                  <div class="row__field">
-                    <div class="textfield">
-                      <label class="textfield__box">
-                        <input class="textfield__input" type="text" value="{260830}_광고_{빅배너}" maxlength="60" oninput="document.getElementById('adnameCount').textContent=this.value.length" />
-                      </label>
-                      <div class="textfield__help"><span class="textfield__count"><span id="adnameCount">0</span>/60</span></div>
+          <!-- 광고 템플릿 + 소재(아코디언) + 미리보기 -->
+          <div class="cols">
+            <div class="col-main">
+              <section class="section">
+                <h2 class="section__title">광고 템플릿</h2>
+                <div class="form">
+                  <div class="row">
+                    <div class="row__label"><span>광고 템플릿 선택</span></div>
+                    <div class="row__field">
+                      <div class="tmpl-checks" role="group" aria-label="광고 템플릿 선택">
+                        <button type="button" class="checkbox checkbox--checked" role="checkbox" aria-checked="true" data-tmpl="bigbanner">
+                          <span class="checkbox__box"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.2 4.7 8.9 10 3.2" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="checkbox__label">빅배너형</span>
+                        </button>
+                        <button type="button" class="checkbox checkbox--checked" role="checkbox" aria-checked="true" data-tmpl="quickmenu">
+                          <span class="checkbox__box"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.2 4.7 8.9 10 3.2" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="checkbox__label">하이라이트 퀵메뉴형</span>
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
 
-                <!-- 이미지 첨부 -->
-                <div class="row">
-                  <div class="row__label"><span>이미지 첨부<span class="req">*</span></span></div>
-                  <div class="row__field">
-                    <!-- 첨부 전 -->
-                    <div id="uploadEmpty">
-                      <button type="button" class="btn btn--secondary btn--sm upload-btn" id="uploadBtn" onclick="applyUpload()">
-                        <span style="width:16px;height:16px;display:inline-flex;"><svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 10.5V3M8 3L5 6M8 3l3 3M3 11.5v1a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-1" stroke="#1a1a1a" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-                        파일 업로드
-                      </button>
-                      <div class="upload-help">
-                        <ul>
-                          <li>크기: 1029×900px</li>
-                          <li>파일 형식: JPG/PNG</li>
-                          <li>최대 용량: 1MB</li>
-                        </ul>
+                <!-- 전체 접기 툴바 -->
+                <div class="acc-tools">
+                  <span class="acc-tools__hint"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="6" stroke="#808080"/><path d="M7 6.2v3.6" stroke="#808080" stroke-width="1.2" stroke-linecap="round"/><circle cx="7" cy="4.4" r="0.7" fill="#808080"/></svg>선택한 템플릿의 필수 항목을 모두 입력해 주세요.</span>
+                  <button type="button" class="btn btn--secondary btn--sm" id="collapseAllBtn" onclick="toggleAllAcc()">전체 접기</button>
+                </div>
+
+                <!-- 아코디언: 스플래시 -->
+                <div class="acc" data-acc data-group="bigbanner" data-preview="splash">
+                  <button type="button" class="acc__head" onclick="toggleAcc(this)">
+                    <span class="acc__title">스플래시</span>
+                    <span class="acc__right"><span class="badge-set badge-set--on">설정함</span><svg class="acc__chev" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                  </button>
+                  <div class="acc__body">
+                    <div class="form form--creative">
+                      <div class="row">
+                        <div class="row__label"><span>광고명<span class="req">*</span></span></div>
+                        <div class="row__field"><div class="textfield"><label class="textfield__box"><input class="textfield__input" type="text" value="(260830)_광고_스플래시" maxlength="60" data-count /></label><div class="textfield__help"><span class="textfield__count"><span data-count-out>0</span>/60</span></div></div></div>
                       </div>
-                    </div>
-                    <!-- 첨부 후 -->
-                    <div id="uploadFilled" style="display:none;">
-                      <div class="file-preview">
-                        <div class="file-preview__img"><img src="assets/kinch-bigbanner.png" alt="업로드한 빅배너 이미지" /></div>
-                        <span class="file-preview__name">킨치x오스트리야_빅배너.png</span>
-                        <span class="file-preview__meta">1029×900px · JPG · 914KB</span>
-                        <button type="button" class="btn btn--secondary btn--sm upload-btn" id="reuploadBtn" style="margin-top:4px;" onclick="applyUpload()">
-                          <span style="width:16px;height:16px;display:inline-flex;"><svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 10.5V3M8 3L5 6M8 3l3 3M3 11.5v1a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-1" stroke="#1a1a1a" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-                          파일 업로드
-                        </button>
-                        <div class="upload-help">
-                          <ul>
-                            <li>크기: 1029×900px</li>
-                            <li>파일 형식: JPG/PNG</li>
-                            <li>최대 용량: 1MB</li>
-                          </ul>
+                      <div class="row">
+                        <div class="row__label"><span>이미지 첨부<span class="req">*</span></span></div>
+                        <div class="row__field">
+                          <div class="up">
+                            <div class="up-filled">
+                              <div class="file-preview">
+                                <div class="file-preview__img" style="aspect-ratio:1432/1792;"><img src="assets/kinch-appsplash.jpg" alt="스플래시 이미지" /></div>
+                                <span class="file-preview__name">킨치x오스트리야_앱스플.PNG</span>
+                                <span class="file-preview__meta">1432×1792px · JPG · 914KB</span>
+                                <button type="button" class="btn btn--secondary btn--sm upload-btn" onclick="applyUpload(this)"><span style="width:16px;height:16px;display:inline-flex;"><svg viewBox="0 0 16 16" fill="none"><path d="M8 10.5V3M8 3L5 6M8 3l3 3M3 11.5v1a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-1" stroke="#1a1a1a" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>파일 업로드</button>
+                                <div class="upload-help"><ul><li>크기: 1432×1792px</li><li>파일 형식: JPG/MP4</li><li>길이: 동영상일 경우 1.5초 이내 권장</li><li>용량: 1MB</li></ul></div>
+                              </div>
+                            </div>
+                          </div>
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
 
-                <!-- 메인 문구 -->
-                <div class="row">
-                  <div class="row__label"><span>메인 문구<span class="req">*</span></span></div>
-                  <div class="row__field">
-                    <div style="display:flex;flex-direction:column;gap:8px;">
-                      <div class="radio-group" role="radiogroup" aria-label="메인 문구 사용 여부">
-                        <button type="button" class="radio" role="radio" aria-checked="true" data-radio="mainuse"><span class="radio__dot" data-on></span><span class="radio__label">사용함</span></button>
-                        <button type="button" class="radio" role="radio" aria-checked="false" data-radio="mainuse"><span class="radio__dot"></span><span class="radio__label">사용 안함</span></button>
+                <!-- 아코디언: 빅배너형 -->
+                <div class="acc" data-acc data-group="bigbanner" data-preview="bigbanner">
+                  <button type="button" class="acc__head" onclick="toggleAcc(this)">
+                    <span class="acc__title">빅배너형</span>
+                    <span class="acc__right"><span class="badge-set badge-set--on">설정함</span><svg class="acc__chev" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                  </button>
+                  <div class="acc__body">
+                    <div class="form form--creative">
+                      <div class="row">
+                        <div class="row__label"><span>광고명<span class="req">*</span></span></div>
+                        <div class="row__field"><div class="textfield"><label class="textfield__box"><input class="textfield__input" type="text" placeholder="광고명을 입력하세요" maxlength="60" data-count /></label><div class="textfield__help"><span class="textfield__count"><span data-count-out>0</span>/60</span></div></div></div>
                       </div>
-                      <div class="textfield">
-                        <span class="textfield__box"><input class="textfield__input" type="text" id="mainLine1" placeholder="첫번째 줄을 최대 10자 이내로 입력하세요" maxlength="10" /></span>
+                      <div class="row">
+                        <div class="row__label"><span>이미지 첨부<span class="req">*</span></span></div>
+                        <div class="row__field">
+                          <div class="up">
+                            <div class="up-filled">
+                              <div class="file-preview">
+                                <div class="file-preview__img"><img src="assets/kinch-bigbanner.png" alt="빅배너 이미지" /></div>
+                                <span class="file-preview__name">킨치x오스트리야_빅배너.png</span>
+                                <span class="file-preview__meta">1029×900px · JPG · 914KB</span>
+                                <button type="button" class="btn btn--secondary btn--sm upload-btn" onclick="applyUpload(this)"><span style="width:16px;height:16px;display:inline-flex;"><svg viewBox="0 0 16 16" fill="none"><path d="M8 10.5V3M8 3L5 6M8 3l3 3M3 11.5v1a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-1" stroke="#1a1a1a" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>파일 업로드</button>
+                                <div class="upload-help"><ul><li>크기: 1029×900px</li><li>파일 형식: JPG/PNG</li><li>최대 용량: 1MB</li></ul></div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
                       </div>
-                      <div class="textfield">
-                        <span class="textfield__box"><input class="textfield__input" type="text" id="mainLine2" placeholder="두번째 줄을 최대 10자 이내로 입력하세요" maxlength="10" /></span>
-                        <div class="textfield__help"><span class="textfield__count"><span id="mainCount">0</span>/22</span></div>
+                      <div class="row">
+                        <div class="row__label"><span>메인 문구<span class="req">*</span></span></div>
+                        <div class="row__field">
+                          <div class="usefield">
+                            <div class="usefield__field" style="display:flex;flex-direction:column;gap:8px;">
+                              <div class="textfield"><span class="textfield__box"><input class="textfield__input" type="text" value="로우로우 × SUPER73" maxlength="10" data-count /></span></div>
+                              <div class="textfield"><span class="textfield__box"><input class="textfield__input" type="text" value="신상 최대 {disc}% 할인" maxlength="10" data-count /></span><div class="textfield__help"><span class="textfield__count"><span data-count-out>0</span>/22</span></div></div>
+                            </div>
+                            <button type="button" class="checkbox usefield__off" role="checkbox" aria-checked="false" data-nouse><span class="checkbox__box"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.2 4.7 8.9 10 3.2" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="checkbox__label">사용 안 함</span></button>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="row__label"><span>서브 문구<span class="req">*</span></span></div>
+                        <div class="row__field">
+                          <div class="usefield">
+                            <div class="usefield__field">
+                              <div class="textfield"><span class="textfield__box"><input class="textfield__input" type="text" placeholder="서브타이틀을 최대 18자 이내로 입력하세요." maxlength="18" data-count /></span><div class="textfield__help"><span class="textfield__count"><span data-count-out>0</span>/18</span></div></div>
+                            </div>
+                            <button type="button" class="checkbox usefield__off" role="checkbox" aria-checked="false" data-nouse><span class="checkbox__box"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.2 4.7 8.9 10 3.2" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="checkbox__label">사용 안 함</span></button>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="row__label"><span>랜딩 URL<span class="req">*</span></span></div>
+                        <div class="row__field"><div class="textfield"><span class="textfield__box"><input class="textfield__input" type="text" placeholder="랜딩 URL을 입력하세요." /></span></div></div>
                       </div>
                     </div>
                   </div>
                 </div>
 
-                <!-- 서브 문구 -->
-                <div class="row">
-                  <div class="row__label"><span>서브 문구<span class="req">*</span></span></div>
-                  <div class="row__field">
-                    <div style="display:flex;flex-direction:column;gap:8px;">
-                      <div class="radio-group" role="radiogroup" aria-label="서브 문구 사용 여부">
-                        <button type="button" class="radio" role="radio" aria-checked="true" data-radio="subuse"><span class="radio__dot" data-on></span><span class="radio__label">사용함</span></button>
-                        <button type="button" class="radio" role="radio" aria-checked="false" data-radio="subuse"><span class="radio__dot"></span><span class="radio__label">사용 안함</span></button>
+                <!-- 아코디언: 하이라이트 퀵메뉴형 (미설정) -->
+                <div class="acc" data-acc data-group="quickmenu" data-preview="quickmenu">
+                  <button type="button" class="acc__head" onclick="toggleAcc(this)">
+                    <span class="acc__title">퀵메뉴형</span>
+                    <span class="acc__right"><span class="badge-set badge-set--off">미설정</span><svg class="acc__chev" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                  </button>
+                  <div class="acc__body">
+                    <div class="form form--creative">
+                      <div class="row">
+                        <div class="row__label"><span>광고명<span class="req">*</span></span></div>
+                        <div class="row__field"><div class="textfield"><label class="textfield__box"><input class="textfield__input" type="text" placeholder="광고명을 입력하세요" maxlength="60" data-count /></label><div class="textfield__help"><span class="textfield__count"><span data-count-out>0</span>/60</span></div></div></div>
                       </div>
-                      <div class="textfield">
-                        <span class="textfield__box"><input class="textfield__input" type="text" id="subLine" placeholder="서브타이틀을 최대 18자 이내로 입력하세요." maxlength="18" /></span>
-                        <div class="textfield__help"><span class="textfield__count"><span id="subCount">0</span>/18</span></div>
+                      <div class="row">
+                        <div class="row__label"><span>이미지 정보<span class="req">*</span></span></div>
+                        <div class="row__field">
+                          <div class="up">
+                            <div class="up-empty">
+                              <button type="button" class="btn btn--secondary btn--sm upload-btn" onclick="applyUpload(this)"><span style="width:16px;height:16px;display:inline-flex;"><svg viewBox="0 0 16 16" fill="none"><path d="M8 10.5V3M8 3L5 6M8 3l3 3M3 11.5v1a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-1" stroke="#1a1a1a" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>파일 업로드</button>
+                              <div class="upload-help"><ul><li>크기: 420×180px</li><li>파일 형식: JPG</li><li>최대 용량: 1MB</li></ul></div>
+                            </div>
+                            <div class="up-filled" style="display:none;">
+                              <div class="file-preview">
+                                <div class="file-preview__img" style="aspect-ratio:420/180;"><img src="assets/kinch_quick.jpg" alt="퀵메뉴 이미지" /></div>
+                                <span class="file-preview__name">킨치x오스트리야_퀵메뉴.png</span>
+                                <span class="file-preview__meta">420×180px · JPG · 914KB</span>
+                                <button type="button" class="btn btn--secondary btn--sm upload-btn" onclick="applyUpload(this)"><span style="width:16px;height:16px;display:inline-flex;"><svg viewBox="0 0 16 16" fill="none"><path d="M8 10.5V3M8 3L5 6M8 3l3 3M3 11.5v1a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-1" stroke="#1a1a1a" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>파일 업로드</button>
+                                <div class="upload-help"><ul><li>크기: 420×180px</li><li>파일 형식: JPG</li><li>최대 용량: 1MB</li></ul></div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="row__label"><span>메인 문구<span class="req">*</span></span></div>
+                        <div class="row__field"><div class="textfield"><span class="textfield__box"><input class="textfield__input" type="text" placeholder="메인 문구를 입력하세요" maxlength="22" data-count /></span><div class="textfield__help"><span class="textfield__count"><span data-count-out>0</span>/22</span></div></div></div>
+                      </div>
+                      <div class="row">
+                        <div class="row__label"><span>랜딩 URL<span class="req">*</span></span></div>
+                        <div class="row__field"><div class="textfield"><span class="textfield__box"><input class="textfield__input" type="text" placeholder="랜딩 URL을 입력하세요." /></span></div></div>
                       </div>
                     </div>
                   </div>
                 </div>
-
-                <!-- 랜딩 URL -->
-                <div class="row">
-                  <div class="row__label"><span>랜딩 URL<span class="req">*</span></span></div>
-                  <div class="row__field">
-                    <div class="textfield">
-                      <span class="textfield__box"><input class="textfield__input" type="text" placeholder="랜딩 URL을 입력하세요." /></span>
-                    </div>
-                  </div>
-                </div>
-              </form>
+              </section>
             </div>
 
-            <!-- 미리보기 -->
+            <!-- 미리보기 (캐러셀) -->
             <aside class="col-preview">
-              <div class="preview-card">
-                <span class="preview-card__title" id="previewTitle">빅배너</span>
-                <div class="preview-card__stage">
-                  <div class="phone">
-                    <div class="phone__screen">
-                      <img id="mockupImg" class="phone__mockup" src="assets/Mockup_frame_1.png" alt="앱 미리보기" />
-                    </div>
+              <div class="pvcarousel">
+                <button type="button" class="pvnav" onclick="pvMove(-1)" aria-label="이전"><svg width="8" height="14" viewBox="0 0 8 14" fill="none"><path d="M7 1L1 7l6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+                <div class="preview-card">
+                  <span class="preview-card__title" id="previewTitle">빅배너형</span>
+                  <div class="preview-card__stage">
+                    <div class="phone"><div class="phone__screen"><img id="mockupImg" class="phone__mockup" src="assets/Mockup_frame_1.png" alt="앱 미리보기" /></div></div>
                   </div>
+                  <p class="preview-card__caption">기기 설정에 따라 보여지는 줄바꿈과 글꼴, 이미지 크기가 다를 수 있습니다.</p>
                 </div>
-                <p class="preview-card__caption">기기 설정에 따라 보여지는 줄바꿈과 글꼴, 이미지 크기가 다를 수 있습니다.</p>
+                <button type="button" class="pvnav" onclick="pvMove(1)" aria-label="다음"><svg width="8" height="14" viewBox="0 0 8 14" fill="none"><path d="M1 1l6 6-6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
               </div>
             </aside>
           </div>
@@ -233,69 +328,90 @@
       <div class="bottombar">
         <button type="button" class="btn btn--secondary" onclick="openCancelAlert()">취소</button>
         <button type="button" class="btn btn--secondary" id="draftBtn">임시저장</button>
-        <button type="button" class="btn btn--primary is-disabled" id="createBtn" disabled onclick="openCreateAlert()">생성</button>
+        <button type="button" class="btn btn--primary" id="createBtn" onclick="openCreateAlert()">광고 만들기</button>
       </div>
     </main>
   </div>
 
   <script>
-    // MCDS radio: CSS 구동 dot — [data-on] 토글
-    function setDot(dot, on) { if (dot) { if (on) dot.setAttribute('data-on', ''); else dot.removeAttribute('data-on'); } }
-    document.querySelectorAll('[data-radio]').forEach(function (el) {
-      el.addEventListener('click', function () {
-        var group = el.getAttribute('data-radio');
-        document.querySelectorAll('[data-radio="' + group + '"]').forEach(function (peer) {
-          var selected = peer === el;
-          peer.setAttribute('aria-checked', selected ? 'true' : 'false');
-          setDot(peer.querySelector('.radio__dot'), selected);
-          if (peer.classList.contains('radio-box')) peer.classList.toggle('radio-box--selected', selected);
-        });
+    // ---- 아코디언 접기/펼치기 ----
+    function toggleAcc(head){ head.closest('.acc').classList.toggle('collapsed'); syncCollapseLabel(); }
+    function toggleAllAcc(){
+      var accs = [].slice.call(document.querySelectorAll('.acc[data-acc]')).filter(function(a){ return a.style.display!=='none'; });
+      var anyOpen = accs.some(function(a){ return !a.classList.contains('collapsed'); });
+      accs.forEach(function(a){ a.classList.toggle('collapsed', anyOpen); });   // 하나라도 열려있으면 전체 접기, 아니면 전체 펼치기
+      syncCollapseLabel();
+    }
+    function syncCollapseLabel(){
+      var accs = [].slice.call(document.querySelectorAll('.acc[data-acc]')).filter(function(a){ return a.style.display!=='none'; });
+      var anyOpen = accs.some(function(a){ return !a.classList.contains('collapsed'); });
+      document.getElementById('collapseAllBtn').textContent = anyOpen ? '전체 접기' : '전체 펼치기';
+    }
+
+    // ---- 광고 템플릿 체크 → 아코디언 그룹 표시/숨김 ----
+    document.querySelectorAll('.tmpl-checks [data-tmpl]').forEach(function(cb){
+      cb.addEventListener('click', function(){
+        var on = cb.getAttribute('aria-checked')!=='true';
+        cb.setAttribute('aria-checked', on?'true':'false');
+        cb.classList.toggle('checkbox--checked', on);
+        var g = cb.getAttribute('data-tmpl');
+        document.querySelectorAll('.acc[data-group="'+g+'"]').forEach(function(a){ a.style.display = on?'':'none'; });
+        syncCollapseLabel();
       });
     });
 
-    // ---- 구좌별 폰 미리보기 목업 (등록 전 a / 등록 후 b) ----
-    var MOCKUPS = {
-      bigbanner: { title: '빅배너', before: 'assets/Mockup_frame_1.png', after: 'assets/Mockup_frame_2.png' },
-      splash:    { title: '앱스플래시', before: 'assets/Mockup_frame_splash_a.png', after: 'assets/Mockup_frame_splash_b.png' },
-      quickmenu: { title: '하이라이트 퀵메뉴', before: 'assets/Mockup_frame_quick_a.png', after: 'assets/Mockup_frame_quick_b.png' }
+    // ---- 문구 '사용 안 함' 체크 → 입력 비활성 ----
+    document.querySelectorAll('[data-nouse]').forEach(function(cb){
+      cb.addEventListener('click', function(){
+        var on = cb.getAttribute('aria-checked')!=='true';
+        cb.setAttribute('aria-checked', on?'true':'false');
+        cb.classList.toggle('checkbox--checked', on);
+        var field = cb.closest('.usefield').querySelector('.usefield__field');
+        field.style.opacity = on?'0.4':''; field.style.pointerEvents = on?'none':'';
+      });
+    });
+
+    // ---- 폰 미리보기 (템플릿 전환: 캐러셀 + 포커스 연동) ----
+    var PV = {
+      splash:    { title:'스플래시', img:'assets/Mockup_frame_splash_b.png' },
+      bigbanner: { title:'빅배너형', img:'assets/Mockup_frame_2.png' },
+      quickmenu: { title:'퀵메뉴형', img:'assets/Mockup_frame_quick_b.png' }
     };
-    var currentSlot = 'bigbanner';
-    var uploaded = false;
-    function updateMockup() {
-      var m = MOCKUPS[currentSlot];
-      document.getElementById('mockupImg').src = uploaded ? m.after : m.before;
-      document.getElementById('previewTitle').textContent = m.title;
+    var PV_ORDER = ['splash','bigbanner','quickmenu'];
+    var pvKey = 'bigbanner';
+    function renderPreview(){ var p=PV[pvKey]; if(!p) return; document.getElementById('previewTitle').textContent=p.title; document.getElementById('mockupImg').src=p.img; }
+    function pvSet(key){ if(PV[key] && key!==pvKey){ pvKey=key; renderPreview(); } }
+    function visiblePvKeys(){ return PV_ORDER.filter(function(k){ var a=document.querySelector('.acc[data-preview="'+k+'"]'); return a && a.style.display!=='none'; }); }
+    function pvMove(d){ var ks=visiblePvKeys(); if(!ks.length) return; var i=ks.indexOf(pvKey); if(i<0) i=0; i=(i+d+ks.length)%ks.length; pvSet(ks[i]); }
+    // 템플릿(아코디언) 포커스 시 해당 미리보기로 전환
+    document.querySelectorAll('.acc[data-preview]').forEach(function(acc){
+      acc.addEventListener('focusin', function(){ pvSet(acc.getAttribute('data-preview')); });
+      acc.addEventListener('click', function(){ pvSet(acc.getAttribute('data-preview')); });
+    });
+
+    // ---- 파일 업로드 → 첨부 영역 전환 + 해당 아코디언 배지 '설정함' ----
+    function applyUpload(btn){
+      var field = btn.closest('.row__field');
+      var empty = field.querySelector('.up-empty'), filled = field.querySelector('.up-filled');
+      if(empty) empty.style.display='none';
+      if(filled) filled.style.display='block';
+      var acc = btn.closest('.acc');
+      if(acc){ var b=acc.querySelector('.badge-set'); if(b){ b.className='badge-set badge-set--on'; b.textContent='설정함'; } }
     }
-    // 구좌 선택 시 미리보기를 해당 구좌 목업으로 전환
-    document.querySelectorAll('[data-radio="slot"]').forEach(function (el) {
-      el.addEventListener('click', function () {
-        var t = el.getAttribute('data-slot-type');
-        if (t && MOCKUPS[t]) { currentSlot = t; updateMockup(); }
+
+    // ---- 글자수(공통): data-count 입력 → 형제/조상의 data-count-out 합산 ----
+    document.querySelectorAll('.textfield [data-count]').forEach(function(inp){
+      inp.addEventListener('input', function(){
+        var wrap = inp.closest('.usefield__field') || inp.closest('.row__field');
+        var out = wrap && wrap.querySelector('[data-count-out]');
+        if(!out) return;
+        var total = 0;
+        wrap.querySelectorAll('[data-count]').forEach(function(i){ total += i.value.length; });
+        out.textContent = total;
       });
     });
-
-    // ---- 파일 업로드 → 이미지 첨부 영역 + 폰 미리보기(등록 후) 반영 ----
-    function applyUpload() {
-      document.getElementById('uploadEmpty').style.display = 'none';
-      document.getElementById('uploadFilled').style.display = 'block';
-      uploaded = true;
-      updateMockup();
-      var btn = document.getElementById('createBtn');
-      btn.disabled = false; btn.classList.remove('is-disabled');
-    }
-    document.getElementById('uploadBtn').addEventListener('click', applyUpload);
-    document.getElementById('reuploadBtn').addEventListener('click', applyUpload);
-
-    // ---- 문구 글자수 ----
-    function updateCounts() {
-      var l1 = document.getElementById('mainLine1').value;
-      var l2 = document.getElementById('mainLine2').value;
-      document.getElementById('mainCount').textContent = l1.length + l2.length;
-      document.getElementById('subCount').textContent = document.getElementById('subLine').value.length;
-    }
-    ['mainLine1', 'mainLine2', 'subLine'].forEach(function (id) {
-      document.getElementById(id).addEventListener('input', updateCounts);
-    });
+    // 초기 카운트
+    document.querySelectorAll('.textfield [data-count]').forEach(function(inp){ inp.dispatchEvent(new Event('input')); });
 
     // 임시저장 토스트 (Figma 3323-123625): 흰 알약 + ⓘ 아이콘, 상단 중앙, 자동 소멸
     function showSaveToast(){
