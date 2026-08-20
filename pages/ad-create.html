@@ -138,6 +138,9 @@
                         <button type="button" class="checkbox checkbox--checked" role="checkbox" aria-checked="true" data-tmpl="splashvid">
                           <span class="checkbox__box"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.2 4.7 8.9 10 3.2" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="checkbox__label">앱 스플래시 (비디오)</span>
                         </button>
+                        <button type="button" class="checkbox checkbox--checked" role="checkbox" aria-checked="true" data-tmpl="quickmenu">
+                          <span class="checkbox__box"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.2 4.7 8.9 10 3.2" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="checkbox__label">퀵메뉴형</span>
+                        </button>
                       </div>
                     </div>
                   </div>
@@ -160,7 +163,7 @@
                     <div class="form form--creative">
                       <div class="row">
                         <div class="row__label"><span>광고명<span class="req">*</span></span></div>
-                        <div class="row__field"><div class="textfield"><label class="textfield__box"><input class="textfield__input" type="text" placeholder="광고명을 입력하세요" maxlength="60" data-count /></label><div class="textfield__help"><span class="textfield__count"><span data-count-out>0</span>/60</span></div></div></div>
+                        <div class="row__field"><div class="textfield"><label class="textfield__box"><input class="textfield__input" type="text" value="피노키 × 데일리룸" placeholder="광고명을 입력하세요" maxlength="60" data-count /></label><div class="textfield__help"><span class="textfield__count"><span data-count-out>0</span>/60</span></div></div></div>
                       </div>
                       <div class="row">
                         <div class="row__label"><span>이미지 첨부<span class="req">*</span></span></div>
@@ -209,6 +212,38 @@
                   </div>
                 </div>
 
+                <!-- 아코디언: 스플래시 동영상 (미설정) -->
+                <div class="acc" data-acc data-group="splashvid" data-preview="splash">
+                  <button type="button" class="acc__head" onclick="toggleAcc(this)">
+                    <span class="acc__title">스플래시 동영상</span>
+                    <span class="acc__right"><span class="badge-set badge-set--off">미설정</span><svg class="acc__chev" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                  </button>
+                  <div class="acc__body">
+                    <div class="form form--creative">
+                      <div class="row">
+                        <div class="row__label"><span>광고명<span class="req">*</span></span></div>
+                        <div class="row__field"><div class="textfield"><label class="textfield__box"><input class="textfield__input" type="text" value="피노키 × 데일리룸" placeholder="광고명을 입력하세요" maxlength="60" data-count /></label><div class="textfield__help"><span class="textfield__count"><span data-count-out>0</span>/60</span></div></div></div>
+                      </div>
+                      <div class="row">
+                        <div class="row__label"><span>동영상 첨부<span class="req">*</span></span></div>
+                        <div class="row__field">
+                          <div class="up">
+                            <div class="up-filled">
+                              <div class="file-preview">
+                                <div class="file-preview__img" style="aspect-ratio:1432/1792;"><img src="assets/kinch-appsplash.jpg" alt="스플래시 동영상" /></div>
+                                <span class="file-preview__name">킨치x오스트리야_앱스플.MP4</span>
+                                <span class="file-preview__meta">1432×1792px · JPG · 914KB</span>
+                                <button type="button" class="btn btn--secondary btn--sm upload-btn" onclick="applyUpload(this)"><span style="width:16px;height:16px;display:inline-flex;"><svg viewBox="0 0 16 16" fill="none"><path d="M8 10.5V3M8 3L5 6M8 3l3 3M3 11.5v1a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-1" stroke="#1a1a1a" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>파일 업로드</button>
+                                <div class="upload-help"><ul><li>크기: 1432×1792px</li><li>파일 형식: JPG/MP4</li><li>길이: 동영상일 경우 1.5초 이내 권장</li><li>용량: 1MB</li></ul></div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
                 <!-- 아코디언: 스플래시 이미지 -->
                 <div class="acc" data-acc data-group="splashimg" data-preview="splash">
                   <button type="button" class="acc__head" onclick="toggleAcc(this)">
@@ -219,7 +254,7 @@
                     <div class="form form--creative">
                       <div class="row">
                         <div class="row__label"><span>광고명<span class="req">*</span></span></div>
-                        <div class="row__field"><div class="textfield"><label class="textfield__box"><input class="textfield__input" type="text" value="(260830)_광고_스플래시" maxlength="60" data-count /></label><div class="textfield__help"><span class="textfield__count"><span data-count-out>0</span>/60</span></div></div></div>
+                        <div class="row__field"><div class="textfield"><label class="textfield__box"><input class="textfield__input" type="text" value="피노키 × 데일리룸" maxlength="60" data-count /></label><div class="textfield__help"><span class="textfield__count"><span data-count-out>0</span>/60</span></div></div></div>
                       </div>
                       <div class="row">
                         <div class="row__label"><span>이미지<span class="req">*</span></span></div>
@@ -241,33 +276,37 @@
                   </div>
                 </div>
 
-                <!-- 아코디언: 스플래시 동영상 (광고명 미입력 → 미설정) -->
-                <div class="acc" data-acc data-group="splashvid" data-preview="splash">
+                <!-- 아코디언: 퀵메뉴형 -->
+                <div class="acc" data-acc data-group="quickmenu" data-preview="quick">
                   <button type="button" class="acc__head" onclick="toggleAcc(this)">
-                    <span class="acc__title">스플래시 동영상</span>
-                    <span class="acc__right"><span class="badge-set badge-set--off">미설정</span><svg class="acc__chev" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                    <span class="acc__title">퀵메뉴형</span>
+                    <span class="acc__right"><span class="badge-set badge-set--on">설정함</span><svg class="acc__chev" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
                   </button>
                   <div class="acc__body">
                     <div class="form form--creative">
                       <div class="row">
                         <div class="row__label"><span>광고명<span class="req">*</span></span></div>
-                        <div class="row__field"><div class="textfield"><label class="textfield__box"><input class="textfield__input" type="text" placeholder="광고명을 입력하세요" maxlength="60" data-count /></label><div class="textfield__help"><span class="textfield__count"><span data-count-out>0</span>/60</span></div></div></div>
+                        <div class="row__field"><div class="textfield"><label class="textfield__box"><input class="textfield__input" type="text" value="피노키 × 데일리룸" maxlength="60" data-count /></label><div class="textfield__help"><span class="textfield__count"><span data-count-out>0</span>/60</span></div></div></div>
                       </div>
                       <div class="row">
-                        <div class="row__label"><span>동영상 첨부<span class="req">*</span></span></div>
+                        <div class="row__label"><span>이미지 첨부<span class="req">*</span></span></div>
                         <div class="row__field">
                           <div class="up">
                             <div class="up-filled">
                               <div class="file-preview">
-                                <div class="file-preview__img" style="aspect-ratio:1432/1792;"><img src="assets/kinch-appsplash.jpg" alt="스플래시 동영상" /></div>
-                                <span class="file-preview__name">킨치x오스트리야_앱스플.MP4</span>
-                                <span class="file-preview__meta">1432×1792px · MP4 · 914KB</span>
+                                <div class="file-preview__img" style="aspect-ratio:420/180;"><img src="assets/kinch_quick.jpg" alt="퀵메뉴 이미지" /></div>
+                                <span class="file-preview__name">킨치x오스트리야_퀵메뉴.PNG</span>
+                                <span class="file-preview__meta">420×180px · JPG · 914KB</span>
                                 <button type="button" class="btn btn--secondary btn--sm upload-btn" onclick="applyUpload(this)"><span style="width:16px;height:16px;display:inline-flex;"><svg viewBox="0 0 16 16" fill="none"><path d="M8 10.5V3M8 3L5 6M8 3l3 3M3 11.5v1a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-1" stroke="#1a1a1a" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>파일 업로드</button>
-                                <div class="upload-help"><ul><li>크기: 1432×1792px</li><li>파일 형식: JPG/MP4</li><li>길이: 동영상일 경우 1.5초 이내 권장</li><li>용량: 1MB</li></ul></div>
+                                <div class="upload-help"><ul><li>크기: 420×180px</li><li>파일 형식: JPG</li><li>최대 용량: 1MB</li></ul></div>
                               </div>
                             </div>
                           </div>
                         </div>
+                      </div>
+                      <div class="row">
+                        <div class="row__label"><span>랜딩 URL<span class="req">*</span></span></div>
+                        <div class="row__field"><div class="textfield"><span class="textfield__box"><input class="textfield__input" type="text" value="https://www.musinsa.com/brand/pinoki/campaign/2026seasonoff1" /></span></div></div>
                       </div>
                     </div>
                   </div>
@@ -343,9 +382,10 @@
     // ---- 폰 미리보기 (템플릿 전환: 캐러셀 + 포커스 연동) ----
     var PV = {
       bigbanner: { img:'assets/Mockup_frame_2.png' },
-      splash:    { img:'assets/Mockup_frame_splash_b.png' }
+      splash:    { img:'assets/Mockup_frame_splash_b.png' },
+      quick:     { img:'assets/Mockup_frame_quick_a.png' }
     };
-    var PV_ORDER = ['bigbanner','splash'];   // 미리보기 이미지(빅배너 / 스플래시)
+    var PV_ORDER = ['bigbanner','splash','quick'];   // 미리보기 이미지(빅배너 / 스플래시 / 퀵메뉴)
     var pvKey = 'bigbanner';
     function renderPreview(){ var p=PV[pvKey]; if(!p) return; document.getElementById('mockupImg').src=p.img; }
     function pvSet(key){ if(PV[key] && key!==pvKey){ pvKey=key; renderPreview(); } }
