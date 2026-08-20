@@ -20,15 +20,16 @@
     /* 전체 접기 툴바 */
     .acc-tools { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 4px 0 12px; }
     .acc-tools__hint { display: inline-flex; align-items: center; gap: 4px; font-size: 13px; color: var(--fg-muted); }
-    /* 아코디언 */
-    .acc { border: 1px solid var(--border); border-radius: var(--r-8); background: #fff; margin-bottom: 12px; }
+    /* 아코디언 — 템플릿 간 간격 12px */
+    .acc-list { display: flex; flex-direction: column; gap: 12px; }
+    .acc { border: 1px solid var(--border); border-radius: var(--r-8); background: #fff; }
     .acc__head { display: flex; align-items: center; justify-content: space-between; width: 100%; padding: 16px 20px; background: transparent; border: 0; cursor: pointer; font-family: inherit; }
     .acc__title { font-size: 16px; font-weight: 600; color: var(--fg-default); }
     .acc__right { display: inline-flex; align-items: center; gap: 12px; }
     .acc__chev { color: var(--fg-muted); transition: transform .2s ease; }
     .acc.collapsed .acc__chev { transform: rotate(-90deg); }
     .acc.collapsed .acc__body { display: none; }
-    .acc__body { padding: 4px 20px 20px; border-top: 1px solid var(--border); }
+    .acc__body { padding: 0 20px 20px; }   /* 타이틀↔속성 사이 디바이더 없음 */
     .badge-set { display: inline-flex; height: 22px; align-items: center; padding: 0 8px; border-radius: var(--r-4); font-size: 12px; font-weight: 500; line-height: 1; }
     .badge-set--on { background: #f7fff0; color: #3da600; border: 1px solid #b2e58a; }
     .badge-set--off { background: #fafafa; color: #808080; border: 1px solid var(--border); }
@@ -36,11 +37,12 @@
     .usefield { display: flex; align-items: flex-start; gap: 16px; }
     .usefield__field { flex: 1; min-width: 0; }
     .usefield__off { flex: none; }
-    /* 미리보기 sticky + 캐러셀 */
+    /* 미리보기 sticky + 카드 내부 화살표 */
     .col-preview { position: sticky; top: calc(var(--gnb-h) + 24px); align-self: flex-start; }
-    .pvcarousel { display: flex; align-items: center; gap: 8px; }
-    .pvcarousel .preview-card { flex: 1; min-width: 0; }
-    .pvnav { flex: none; width: 32px; height: 32px; border: 1px solid var(--border); border-radius: 50%; background: #fff; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; color: var(--fg-muted); }
+    .preview-card__stage { position: relative; }
+    .pvnav { position: absolute; top: 50%; transform: translateY(-50%); z-index: 2; width: 32px; height: 32px; border: 1px solid var(--border); border-radius: 50%; background: #fff; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; color: var(--fg-muted); box-shadow: 0 2px 8px rgba(0,0,0,.12); }
+    .pvnav--prev { left: 6px; }
+    .pvnav--next { right: 6px; }
     .pvnav:hover { background: var(--fill-light-low); }
   </style>
 </head>
@@ -147,7 +149,7 @@
                   <button type="button" class="btn btn--secondary btn--sm" id="collapseAllBtn" onclick="toggleAllAcc()">전체 접기</button>
                 </div>
 
-                <!-- 아코디언: 스플래시 -->
+                <div class="acc-list">
                 <!-- 아코디언: 빅배너 -->
                 <div class="acc" data-acc data-group="bigbanner" data-preview="bigbanner">
                   <button type="button" class="acc__head" onclick="toggleAcc(this)">
@@ -270,22 +272,21 @@
                     </div>
                   </div>
                 </div>
+                </div><!-- /acc-list -->
 
               </section>
             </div>
 
-            <!-- 미리보기 (캐러셀) -->
+            <!-- 미리보기 (카드 내부 화살표) -->
             <aside class="col-preview">
-              <div class="pvcarousel">
-                <button type="button" class="pvnav" onclick="pvMove(-1)" aria-label="이전"><svg width="8" height="14" viewBox="0 0 8 14" fill="none"><path d="M7 1L1 7l6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-                <div class="preview-card">
-                  <span class="preview-card__title" id="previewTitle">미리보기</span>
-                  <div class="preview-card__stage">
-                    <div class="phone"><div class="phone__screen"><img id="mockupImg" class="phone__mockup" src="assets/Mockup_frame_2.png" alt="앱 미리보기" /></div></div>
-                  </div>
-                  <p class="preview-card__caption">기기 설정에 따라 보여지는 줄바꿈과 글꼴, 이미지 크기가 다를 수 있습니다.</p>
+              <div class="preview-card">
+                <span class="preview-card__title" id="previewTitle">미리보기</span>
+                <div class="preview-card__stage">
+                  <button type="button" class="pvnav pvnav--prev" onclick="pvMove(-1)" aria-label="이전"><svg width="8" height="14" viewBox="0 0 8 14" fill="none"><path d="M7 1L1 7l6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+                  <div class="phone"><div class="phone__screen"><img id="mockupImg" class="phone__mockup" src="assets/Mockup_frame_2.png" alt="앱 미리보기" /></div></div>
+                  <button type="button" class="pvnav pvnav--next" onclick="pvMove(1)" aria-label="다음"><svg width="8" height="14" viewBox="0 0 8 14" fill="none"><path d="M1 1l6 6-6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
                 </div>
-                <button type="button" class="pvnav" onclick="pvMove(1)" aria-label="다음"><svg width="8" height="14" viewBox="0 0 8 14" fill="none"><path d="M1 1l6 6-6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+                <p class="preview-card__caption">기기 설정에 따라 보여지는 줄바꿈과 글꼴, 이미지 크기가 다를 수 있습니다.</p>
               </div>
             </aside>
           </div>
