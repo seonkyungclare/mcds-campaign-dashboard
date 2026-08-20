@@ -43,6 +43,8 @@
     .pvnav { position: absolute; top: 50%; transform: translateY(-50%); z-index: 2; width: 32px; height: 32px; border: 1px solid var(--border); border-radius: 50%; background: #fff; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; color: var(--fg-muted); box-shadow: 0 2px 8px rgba(0,0,0,.12); }
     .pvnav--prev { left: 6px; }
     .pvnav--next { right: 6px; }
+    #mockupImg { border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,.10); }
+    .pv-empty { width: 250px; min-height: 320px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; background: #fff; border: 1px dashed var(--border); border-radius: 12px; color: var(--fg-muted); font-size: 13px; line-height: 19px; text-align: center; }
     .pvnav:hover { background: var(--fill-light-low); }
   </style>
 </head>
@@ -171,7 +173,7 @@
                           <div class="up">
                             <div class="up-filled">
                               <div class="file-preview">
-                                <div class="file-preview__img"><img src="assets/kinch-bigbanner.png" alt="빅배너 이미지" /></div>
+                                <div class="file-preview__img"><img src="assets/pinoki_big.jpg" alt="빅배너 이미지" /></div>
                                 <span class="file-preview__name">킨치x오스트리야_빅배너.png</span>
                                 <span class="file-preview__meta">1029×900px · JPG · 914KB</span>
                                 <button type="button" class="btn btn--secondary btn--sm upload-btn" onclick="applyUpload(this)"><span style="width:16px;height:16px;display:inline-flex;"><svg viewBox="0 0 16 16" fill="none"><path d="M8 10.5V3M8 3L5 6M8 3l3 3M3 11.5v1a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-1" stroke="#1a1a1a" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>파일 업로드</button>
@@ -213,7 +215,7 @@
                 </div>
 
                 <!-- 아코디언: 스플래시 동영상 (미설정) -->
-                <div class="acc" data-acc data-group="splashvid" data-preview="splash">
+                <div class="acc" data-acc data-group="splashvid" data-preview="splashvid">
                   <button type="button" class="acc__head" onclick="toggleAcc(this)">
                     <span class="acc__title">스플래시 동영상</span>
                     <span class="acc__right"><span class="badge-set badge-set--off">미설정</span><svg class="acc__chev" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
@@ -228,9 +230,13 @@
                         <div class="row__label"><span>동영상 첨부<span class="req">*</span></span></div>
                         <div class="row__field">
                           <div class="up">
-                            <div class="up-filled">
+                            <div class="up-empty">
+                              <button type="button" class="btn btn--secondary btn--sm upload-btn" onclick="applyUpload(this)"><span style="width:16px;height:16px;display:inline-flex;"><svg viewBox="0 0 16 16" fill="none"><path d="M8 10.5V3M8 3L5 6M8 3l3 3M3 11.5v1a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-1" stroke="#1a1a1a" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>파일 업로드</button>
+                              <div class="upload-help"><ul><li>크기: 1432×1792px</li><li>파일 형식: JPG/MP4</li><li>길이: 동영상일 경우 1.5초 이내 권장</li><li>용량: 1MB</li></ul></div>
+                            </div>
+                            <div class="up-filled" style="display:none;">
                               <div class="file-preview">
-                                <div class="file-preview__img" style="aspect-ratio:1432/1792;"><img src="assets/kinch-appsplash.jpg" alt="스플래시 동영상" /></div>
+                                <div class="file-preview__img" style="aspect-ratio:1432/1792;"><img src="assets/pinoki_splash.jpg" alt="스플래시 동영상" /></div>
                                 <span class="file-preview__name">킨치x오스트리야_앱스플.MP4</span>
                                 <span class="file-preview__meta">1432×1792px · JPG · 914KB</span>
                                 <button type="button" class="btn btn--secondary btn--sm upload-btn" onclick="applyUpload(this)"><span style="width:16px;height:16px;display:inline-flex;"><svg viewBox="0 0 16 16" fill="none"><path d="M8 10.5V3M8 3L5 6M8 3l3 3M3 11.5v1a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-1" stroke="#1a1a1a" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>파일 업로드</button>
@@ -245,7 +251,7 @@
                 </div>
 
                 <!-- 아코디언: 스플래시 이미지 -->
-                <div class="acc" data-acc data-group="splashimg" data-preview="splash">
+                <div class="acc" data-acc data-group="splashimg" data-preview="splashimg">
                   <button type="button" class="acc__head" onclick="toggleAcc(this)">
                     <span class="acc__title">스플래시 이미지</span>
                     <span class="acc__right"><span class="badge-set badge-set--on">설정함</span><svg class="acc__chev" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
@@ -262,7 +268,7 @@
                           <div class="up">
                             <div class="up-filled">
                               <div class="file-preview">
-                                <div class="file-preview__img" style="aspect-ratio:1432/1792;"><img src="assets/kinch-appsplash.jpg" alt="스플래시 이미지" /></div>
+                                <div class="file-preview__img" style="aspect-ratio:1432/1792;"><img src="assets/pinoki_splash2.jpg" alt="스플래시 이미지" /></div>
                                 <span class="file-preview__name">킨치x오스트리야_앱스플.PNG</span>
                                 <span class="file-preview__meta">1432×1792px · PNG · 914KB</span>
                                 <button type="button" class="btn btn--secondary btn--sm upload-btn" onclick="applyUpload(this)"><span style="width:16px;height:16px;display:inline-flex;"><svg viewBox="0 0 16 16" fill="none"><path d="M8 10.5V3M8 3L5 6M8 3l3 3M3 11.5v1a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-1" stroke="#1a1a1a" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>파일 업로드</button>
@@ -322,7 +328,7 @@
                 <span class="preview-card__title" id="previewTitle">미리보기</span>
                 <div class="preview-card__stage">
                   <button type="button" class="pvnav pvnav--prev" onclick="pvMove(-1)" aria-label="이전"><svg width="8" height="14" viewBox="0 0 8 14" fill="none"><path d="M7 1L1 7l6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-                  <div class="phone"><div class="phone__screen"><img id="mockupImg" class="phone__mockup" src="assets/Mockup_frame_2.png" alt="앱 미리보기" /></div></div>
+                  <div class="phone"><div class="phone__screen"><img id="mockupImg" class="phone__mockup" src="assets/pinoki_big.jpg" alt="광고 미리보기" /><div id="pvEmpty" class="pv-empty" style="display:none;"><svg width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden="true"><rect x="3.5" y="5.5" width="21" height="17" rx="2.5" stroke="#c2c2c2" stroke-width="1.5"/><path d="M3.5 17.5l5-4.5 4 3.5 4.5-5 7.5 7" stroke="#c2c2c2" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="10" cy="11" r="1.6" fill="#c2c2c2"/></svg><span>이미지를 업로드하면<br>미리보기가 표시됩니다.</span></div></div></div>
                   <button type="button" class="pvnav pvnav--next" onclick="pvMove(1)" aria-label="다음"><svg width="8" height="14" viewBox="0 0 8 14" fill="none"><path d="M1 1l6 6-6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
                 </div>
                 <p class="preview-card__caption">기기 설정에 따라 보여지는 줄바꿈과 글꼴, 이미지 크기가 다를 수 있습니다.</p>
@@ -380,15 +386,24 @@
     });
 
     // ---- 폰 미리보기 (템플릿 전환: 캐러셀 + 포커스 연동) ----
+    // 각 템플릿의 실제 크리에이티브 + 업로드(입력) 여부
     var PV = {
-      bigbanner: { img:'assets/Mockup_frame_2.png' },
-      splash:    { img:'assets/Mockup_frame_splash_b.png' },
-      quick:     { img:'assets/Mockup_frame_quick_a.png' }
+      bigbanner: { img:'assets/pinoki_big.jpg',     uploaded:true  },
+      splashvid: { img:'assets/pinoki_splash.jpg',  uploaded:false },  // 미설정(입력 전)
+      splashimg: { img:'assets/pinoki_splash2.jpg', uploaded:true  },
+      quick:     { img:'assets/kinch_quick.jpg',    uploaded:true  }
     };
-    var PV_ORDER = ['bigbanner','splash','quick'];   // 미리보기 이미지(빅배너 / 스플래시 / 퀵메뉴)
+    var PV_ORDER = ['bigbanner','splashvid','splashimg','quick'];
     var pvKey = 'bigbanner';
-    function renderPreview(){ var p=PV[pvKey]; if(!p) return; document.getElementById('mockupImg').src=p.img; }
-    function pvSet(key){ if(PV[key] && key!==pvKey){ pvKey=key; renderPreview(); } }
+    function renderPreview(){
+      var p = PV[pvKey];
+      var img = document.getElementById('mockupImg');
+      var empty = document.getElementById('pvEmpty');
+      if(p && p.uploaded){ img.src = p.img; img.style.display=''; if(empty) empty.style.display='none'; }
+      else { img.removeAttribute('src'); img.style.display='none'; if(empty) empty.style.display='flex'; }
+    }
+    // 포커스/업로드 시 항상 해당 템플릿 미리보기로 갱신
+    function pvSet(key){ if(PV[key]){ pvKey=key; renderPreview(); } }
     function visiblePvKeys(){ return PV_ORDER.filter(function(k){ var a=document.querySelector('.acc[data-preview="'+k+'"]'); return a && a.style.display!=='none'; }); }
     function pvMove(d){ var ks=visiblePvKeys(); if(!ks.length) return; var i=ks.indexOf(pvKey); if(i<0) i=0; i=(i+d+ks.length)%ks.length; pvSet(ks[i]); }
     // 템플릿(아코디언) 포커스 시 해당 미리보기로 전환
@@ -404,7 +419,12 @@
       if(empty) empty.style.display='none';
       if(filled) filled.style.display='block';
       var acc = btn.closest('.acc');
-      if(acc){ var b=acc.querySelector('.badge-set'); if(b){ b.className='badge-set badge-set--on'; b.textContent='설정함'; } }
+      if(acc){
+        var b=acc.querySelector('.badge-set'); if(b){ b.className='badge-set badge-set--on'; b.textContent='설정함'; }
+        // 입력 전 상태에서 업로드 → 해당 템플릿 크리에이티브를 우측 미리보기에 반영
+        var key = acc.getAttribute('data-preview');
+        if(key && PV[key]){ PV[key].uploaded = true; pvSet(key); }
+      }
     }
 
     // ---- 글자수(공통): data-count 입력 → 형제/조상의 data-count-out 합산 ----
