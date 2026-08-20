@@ -43,8 +43,10 @@
     .pvnav { position: absolute; top: 50%; transform: translateY(-50%); z-index: 2; width: 32px; height: 32px; border: 1px solid var(--border); border-radius: 50%; background: #fff; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; color: var(--fg-muted); box-shadow: 0 2px 8px rgba(0,0,0,.12); }
     .pvnav--prev { left: 6px; }
     .pvnav--next { right: 6px; }
-    #mockupImg { border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,.10); }
-    .pv-empty { width: 250px; min-height: 320px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; background: #fff; border: 1px dashed var(--border); border-radius: 12px; color: var(--fg-muted); font-size: 13px; line-height: 19px; text-align: center; }
+    .phone { width: 250px; background: #111; border-radius: 32px; padding: 9px; box-shadow: 0 10px 30px rgba(0,0,0,.20); }
+    .phone__screen { background: #fff; border-radius: 24px; overflow: hidden; }
+    #pvFull { display: block; width: 100%; height: auto; }
+    .pv-empty { min-height: 360px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; background: #fff; color: var(--fg-muted); font-size: 13px; line-height: 19px; text-align: center; }
     .pvnav:hover { background: var(--fill-light-low); }
   </style>
 </head>
@@ -188,8 +190,8 @@
                         <div class="row__field">
                           <div class="usefield">
                             <div class="usefield__field" style="display:flex;flex-direction:column;gap:8px;">
-                              <div class="textfield"><span class="textfield__box"><input class="textfield__input" type="text" value="상반기 결산 빅세일" maxlength="10" data-count /></span></div>
-                              <div class="textfield"><span class="textfield__box"><input class="textfield__input" type="text" value="신상 최대 {disc}% 할인" maxlength="10" data-count /></span><div class="textfield__help"><span class="textfield__count"><span data-count-out>0</span>/22</span></div></div>
+                              <div class="textfield"><span class="textfield__box"><input class="textfield__input" type="text" value="상반기 결산 빅세일" maxlength="10" data-count data-banner="main1" /></span></div>
+                              <div class="textfield"><span class="textfield__box"><input class="textfield__input" type="text" value="신상 최대 {disc}% 할인" maxlength="10" data-count data-banner="main2" /></span><div class="textfield__help"><span class="textfield__count"><span data-count-out>0</span>/22</span></div></div>
                             </div>
                             <button type="button" class="checkbox usefield__off" role="checkbox" aria-checked="false" data-nouse><span class="checkbox__box"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.2 4.7 8.9 10 3.2" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="checkbox__label">사용 안 함</span></button>
                           </div>
@@ -200,7 +202,7 @@
                         <div class="row__field">
                           <div class="usefield">
                             <div class="usefield__field">
-                              <div class="textfield"><span class="textfield__box"><input class="textfield__input" type="text" value="피노키" maxlength="18" data-count /></span><div class="textfield__help"><span class="textfield__count"><span data-count-out>0</span>/18</span></div></div>
+                              <div class="textfield"><span class="textfield__box"><input class="textfield__input" type="text" value="피노키" maxlength="18" data-count data-banner="sub" /></span><div class="textfield__help"><span class="textfield__count"><span data-count-out>0</span>/18</span></div></div>
                             </div>
                             <button type="button" class="checkbox usefield__off" role="checkbox" aria-checked="false" data-nouse><span class="checkbox__box"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.2 4.7 8.9 10 3.2" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="checkbox__label">사용 안 함</span></button>
                           </div>
@@ -328,7 +330,64 @@
                 <span class="preview-card__title" id="previewTitle">미리보기</span>
                 <div class="preview-card__stage">
                   <button type="button" class="pvnav pvnav--prev" onclick="pvMove(-1)" aria-label="이전"><svg width="8" height="14" viewBox="0 0 8 14" fill="none"><path d="M7 1L1 7l6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-                  <div class="phone"><div class="phone__screen"><img id="mockupImg" class="phone__mockup" src="assets/pinoki_big.jpg" alt="광고 미리보기" /><div id="pvEmpty" class="pv-empty" style="display:none;"><svg width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden="true"><rect x="3.5" y="5.5" width="21" height="17" rx="2.5" stroke="#c2c2c2" stroke-width="1.5"/><path d="M3.5 17.5l5-4.5 4 3.5 4.5-5 7.5 7" stroke="#c2c2c2" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="10" cy="11" r="1.6" fill="#c2c2c2"/></svg><span>이미지를 업로드하면<br>미리보기가 표시됩니다.</span></div></div></div>
+                  <div class="phone">
+                    <div class="phone__screen">
+                      <!-- 홈 모드(빅배너/퀵메뉴): 스토어 홈 + 배너 슬롯 -->
+                      <div id="pvHome">
+                        <div class="phone__status">
+                          <span class="phone__time">9:41</span>
+                          <span class="phone__status-ic">
+                            <svg width="15" height="11" viewBox="0 0 16 12" fill="none"><path d="M8 2.5c2 0 3.8.8 5 2M8 6c1 0 2 .4 2.7 1.1M3 4.5C4.4 3.2 6.1 2.5 8 2.5" stroke="#111" stroke-width="1.2" stroke-linecap="round"/><circle cx="8" cy="9.5" r="1" fill="#111"/></svg>
+                            <svg width="22" height="11" viewBox="0 0 24 12" fill="none"><rect x="1" y="2" width="20" height="8" rx="2" stroke="#111" stroke-width="1"/><rect x="2.5" y="3.5" width="14" height="5" rx="1" fill="#111"/><rect x="22" y="4.5" width="1.5" height="3" rx="0.7" fill="#111"/></svg>
+                          </span>
+                        </div>
+                        <div class="phone__header">
+                          <span class="phone__logo">MUSINSA</span>
+                          <span class="phone__header-ic">
+                            <svg width="15" height="15" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="8.5" stroke="#111"/><path d="M6.5 8l1.7 5 1.8-4 1.8 4 1.7-5" stroke="#111" stroke-width="1" stroke-linejoin="round"/></svg>
+                            <svg width="15" height="15" viewBox="0 0 20 20" fill="none"><path d="M10 3a4 4 0 0 0-4 4c0 4-1.5 5.5-1.5 5.5h11S14 11 14 7a4 4 0 0 0-4-4zM8.5 15a1.5 1.5 0 0 0 3 0" stroke="#111" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            <svg width="15" height="15" viewBox="0 0 20 20" fill="none"><path d="M5.5 6h9l-.8 9.5a1 1 0 0 1-1 .9H7.3a1 1 0 0 1-1-.9L5.5 6zM7.5 6V5a2.5 2.5 0 0 1 5 0v1" stroke="#111" stroke-width="1.1" stroke-linejoin="round"/></svg>
+                          </span>
+                        </div>
+                        <div class="phone__search"></div>
+                        <div class="phone__tabs">
+                          <span class="phone__tab">콘텐츠</span>
+                          <span class="phone__tab phone__tab--active">추천</span>
+                          <span class="phone__tab">랭킹</span>
+                          <span class="phone__tab">세일</span>
+                          <span class="phone__tab">브랜드</span>
+                          <span class="phone__tab">뷰티페스타</span>
+                          <span class="phone__tab">멤버스데이</span>
+                        </div>
+                        <div class="phone__banner" id="phoneBanner">
+                          <img id="phoneBannerImg" alt="" />
+                          <div class="phone__banner-overlay" id="bannerOverlay">
+                            <span class="phone__banner-main" id="bannerMain">메인 문구를 입력하면 이곳에
+반영됩니다</span>
+                            <span class="phone__banner-sub" id="bannerSub">서브문구를 입력하면 이곳에 반영됩니다</span>
+                          </div>
+                          <span class="phone__banner-page">1 / 99 <svg width="6" height="9" viewBox="0 0 6 9" fill="none"><path d="M1 1l4 3.5L1 8" stroke="#fff" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                        </div>
+                        <div class="phone__grid">
+                          <div class="phone__grid-row"><span class="phone__sk"></span><span class="phone__sk"></span><span class="phone__sk"></span></div>
+                          <div class="phone__grid-row"><span class="phone__sk"></span><span class="phone__sk"></span><span class="phone__sk"></span></div>
+                        </div>
+                        <div class="phone__live">무신사 라이브</div>
+                        <div class="phone__live-row"><span class="phone__sk"></span><span class="phone__sk"></span></div>
+                        <div class="phone__nav">
+                          <span class="phone__nav-item"><svg width="16" height="16" viewBox="0 0 20 20" fill="none"><circle cx="8.5" cy="8.5" r="5.5" stroke="#9a9a9a" stroke-width="1.3"/><path d="M13 13l4 4" stroke="#9a9a9a" stroke-width="1.3" stroke-linecap="round"/></svg>카테고리</span>
+                          <span class="phone__nav-item">(S)<span>스냅</span></span>
+                          <span class="phone__nav-item phone__nav-item--active"><svg width="16" height="16" viewBox="0 0 20 20" fill="#111"><path d="M10 3l7 6v8a1 1 0 0 1-1 1h-3v-5H7v5H4a1 1 0 0 1-1-1V9l7-6z"/></svg>홈</span>
+                          <span class="phone__nav-item"><svg width="16" height="16" viewBox="0 0 20 20" fill="none"><path d="M10 16S3.5 12 3.5 7.6A3.1 3.1 0 0 1 10 6a3.1 3.1 0 0 1 6.5 1.6C16.5 12 10 16 10 16z" stroke="#9a9a9a" stroke-width="1.3" stroke-linejoin="round"/></svg>좋아요</span>
+                          <span class="phone__nav-item"><svg width="16" height="16" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="7" r="3" stroke="#9a9a9a" stroke-width="1.3"/><path d="M4.5 16c0-3 2.5-4.5 5.5-4.5s5.5 1.5 5.5 4.5" stroke="#9a9a9a" stroke-width="1.3" stroke-linecap="round"/></svg>마이</span>
+                        </div>
+                      </div>
+                      <!-- 풀스크린 모드(스플래시): 앱 스플래시 전면 -->
+                      <img id="pvFull" class="phone__mockup" alt="스플래시 미리보기" style="display:none;" />
+                      <!-- 빈 상태 -->
+                      <div id="pvEmpty" class="pv-empty" style="display:none;"><svg width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden="true"><rect x="3.5" y="5.5" width="21" height="17" rx="2.5" stroke="#c2c2c2" stroke-width="1.5"/><path d="M3.5 17.5l5-4.5 4 3.5 4.5-5 7.5 7" stroke="#c2c2c2" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="10" cy="11" r="1.6" fill="#c2c2c2"/></svg><span>이미지를 업로드하면<br>미리보기가 표시됩니다.</span></div>
+                    </div>
+                  </div>
                   <button type="button" class="pvnav pvnav--next" onclick="pvMove(1)" aria-label="다음"><svg width="8" height="14" viewBox="0 0 8 14" fill="none"><path d="M1 1l6 6-6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
                 </div>
                 <p class="preview-card__caption">기기 설정에 따라 보여지는 줄바꿈과 글꼴, 이미지 크기가 다를 수 있습니다.</p>
@@ -394,16 +453,41 @@
       quick:     { img:'assets/kinch_quick.jpg',    uploaded:true  }
     };
     var PV_ORDER = ['bigbanner','splashvid','splashimg','quick'];
+    // 홈 모드(스토어 홈 배너 슬롯) / 풀스크린 모드(앱 스플래시 전면)
+    var PV_MODE = { bigbanner:'home', splashvid:'full', splashimg:'full', quick:'home' };
     var pvKey = 'bigbanner';
+    // 빅배너 문구 입력값 → 배너 오버레이 반영
+    function bannerVal(k){ var el=document.querySelector('.acc[data-group="bigbanner"] [data-banner="'+k+'"]'); return el ? el.value : ''; }
+    function updateBanner(){
+      var l1=bannerVal('main1'), l2=bannerVal('main2'), sub=bannerVal('sub');
+      var m=document.getElementById('bannerMain'), s=document.getElementById('bannerSub');
+      if(m) m.textContent = (l1||l2) ? (l1 + (l2 ? '\n'+l2 : '')) : '메인 문구를 입력하면 이곳에\n반영됩니다';
+      if(s) s.textContent = sub || '서브문구를 입력하면 이곳에 반영됩니다';
+    }
     function renderPreview(){
-      var p = PV[pvKey];
-      var img = document.getElementById('mockupImg');
-      var empty = document.getElementById('pvEmpty');
-      if(p && p.uploaded){ img.src = p.img; img.style.display=''; if(empty) empty.style.display='none'; }
-      else { img.removeAttribute('src'); img.style.display='none'; if(empty) empty.style.display='flex'; }
+      var p = PV[pvKey], mode = PV_MODE[pvKey] || 'full';
+      var home=document.getElementById('pvHome'), full=document.getElementById('pvFull'), empty=document.getElementById('pvEmpty');
+      home.style.display='none'; full.style.display='none'; empty.style.display='none';
+      if(!p || !p.uploaded){ empty.style.display='flex'; return; }
+      if(mode==='home'){
+        home.style.display='';
+        var banner=document.getElementById('phoneBanner');
+        document.getElementById('phoneBannerImg').src=p.img;
+        banner.classList.add('has-image');
+        var ov=document.getElementById('bannerOverlay');
+        if(pvKey==='bigbanner'){ ov.style.display='flex'; updateBanner(); }
+        else { ov.style.display='none'; }
+      } else {
+        full.style.display='block';
+        full.src=p.img;
+      }
     }
     // 포커스/업로드 시 항상 해당 템플릿 미리보기로 갱신
     function pvSet(key){ if(PV[key]){ pvKey=key; renderPreview(); } }
+    // 빅배너 문구 실시간 반영
+    document.querySelectorAll('.acc[data-group="bigbanner"] [data-banner]').forEach(function(inp){
+      inp.addEventListener('input', function(){ if(pvKey==='bigbanner') updateBanner(); });
+    });
     function visiblePvKeys(){ return PV_ORDER.filter(function(k){ var a=document.querySelector('.acc[data-preview="'+k+'"]'); return a && a.style.display!=='none'; }); }
     function pvMove(d){ var ks=visiblePvKeys(); if(!ks.length) return; var i=ks.indexOf(pvKey); if(i<0) i=0; i=(i+d+ks.length)%ks.length; pvSet(ks[i]); }
     // 템플릿(아코디언) 포커스 시 해당 미리보기로 전환
@@ -411,6 +495,7 @@
       acc.addEventListener('focusin', function(){ pvSet(acc.getAttribute('data-preview')); });
       acc.addEventListener('click', function(){ pvSet(acc.getAttribute('data-preview')); });
     });
+    renderPreview();  // 초기 미리보기(빅배너 홈)
 
     // ---- 파일 업로드 → 첨부 영역 전환 + 해당 아코디언 배지 '설정함' ----
     function applyUpload(btn){
