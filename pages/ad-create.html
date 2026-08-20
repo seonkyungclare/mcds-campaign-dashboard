@@ -161,7 +161,7 @@
                 <div class="acc" data-acc data-group="bigbanner" data-preview="bigbanner">
                   <button type="button" class="acc__head" onclick="toggleAcc(this)">
                     <span class="acc__title">빅배너</span>
-                    <span class="acc__right"><span class="badge-set badge-set--on">설정함</span><svg class="acc__chev" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                    <span class="acc__right"><span class="badge-set badge-set--off">미설정</span><svg class="acc__chev" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
                   </button>
                   <div class="acc__body">
                     <div class="form form--creative">
@@ -173,7 +173,11 @@
                         <div class="row__label"><span>이미지 첨부<span class="req">*</span></span></div>
                         <div class="row__field">
                           <div class="up">
-                            <div class="up-filled">
+                            <div class="up-empty">
+                              <button type="button" class="btn btn--secondary btn--sm upload-btn" onclick="applyUpload(this)"><span style="width:16px;height:16px;display:inline-flex;"><svg viewBox="0 0 16 16" fill="none"><path d="M8 10.5V3M8 3L5 6M8 3l3 3M3 11.5v1a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-1" stroke="#1a1a1a" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>파일 업로드</button>
+                              <div class="upload-help"><ul><li>크기: 1029×900px</li><li>파일 형식: JPG/PNG</li><li>최대 용량: 1MB</li></ul></div>
+                            </div>
+                            <div class="up-filled" style="display:none;">
                               <div class="file-preview">
                                 <div class="file-preview__img"><img src="assets/pinoki_big.jpg" alt="빅배너 이미지" /></div>
                                 <span class="file-preview__name">킨치x오스트리야_빅배너.png</span>
@@ -256,7 +260,7 @@
                 <div class="acc" data-acc data-group="splashimg" data-preview="splashimg">
                   <button type="button" class="acc__head" onclick="toggleAcc(this)">
                     <span class="acc__title">스플래시 이미지</span>
-                    <span class="acc__right"><span class="badge-set badge-set--on">설정함</span><svg class="acc__chev" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                    <span class="acc__right"><span class="badge-set badge-set--off">미설정</span><svg class="acc__chev" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
                   </button>
                   <div class="acc__body">
                     <div class="form form--creative">
@@ -268,7 +272,11 @@
                         <div class="row__label"><span>이미지<span class="req">*</span></span></div>
                         <div class="row__field">
                           <div class="up">
-                            <div class="up-filled">
+                            <div class="up-empty">
+                              <button type="button" class="btn btn--secondary btn--sm upload-btn" onclick="applyUpload(this)"><span style="width:16px;height:16px;display:inline-flex;"><svg viewBox="0 0 16 16" fill="none"><path d="M8 10.5V3M8 3L5 6M8 3l3 3M3 11.5v1a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-1" stroke="#1a1a1a" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>파일 업로드</button>
+                              <div class="upload-help"><ul><li>크기: 1432×1792px</li><li>파일 형식: JPG/MP4</li><li>길이: 동영상일 경우 1.5초 이내 권장</li><li>용량: 1MB</li></ul></div>
+                            </div>
+                            <div class="up-filled" style="display:none;">
                               <div class="file-preview">
                                 <div class="file-preview__img" style="aspect-ratio:1432/1792;"><img src="assets/pinoki_splash2.jpg" alt="스플래시 이미지" /></div>
                                 <span class="file-preview__name">킨치x오스트리야_앱스플.PNG</span>
@@ -288,7 +296,7 @@
                 <div class="acc" data-acc data-group="quickmenu" data-preview="quick">
                   <button type="button" class="acc__head" onclick="toggleAcc(this)">
                     <span class="acc__title">퀵메뉴형</span>
-                    <span class="acc__right"><span class="badge-set badge-set--on">설정함</span><svg class="acc__chev" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                    <span class="acc__right"><span class="badge-set badge-set--off">미설정</span><svg class="acc__chev" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
                   </button>
                   <div class="acc__body">
                     <div class="form form--creative">
@@ -300,7 +308,11 @@
                         <div class="row__label"><span>이미지 첨부<span class="req">*</span></span></div>
                         <div class="row__field">
                           <div class="up">
-                            <div class="up-filled">
+                            <div class="up-empty">
+                              <button type="button" class="btn btn--secondary btn--sm upload-btn" onclick="applyUpload(this)"><span style="width:16px;height:16px;display:inline-flex;"><svg viewBox="0 0 16 16" fill="none"><path d="M8 10.5V3M8 3L5 6M8 3l3 3M3 11.5v1a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-1" stroke="#1a1a1a" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>파일 업로드</button>
+                              <div class="upload-help"><ul><li>크기: 420×180px</li><li>파일 형식: JPG</li><li>최대 용량: 1MB</li></ul></div>
+                            </div>
+                            <div class="up-filled" style="display:none;">
                               <div class="file-preview">
                                 <div class="file-preview__img" style="aspect-ratio:420/180;"><img src="assets/kinch_quick.jpg" alt="퀵메뉴 이미지" /></div>
                                 <span class="file-preview__name">킨치x오스트리야_퀵메뉴.PNG</span>
@@ -446,11 +458,12 @@
 
     // ---- 폰 미리보기 (템플릿 전환: 캐러셀 + 포커스 연동) ----
     // 각 템플릿의 실제 크리에이티브 + 업로드(입력) 여부
+    // 첫 진입 시 전 템플릿 '파일 등록 전' → uploaded:false, 업로드 버튼 클릭 시 반영
     var PV = {
-      bigbanner: { img:'assets/pinoki_big.jpg',     uploaded:true  },
-      splashvid: { img:'assets/pinoki_splash.jpg',  uploaded:false },  // 미설정(입력 전)
-      splashimg: { img:'assets/pinoki_splash2.jpg', uploaded:true  },
-      quick:     { img:'assets/kinch_quick.jpg',    uploaded:true  }
+      bigbanner: { img:'assets/pinoki_big.jpg',     uploaded:false },
+      splashvid: { img:'assets/pinoki_splash.jpg',  uploaded:false },
+      splashimg: { img:'assets/pinoki_splash2.jpg', uploaded:false },
+      quick:     { img:'assets/kinch_quick.jpg',    uploaded:false }
     };
     var PV_ORDER = ['bigbanner','splashvid','splashimg','quick'];
     // 홈 모드(스토어 홈 배너 슬롯) / 풀스크린 모드(앱 스플래시 전면)
