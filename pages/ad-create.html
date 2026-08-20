@@ -10,12 +10,11 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
   <link rel="stylesheet" href="mcds.css?v=20260813i" />
   <style>
-    /* 노출 정보: 선택한 지면 박스 */
-    .exp-box { border: 1px solid var(--border); border-radius: var(--r-8); width: 728px; max-width: 100%; }
-    .exp-slot { padding: 16px 20px; display: flex; flex-direction: column; gap: 10px; }
-    .exp-slot + .exp-slot { border-top: 1px solid var(--border); }
-    .exp-slot__name { font-size: 14px; font-weight: 600; color: var(--fg-default); }
-    .exp-slot__chips { display: flex; flex-wrap: wrap; gap: 6px; }
+    /* 광고그룹 정보: 키-값 리스트 */
+    .aginfo { margin: 0; display: flex; flex-direction: column; gap: 6px; }
+    .aginfo__row { display: flex; gap: 16px; font-size: 13px; line-height: 20px; }
+    .aginfo__row dt { flex: 0 0 84px; margin: 0; color: var(--fg-muted); }
+    .aginfo__row dd { margin: 0; color: var(--fg-default); }
     /* 광고 템플릿 체크 */
     .tmpl-checks { display: flex; gap: 20px; flex-wrap: wrap; }
     /* 전체 접기 툴바 */
@@ -108,37 +107,13 @@
                 <svg width="10" height="6" viewBox="0 0 9.10711 5.01213" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M0.353553 0.353553L4.48284 4.48284C4.52189 4.52189 4.58521 4.52189 4.62426 4.48284L8.75355 0.353553" stroke="#808080"/></svg>
               </button>
             </div>
-            <div class="camp-info__tags">
-              <span>한국</span><span class="camp-info__tag-sep">|</span><span>인구통계학 타겟팅</span><span class="camp-info__tag-sep">|</span><span>2026-08-26 ~ 2026-10-30</span>
-            </div>
-            <div class="camp-info__tags">
-              <span>빅배너·메인스토어·뷰티·키즈·스포츠</span><span class="camp-info__tag-sep">|</span><span>하이라이트 퀵메뉴·메인스토어·키즈</span>
-            </div>
+            <dl class="aginfo">
+              <div class="aginfo__row"><dt>상품 유형</dt><dd>일반형</dd></div>
+              <div class="aginfo__row"><dt>구좌 타입</dt><dd>빅배너(-메인스토어/뷰티/키즈/스포츠, 스플래시)</dd></div>
+              <div class="aginfo__row"><dt>광고 기간</dt><dd>2026-08-26 ~ 2026-10-30</dd></div>
+              <div class="aginfo__row"><dt>타겟팅 방식</dt><dd>커스텀 타겟팅</dd></div>
+            </dl>
           </div>
-
-          <hr class="divider" />
-
-          <!-- 노출 정보 -->
-          <section class="section">
-            <h2 class="section__title">노출 정보</h2>
-            <div class="form">
-              <div class="row">
-                <div class="row__label" style="align-items:flex-start;"><span>선택한 지면</span></div>
-                <div class="row__field">
-                  <div class="exp-box">
-                    <div class="exp-slot">
-                      <span class="exp-slot__name">빅배너</span>
-                      <div class="exp-slot__chips"><span class="chip">메인스토어</span><span class="chip">뷰티</span><span class="chip">키즈</span><span class="chip">스포츠</span></div>
-                    </div>
-                    <div class="exp-slot">
-                      <span class="exp-slot__name">하이라이트 퀵메뉴</span>
-                      <div class="exp-slot__chips"><span class="chip">메인스토어</span><span class="chip">키즈</span></div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </section>
 
           <hr class="divider" />
 
@@ -153,10 +128,13 @@
                     <div class="row__field">
                       <div class="tmpl-checks" role="group" aria-label="광고 템플릿 선택">
                         <button type="button" class="checkbox checkbox--checked" role="checkbox" aria-checked="true" data-tmpl="bigbanner">
-                          <span class="checkbox__box"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.2 4.7 8.9 10 3.2" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="checkbox__label">빅배너형</span>
+                          <span class="checkbox__box"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.2 4.7 8.9 10 3.2" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="checkbox__label">빅배너</span>
                         </button>
-                        <button type="button" class="checkbox checkbox--checked" role="checkbox" aria-checked="true" data-tmpl="quickmenu">
-                          <span class="checkbox__box"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.2 4.7 8.9 10 3.2" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="checkbox__label">하이라이트 퀵메뉴형</span>
+                        <button type="button" class="checkbox checkbox--checked" role="checkbox" aria-checked="true" data-tmpl="splashimg">
+                          <span class="checkbox__box"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.2 4.7 8.9 10 3.2" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="checkbox__label">앱 스플래시 (이미지)</span>
+                        </button>
+                        <button type="button" class="checkbox checkbox--checked" role="checkbox" aria-checked="true" data-tmpl="splashvid">
+                          <span class="checkbox__box"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.2 4.7 8.9 10 3.2" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="checkbox__label">앱 스플래시 (비디오)</span>
                         </button>
                       </div>
                     </div>
@@ -170,41 +148,10 @@
                 </div>
 
                 <!-- 아코디언: 스플래시 -->
-                <div class="acc" data-acc data-group="bigbanner" data-preview="splash">
-                  <button type="button" class="acc__head" onclick="toggleAcc(this)">
-                    <span class="acc__title">스플래시</span>
-                    <span class="acc__right"><span class="badge-set badge-set--on">설정함</span><svg class="acc__chev" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-                  </button>
-                  <div class="acc__body">
-                    <div class="form form--creative">
-                      <div class="row">
-                        <div class="row__label"><span>광고명<span class="req">*</span></span></div>
-                        <div class="row__field"><div class="textfield"><label class="textfield__box"><input class="textfield__input" type="text" value="(260830)_광고_스플래시" maxlength="60" data-count /></label><div class="textfield__help"><span class="textfield__count"><span data-count-out>0</span>/60</span></div></div></div>
-                      </div>
-                      <div class="row">
-                        <div class="row__label"><span>이미지 첨부<span class="req">*</span></span></div>
-                        <div class="row__field">
-                          <div class="up">
-                            <div class="up-filled">
-                              <div class="file-preview">
-                                <div class="file-preview__img" style="aspect-ratio:1432/1792;"><img src="assets/kinch-appsplash.jpg" alt="스플래시 이미지" /></div>
-                                <span class="file-preview__name">킨치x오스트리야_앱스플.PNG</span>
-                                <span class="file-preview__meta">1432×1792px · JPG · 914KB</span>
-                                <button type="button" class="btn btn--secondary btn--sm upload-btn" onclick="applyUpload(this)"><span style="width:16px;height:16px;display:inline-flex;"><svg viewBox="0 0 16 16" fill="none"><path d="M8 10.5V3M8 3L5 6M8 3l3 3M3 11.5v1a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-1" stroke="#1a1a1a" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>파일 업로드</button>
-                                <div class="upload-help"><ul><li>크기: 1432×1792px</li><li>파일 형식: JPG/MP4</li><li>길이: 동영상일 경우 1.5초 이내 권장</li><li>용량: 1MB</li></ul></div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- 아코디언: 빅배너형 -->
+                <!-- 아코디언: 빅배너 -->
                 <div class="acc" data-acc data-group="bigbanner" data-preview="bigbanner">
                   <button type="button" class="acc__head" onclick="toggleAcc(this)">
-                    <span class="acc__title">빅배너형</span>
+                    <span class="acc__title">빅배너</span>
                     <span class="acc__right"><span class="badge-set badge-set--on">설정함</span><svg class="acc__chev" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
                   </button>
                   <div class="acc__body">
@@ -234,7 +181,7 @@
                         <div class="row__field">
                           <div class="usefield">
                             <div class="usefield__field" style="display:flex;flex-direction:column;gap:8px;">
-                              <div class="textfield"><span class="textfield__box"><input class="textfield__input" type="text" value="로우로우 × SUPER73" maxlength="10" data-count /></span></div>
+                              <div class="textfield"><span class="textfield__box"><input class="textfield__input" type="text" value="상반기 결산 빅세일" maxlength="10" data-count /></span></div>
                               <div class="textfield"><span class="textfield__box"><input class="textfield__input" type="text" value="신상 최대 {disc}% 할인" maxlength="10" data-count /></span><div class="textfield__help"><span class="textfield__count"><span data-count-out>0</span>/22</span></div></div>
                             </div>
                             <button type="button" class="checkbox usefield__off" role="checkbox" aria-checked="false" data-nouse><span class="checkbox__box"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.2 4.7 8.9 10 3.2" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="checkbox__label">사용 안 함</span></button>
@@ -246,7 +193,7 @@
                         <div class="row__field">
                           <div class="usefield">
                             <div class="usefield__field">
-                              <div class="textfield"><span class="textfield__box"><input class="textfield__input" type="text" placeholder="서브타이틀을 최대 18자 이내로 입력하세요." maxlength="18" data-count /></span><div class="textfield__help"><span class="textfield__count"><span data-count-out>0</span>/18</span></div></div>
+                              <div class="textfield"><span class="textfield__box"><input class="textfield__input" type="text" value="피노키" maxlength="18" data-count /></span><div class="textfield__help"><span class="textfield__count"><span data-count-out>0</span>/18</span></div></div>
                             </div>
                             <button type="button" class="checkbox usefield__off" role="checkbox" aria-checked="false" data-nouse><span class="checkbox__box"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.2 4.7 8.9 10 3.2" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="checkbox__label">사용 안 함</span></button>
                           </div>
@@ -254,16 +201,48 @@
                       </div>
                       <div class="row">
                         <div class="row__label"><span>랜딩 URL<span class="req">*</span></span></div>
-                        <div class="row__field"><div class="textfield"><span class="textfield__box"><input class="textfield__input" type="text" placeholder="랜딩 URL을 입력하세요." /></span></div></div>
+                        <div class="row__field"><div class="textfield"><span class="textfield__box"><input class="textfield__input" type="text" value="https://www.musinsa.com/brand/pinoki/campaign/2026seasonoff1" /></span></div></div>
                       </div>
                     </div>
                   </div>
                 </div>
 
-                <!-- 아코디언: 하이라이트 퀵메뉴형 (미설정) -->
-                <div class="acc" data-acc data-group="quickmenu" data-preview="quickmenu">
+                <!-- 아코디언: 스플래시 이미지 -->
+                <div class="acc" data-acc data-group="splashimg" data-preview="splash">
                   <button type="button" class="acc__head" onclick="toggleAcc(this)">
-                    <span class="acc__title">퀵메뉴형</span>
+                    <span class="acc__title">스플래시 이미지</span>
+                    <span class="acc__right"><span class="badge-set badge-set--on">설정함</span><svg class="acc__chev" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                  </button>
+                  <div class="acc__body">
+                    <div class="form form--creative">
+                      <div class="row">
+                        <div class="row__label"><span>광고명<span class="req">*</span></span></div>
+                        <div class="row__field"><div class="textfield"><label class="textfield__box"><input class="textfield__input" type="text" value="(260830)_광고_스플래시" maxlength="60" data-count /></label><div class="textfield__help"><span class="textfield__count"><span data-count-out>0</span>/60</span></div></div></div>
+                      </div>
+                      <div class="row">
+                        <div class="row__label"><span>이미지<span class="req">*</span></span></div>
+                        <div class="row__field">
+                          <div class="up">
+                            <div class="up-filled">
+                              <div class="file-preview">
+                                <div class="file-preview__img" style="aspect-ratio:1432/1792;"><img src="assets/kinch-appsplash.jpg" alt="스플래시 이미지" /></div>
+                                <span class="file-preview__name">킨치x오스트리야_앱스플.PNG</span>
+                                <span class="file-preview__meta">1432×1792px · PNG · 914KB</span>
+                                <button type="button" class="btn btn--secondary btn--sm upload-btn" onclick="applyUpload(this)"><span style="width:16px;height:16px;display:inline-flex;"><svg viewBox="0 0 16 16" fill="none"><path d="M8 10.5V3M8 3L5 6M8 3l3 3M3 11.5v1a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-1" stroke="#1a1a1a" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>파일 업로드</button>
+                                <div class="upload-help"><ul><li>크기: 1432×1792px</li><li>파일 형식: JPG/MP4</li><li>길이: 동영상일 경우 1.5초 이내 권장</li><li>용량: 1MB</li></ul></div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- 아코디언: 스플래시 동영상 (광고명 미입력 → 미설정) -->
+                <div class="acc" data-acc data-group="splashvid" data-preview="splash">
+                  <button type="button" class="acc__head" onclick="toggleAcc(this)">
+                    <span class="acc__title">스플래시 동영상</span>
                     <span class="acc__right"><span class="badge-set badge-set--off">미설정</span><svg class="acc__chev" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
                   </button>
                   <div class="acc__body">
@@ -273,36 +252,25 @@
                         <div class="row__field"><div class="textfield"><label class="textfield__box"><input class="textfield__input" type="text" placeholder="광고명을 입력하세요" maxlength="60" data-count /></label><div class="textfield__help"><span class="textfield__count"><span data-count-out>0</span>/60</span></div></div></div>
                       </div>
                       <div class="row">
-                        <div class="row__label"><span>이미지 정보<span class="req">*</span></span></div>
+                        <div class="row__label"><span>동영상 첨부<span class="req">*</span></span></div>
                         <div class="row__field">
                           <div class="up">
-                            <div class="up-empty">
-                              <button type="button" class="btn btn--secondary btn--sm upload-btn" onclick="applyUpload(this)"><span style="width:16px;height:16px;display:inline-flex;"><svg viewBox="0 0 16 16" fill="none"><path d="M8 10.5V3M8 3L5 6M8 3l3 3M3 11.5v1a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-1" stroke="#1a1a1a" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>파일 업로드</button>
-                              <div class="upload-help"><ul><li>크기: 420×180px</li><li>파일 형식: JPG</li><li>최대 용량: 1MB</li></ul></div>
-                            </div>
-                            <div class="up-filled" style="display:none;">
+                            <div class="up-filled">
                               <div class="file-preview">
-                                <div class="file-preview__img" style="aspect-ratio:420/180;"><img src="assets/kinch_quick.jpg" alt="퀵메뉴 이미지" /></div>
-                                <span class="file-preview__name">킨치x오스트리야_퀵메뉴.png</span>
-                                <span class="file-preview__meta">420×180px · JPG · 914KB</span>
+                                <div class="file-preview__img" style="aspect-ratio:1432/1792;"><img src="assets/kinch-appsplash.jpg" alt="스플래시 동영상" /></div>
+                                <span class="file-preview__name">킨치x오스트리야_앱스플.MP4</span>
+                                <span class="file-preview__meta">1432×1792px · MP4 · 914KB</span>
                                 <button type="button" class="btn btn--secondary btn--sm upload-btn" onclick="applyUpload(this)"><span style="width:16px;height:16px;display:inline-flex;"><svg viewBox="0 0 16 16" fill="none"><path d="M8 10.5V3M8 3L5 6M8 3l3 3M3 11.5v1a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-1" stroke="#1a1a1a" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>파일 업로드</button>
-                                <div class="upload-help"><ul><li>크기: 420×180px</li><li>파일 형식: JPG</li><li>최대 용량: 1MB</li></ul></div>
+                                <div class="upload-help"><ul><li>크기: 1432×1792px</li><li>파일 형식: JPG/MP4</li><li>길이: 동영상일 경우 1.5초 이내 권장</li><li>용량: 1MB</li></ul></div>
                               </div>
                             </div>
                           </div>
                         </div>
                       </div>
-                      <div class="row">
-                        <div class="row__label"><span>메인 문구<span class="req">*</span></span></div>
-                        <div class="row__field"><div class="textfield"><span class="textfield__box"><input class="textfield__input" type="text" placeholder="메인 문구를 입력하세요" maxlength="22" data-count /></span><div class="textfield__help"><span class="textfield__count"><span data-count-out>0</span>/22</span></div></div></div>
-                      </div>
-                      <div class="row">
-                        <div class="row__label"><span>랜딩 URL<span class="req">*</span></span></div>
-                        <div class="row__field"><div class="textfield"><span class="textfield__box"><input class="textfield__input" type="text" placeholder="랜딩 URL을 입력하세요." /></span></div></div>
-                      </div>
                     </div>
                   </div>
                 </div>
+
               </section>
             </div>
 
@@ -311,9 +279,9 @@
               <div class="pvcarousel">
                 <button type="button" class="pvnav" onclick="pvMove(-1)" aria-label="이전"><svg width="8" height="14" viewBox="0 0 8 14" fill="none"><path d="M7 1L1 7l6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
                 <div class="preview-card">
-                  <span class="preview-card__title" id="previewTitle">빅배너형</span>
+                  <span class="preview-card__title" id="previewTitle">미리보기</span>
                   <div class="preview-card__stage">
-                    <div class="phone"><div class="phone__screen"><img id="mockupImg" class="phone__mockup" src="assets/Mockup_frame_1.png" alt="앱 미리보기" /></div></div>
+                    <div class="phone"><div class="phone__screen"><img id="mockupImg" class="phone__mockup" src="assets/Mockup_frame_2.png" alt="앱 미리보기" /></div></div>
                   </div>
                   <p class="preview-card__caption">기기 설정에 따라 보여지는 줄바꿈과 글꼴, 이미지 크기가 다를 수 있습니다.</p>
                 </div>
@@ -373,13 +341,12 @@
 
     // ---- 폰 미리보기 (템플릿 전환: 캐러셀 + 포커스 연동) ----
     var PV = {
-      splash:    { title:'스플래시', img:'assets/Mockup_frame_splash_b.png' },
-      bigbanner: { title:'빅배너형', img:'assets/Mockup_frame_2.png' },
-      quickmenu: { title:'퀵메뉴형', img:'assets/Mockup_frame_quick_b.png' }
+      bigbanner: { img:'assets/Mockup_frame_2.png' },
+      splash:    { img:'assets/Mockup_frame_splash_b.png' }
     };
-    var PV_ORDER = ['splash','bigbanner','quickmenu'];
+    var PV_ORDER = ['bigbanner','splash'];   // 미리보기 이미지(빅배너 / 스플래시)
     var pvKey = 'bigbanner';
-    function renderPreview(){ var p=PV[pvKey]; if(!p) return; document.getElementById('previewTitle').textContent=p.title; document.getElementById('mockupImg').src=p.img; }
+    function renderPreview(){ var p=PV[pvKey]; if(!p) return; document.getElementById('mockupImg').src=p.img; }
     function pvSet(key){ if(PV[key] && key!==pvKey){ pvKey=key; renderPreview(); } }
     function visiblePvKeys(){ return PV_ORDER.filter(function(k){ var a=document.querySelector('.acc[data-preview="'+k+'"]'); return a && a.style.display!=='none'; }); }
     function pvMove(d){ var ks=visiblePvKeys(); if(!ks.length) return; var i=ks.indexOf(pvKey); if(i<0) i=0; i=(i+d+ks.length)%ks.length; pvSet(ks[i]); }
